@@ -12,7 +12,9 @@ package application;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -222,6 +224,12 @@ public class BPTreeUnitTests {
 	
 	@Test
 	public void test00011_isEmpty() {
+		//Setup
+		Random r = new Random();
+		final int count = 100;
+		int keyVal;
+		int[] keyVals = new int[count];
+		
 		assertTrue(tree.isEmpty()); //new tree should be empty
 		
 		//nulls
@@ -249,6 +257,62 @@ public class BPTreeUnitTests {
 		tree.insert(0, 0);
 		tree.remove(0, 1);
 		assertFalse(tree.isEmpty());
+		
+		tree.remove(0, 0);
+		assertTrue(tree.isEmpty());
+		
+		//Stress testing
+		for (int i = 0; i < count; ++i) {
+			keyVal = r.nextInt(Integer.MAX_VALUE);
+			keyVals[i] = keyVal;
+			tree.insert(keyVal, keyVal);
+		}
+		
+		for (int i = 0; i < count; ++i) {
+			tree.remove(keyVals[i], keyVals[i]);
+		}
+		
+		assertTrue(tree.isEmpty());
+	}
+	
+	@Test
+	public void test00100_valuesForKey() {
+		//Setup
+		Set<Integer> values;
+		
+		//nulls
+		try {
+			tree.valuesForKey(null);
+		}
+		catch (Exception e) {
+			fail("Threw an exception trying to find values for null key");
+		}
+		
+		//non-existent key
+		try {
+			tree.valuesForKey(0);
+		}
+		catch (Exception e) {
+			fail("Threw an exception searching for values of key not in tree");
+		}
+		
+		//Should return 0 for null or keys we don't have
+		assertEquals(tree.valuesForKey(null), 0);
+		assertEquals(tree.valuesForKey(0), 0);
+		
+		tree.insert(0, 0);
+		assertEquals(tree.valuesForKey(0), 1);
+		
+		tree.remove(0, 0);
+		assertEquals(tree.valuesForKey(0), 0);
+		
+		tree.insert(0, 0);
+		tree.insert(0, 1);
+		assertEquals(tree.valuesForKey(0), 2);
+		
+		tree.insert(1, 0);
+		assertEquals(tree.valuesForKey(0), 2);
+		
 		
 	}
 
