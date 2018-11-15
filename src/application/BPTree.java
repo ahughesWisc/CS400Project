@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
 
 /**Filename:	BPTree.java
 * Project:		Final Project (p5)
@@ -67,6 +68,15 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
     }
     
     /**
+     * Removes a key/value pair
+     * @param key key to remove at
+     * @param value value to remove
+     */
+    public void remove(K key, V value) {
+    	// TODO : Complete
+    }
+    
+    /**
      * Getter for root of tree
      * @return root node
      */
@@ -80,6 +90,15 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
      */
     public boolean isEmpty() {
     	return this.root == null;
+    }
+    
+    /**
+     * Returns all values associated with a given key
+     * @param key key to search for values for
+     */
+    public Set<V> valuesForKey(K key) {
+    	// TODO : Complete
+    	return null;
     }
     
     /*

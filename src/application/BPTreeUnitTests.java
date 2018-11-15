@@ -32,7 +32,7 @@ public class BPTreeUnitTests {
 	}
 
 	@Test
-	public void test10000_constructor() {
+	public void test00000_constructor() {
 		//bad values testing
 		for (int badBranchFactor = -11; badBranchFactor < 3 ; ++badBranchFactor ) {
 			try {
@@ -47,7 +47,8 @@ public class BPTreeUnitTests {
 				tree = new BPTree<Integer,Integer>(goodBranchFactor);
 			}
 			catch (IllegalArgumentException e) { //failure
-				fail(String.format("Constructor threw an exception with branch factor %d", goodBranchFactor)
+				fail(
+						String.format("Constructor threw an exception with branch factor %d", goodBranchFactor)
 						);
 				}
 			}
@@ -70,10 +71,184 @@ public class BPTreeUnitTests {
 				tree = new BPTree<Integer,Integer>(value); //select positive values at least 3 at random to get more coverage
 			}
 			catch (IllegalArgumentException e) { //failure
-				fail(String.format("Constructor threw an exception with branch factor %d", value)
+				fail(
+						String.format("Constructor threw an exception with branch factor %d", value)
 						);
 				}
 		}
+		
+	}
+	
+	@Test
+	public void test00001_insert() {
+		//Setup
+		Random r = new Random();
+		
+		//insert with nulls
+		try {
+			tree.insert(null, null);
+			tree.insert(null, 0);
+			tree.insert(0, null);
+		}
+		catch (Exception e) {
+			fail("Threw an exception when attempting to insert null values");
+		}
+		
+		//insert single keys
+		for (int key = 0; key < 10; ++key) {
+			try {
+				tree.insert(key, 0);
+			}
+			
+			catch (Exception e) {
+				fail(
+						String.format("Threw an exception attempting to insert with key %d", key)
+						);
+			}
+		}
+		
+		//insert duplicate keys
+		for (int key = 0; key < 10; ++key) {
+			for (int value = 0; value < 10; ++value) {
+				try {
+					tree.insert(key, value);
+				}
+				catch (Exception e) {
+					fail(
+							String.format("Threw an exception inserting duplicate keys with key %d and value %d", key, value)
+							);
+				}
+			}
+		}
+		
+		//Stress testing
+		int k = 0;
+		int v = 0;
+		for (int i = 0; i < 10; ++i) {
+			for (int j = 0; j < 10; ++j) {
+				try {
+					k = r.nextInt(Integer.MAX_VALUE);
+					v = r.nextInt(Integer.MAX_VALUE);
+					tree.insert(k, v);
+				}
+				
+				catch (Exception e) {
+					fail(
+							String.format("Threw an exception inserting with key %d and value %d", k, v)
+							);
+				}
+			}
+		}
+	}
+	
+	@Test
+	public void test00010_remove() {
+		//Setup
+		int key;
+		int value;
+		final int count = 100;
+		int[] keys = new int[count];
+		int[] values = new int[count];
+		Random r = new Random();
+		
+		//null testing
+		try {
+			tree.remove(null, null);
+			tree.remove(null, 0);
+			tree.remove(0, null);
+		}
+		
+		catch (Exception e) {
+			fail("Threw an exception removing with null key or value.");
+		}
+		
+		//Remove from empty
+		try {
+			tree.remove(0, 0);
+		}
+		
+		catch (Exception e) {
+			fail("Threw an exception removing from an empty tree.");
+		}
+		
+		//Setup with some values
+		tree.insert(0, 0);
+		tree.insert(0, 1);
+		tree.insert(0, 2);
+		tree.insert(1, 2);
+		tree.insert(1, 3);
+		tree.insert(4, 5);
+		tree.insert(-5, 3);
+		
+		//Remove key that isn't there
+		try {
+			tree.remove(-1, 0);
+		}
+		
+		catch (Exception e) {
+			fail("Threw an exception removing non-existent key");
+		}
+		
+		//Remove value that isn't there for valid key
+		try {
+			tree.remove(0, -1);
+		}
+		catch (Exception e) {
+			fail("Threw an exception removing non-existent value for valid key.");
+		}
+		
+		//No need for try/catch since we don't care about a custom fail message here
+		tree.remove(0, 0);
+		tree.remove(1, 2);
+		tree.remove(-5, 3);
+		tree.remove(1, 3);
+		tree.remove(0, 2);
+		tree.remove(4, 5);
+		tree.remove(0, 1);
+		
+		//Stress testing
+		for (int i = 0; i < count; ++i) {
+			key = r.nextInt(Integer.MAX_VALUE);
+			value = r.nextInt(Integer.MAX_VALUE);
+			keys[i] = key;
+			values[i] = value;
+			tree.insert(key, value);
+		}
+		
+		for (int i = 0; i < count; ++i) {
+			tree.remove(keys[i], values[i]);
+		}
+	}
+	
+	@Test
+	public void test00011_isEmpty() {
+		assertTrue(tree.isEmpty()); //new tree should be empty
+		
+		//nulls
+		tree.insert(null, null);
+		assertTrue(tree.isEmpty());
+		
+		tree.insert(null, 0);
+		assertTrue(tree.isEmpty());
+		
+		tree.insert(0, null);
+		assertTrue(tree.isEmpty());
+		
+		tree.insert(0, 0);
+		assertFalse(tree.isEmpty()); //now we should have something
+		
+		tree.remove(0, 0);
+		assertTrue(tree.isEmpty()); //should be empty again
+		
+		tree.insert(0, 1);
+		assertFalse(tree.isEmpty());
+		
+		tree.remove(0, 0);
+		assertFalse(tree.isEmpty()); //should not be empty if we remove something not there
+		
+		tree.insert(0, 0);
+		tree.remove(0, 1);
+		assertFalse(tree.isEmpty());
 		
 	}
 
