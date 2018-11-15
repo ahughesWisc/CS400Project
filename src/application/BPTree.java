@@ -74,6 +74,14 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
     	return this.root;
     }
     
+    /**
+     * Determines if the tree has any nodes
+     * @return true if yes, false if no
+     */
+    public boolean isEmpty() {
+    	return this.root == null;
+    }
+    
     /*
      * (non-Javadoc)
      * @see BPTreeADT#rangeSearch(java.lang.Object, java.lang.String)
