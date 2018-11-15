@@ -7,7 +7,7 @@ package application;
 * Course:		CS400
 * Section:		004
 * 
-* Notes: Testing commit
+* Notes: 
 */
 
 import static org.junit.Assert.*;
