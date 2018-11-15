@@ -8,6 +8,16 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+/**Filename:	BPTree.java
+* Project:		Final Project (p5)
+* Authors: 		Adam Hughes
+* Emails:		adam.hughes@wisc.edu
+* Course:		CS400
+* Section:		004
+* 
+* Notes: 
+*/
+
 /**
  * Implementation of a B+ tree to allow efficient access to
  * many different indexes of a large data set. 
@@ -18,6 +28,7 @@ import java.util.Random;
  * linear in-order traversals of the data items.
  * 
  * @author sapan (sapan@cs.wisc.edu)
+ * @author ahughes (adam.hughes@wisc.edu)
  *
  * @param <K> key - expect a string that is the type of id for each item
  * @param <V> value - expect a user-defined type that stores all data for a food item
@@ -55,6 +66,13 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         // TODO : Complete
     }
     
+    /**
+     * Getter for root of tree
+     * @return root node
+     */
+    public Node getRoot() {
+    	return this.root;
+    }
     
     /*
      * (non-Javadoc)
