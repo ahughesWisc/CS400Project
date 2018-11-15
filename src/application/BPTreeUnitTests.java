@@ -13,6 +13,7 @@ package application;
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -22,11 +23,14 @@ import org.junit.Test;
 
 public class BPTreeUnitTests {
 	
-	BPTree<Integer,Integer> tree;
+	BPTree<Integer,Integer> tree; //main object
+	final static int branchFact = 3; //branch factor of our tree, good for when we need to reinitialize
+	final static int count = 100; //used for stress testing
+	final static Random r = new Random(); //used for stress testing
 
 	@Before
 	public void setUp() throws Exception {
-		tree = new BPTree<Integer, Integer>(3); //
+		tree = new BPTree<Integer, Integer>(branchFact); //initialize
 	}
 
 	@After
@@ -55,12 +59,12 @@ public class BPTreeUnitTests {
 				}
 			}
 		//Spot checking some more values sampled at random
-		Random r = new Random();
+		
 		int value;
 		//Random bad
 		for (int i = 0; i < 10; ++i) {
 			try {
-				value = -r.nextInt(Integer.MAX_VALUE);
+				value = -r.nextInt(Integer.MAX_VALUE); //don't shift as we've already tested numbers close to 2
 				tree = new BPTree<Integer,Integer>(value); //select negative values at random to get some more coverage
 			}
 			catch (IllegalArgumentException e) { } //success
@@ -68,7 +72,7 @@ public class BPTreeUnitTests {
 		
 		//Random good
 		for (int i = 0; i < 10; ++i) {
-			value = r.nextInt(Integer.MAX_VALUE);
+			value = 3 + r.nextInt(Integer.MAX_VALUE - 2); //add 3 to ensure it is at least 3, make sure max argument is not too big for overflow
 			try {
 				tree = new BPTree<Integer,Integer>(value); //select positive values at least 3 at random to get more coverage
 			}
@@ -84,7 +88,7 @@ public class BPTreeUnitTests {
 	@Test
 	public void test00001_insert() {
 		//Setup
-		Random r = new Random();
+		
 		
 		//insert with nulls
 		try {
@@ -126,11 +130,11 @@ public class BPTreeUnitTests {
 		//Stress testing
 		int k = 0;
 		int v = 0;
-		for (int i = 0; i < 10; ++i) {
-			for (int j = 0; j < 10; ++j) {
+		for (int i = 0; i < count; ++i) {
+			for (int j = 0; j < count; ++j) {
 				try {
-					k = r.nextInt(Integer.MAX_VALUE);
-					v = r.nextInt(Integer.MAX_VALUE);
+					k = r.nextInt();
+					v = r.nextInt();
 					tree.insert(k, v);
 				}
 				
@@ -148,10 +152,9 @@ public class BPTreeUnitTests {
 		//Setup
 		int key;
 		int value;
-		final int count = 100;
 		int[] keys = new int[count];
 		int[] values = new int[count];
-		Random r = new Random();
+		
 		
 		//null testing
 		try {
@@ -210,8 +213,8 @@ public class BPTreeUnitTests {
 		
 		//Stress testing
 		for (int i = 0; i < count; ++i) {
-			key = r.nextInt(Integer.MAX_VALUE);
-			value = r.nextInt(Integer.MAX_VALUE);
+			key = r.nextInt();
+			value = r.nextInt();
 			keys[i] = key;
 			values[i] = value;
 			tree.insert(key, value);
@@ -225,8 +228,7 @@ public class BPTreeUnitTests {
 	@Test
 	public void test00011_isEmpty() {
 		//Setup
-		Random r = new Random();
-		final int count = 100;
+		
 		int keyVal;
 		int[] keyVals = new int[count];
 		
@@ -263,7 +265,7 @@ public class BPTreeUnitTests {
 		
 		//Stress testing
 		for (int i = 0; i < count; ++i) {
-			keyVal = r.nextInt(Integer.MAX_VALUE);
+			keyVal = r.nextInt();
 			keyVals[i] = keyVal;
 			tree.insert(keyVal, keyVal);
 		}
@@ -277,9 +279,6 @@ public class BPTreeUnitTests {
 	
 	@Test
 	public void test00100_valuesForKey() {
-		//Setup
-		Set<Integer> values;
-		
 		//nulls
 		try {
 			tree.valuesForKey(null);
@@ -297,22 +296,54 @@ public class BPTreeUnitTests {
 		}
 		
 		//Should return 0 for null or keys we don't have
-		assertEquals(tree.valuesForKey(null), 0);
-		assertEquals(tree.valuesForKey(0), 0);
+		assertEquals(tree.valuesForKey(null).size(), 0);
+		assertEquals(tree.valuesForKey(0).size(), 0);
 		
+		//simple test
 		tree.insert(0, 0);
-		assertEquals(tree.valuesForKey(0), 1);
+		assertEquals(tree.valuesForKey(0).size(), 1);
 		
+		//jives with removal
 		tree.remove(0, 0);
-		assertEquals(tree.valuesForKey(0), 0);
+		assertEquals(tree.valuesForKey(0).size(), 0);
 		
+		//more than one
 		tree.insert(0, 0);
 		tree.insert(0, 1);
-		assertEquals(tree.valuesForKey(0), 2);
+		assertEquals(tree.valuesForKey(0).size(), 2);
 		
+		//no cross talk
 		tree.insert(1, 0);
-		assertEquals(tree.valuesForKey(0), 2);
+		assertEquals(tree.valuesForKey(0).size(), 2);
 		
+		//duplicate key value pair
+		tree.insert(0, 0);
+		assertEquals(tree.valuesForKey(0).size(), 2);
+		
+		//Stress testing
+		for (int testNumber = 0; testNumber < count; ++testNumber) {
+			//Setup
+			tree = new BPTree<Integer, Integer>(branchFact); //clean out old stuff
+			Set<Integer> values = new HashSet<Integer>();
+			
+			for (int i = 0; i < count; ++i) { //shove a bunch of integers into a set
+				values.add(r.nextInt());
+			}
+			
+			Iterator<Integer> itr = values.iterator();
+			
+			while (itr.hasNext()) { //now put all the (unique!) values with the same key
+				tree.insert(0, itr.next());
+			}
+			
+			//Finally check that our count agrees with the set size
+			assertEquals(tree.valuesForKey(0).size(), values.size()); //number of values for key 0 should be exactly the size of the set
+		}
+		
+	}
+	
+	@Test
+	public void test00101_rangeSearch() {
 		
 	}
 
