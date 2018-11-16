@@ -38,6 +38,31 @@ public class FoodDataUnitTests {
 
 	@Test
 	public void test00000_addFoodItem() {
+		//TODO: Complete
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void test00010_filterByName() {
+		//TODO: Complete
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void test00011_filterByNutrients() {
+		//TODO: Complete
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void test00100_loadAllFoodItems() {
+		//TODO: Complete
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void test00101_saveFoodItems() {
+		//TODO: Complete
 		fail("Not yet implemented");
 	}
 	
