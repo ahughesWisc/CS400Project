@@ -77,14 +77,6 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
     }
     
     /**
-     * Getter for root of tree
-     * @return root node
-     */
-    public Node getRoot() {
-    	return this.root;
-    }
-    
-    /**
      * Determines if the tree has any nodes
      * @return true if yes, false if no
      */
