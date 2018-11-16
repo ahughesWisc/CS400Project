@@ -12,8 +12,10 @@ package application;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -24,6 +26,7 @@ import org.junit.Test;
 public class BPTreeUnitTests {
 	
 	BPTree<Integer,Integer> tree; //main object
+	String comparator;
 	final static int branchFact = 3; //branch factor of our tree, good for when we need to reinitialize
 	final static int count = 100; //used for stress testing
 	final static Random r = new Random(); //used for stress testing
@@ -296,29 +299,29 @@ public class BPTreeUnitTests {
 		}
 		
 		//Should return 0 for null or keys we don't have
-		assertEquals(tree.valuesForKey(null).size(), 0);
-		assertEquals(tree.valuesForKey(0).size(), 0);
+		assertEquals(0, tree.valuesForKey(null).size());
+		assertEquals(0, tree.valuesForKey(0).size());
 		
 		//simple test
 		tree.insert(0, 0);
-		assertEquals(tree.valuesForKey(0).size(), 1);
+		assertEquals(1, tree.valuesForKey(0).size());
 		
 		//jives with removal
 		tree.remove(0, 0);
-		assertEquals(tree.valuesForKey(0).size(), 0);
+		assertEquals(0, tree.valuesForKey(0).size());
 		
 		//more than one
 		tree.insert(0, 0);
 		tree.insert(0, 1);
-		assertEquals(tree.valuesForKey(0).size(), 2);
+		assertEquals(2, tree.valuesForKey(0).size());
 		
 		//no cross talk
 		tree.insert(1, 0);
-		assertEquals(tree.valuesForKey(0).size(), 2);
+		assertEquals(2, tree.valuesForKey(0).size());
 		
 		//duplicate key value pair
 		tree.insert(0, 0);
-		assertEquals(tree.valuesForKey(0).size(), 2);
+		assertEquals(2, tree.valuesForKey(0).size());
 		
 		//Stress testing
 		for (int testNumber = 0; testNumber < count; ++testNumber) {
@@ -337,14 +340,116 @@ public class BPTreeUnitTests {
 			}
 			
 			//Finally check that our count agrees with the set size
-			assertEquals(tree.valuesForKey(0).size(), values.size()); //number of values for key 0 should be exactly the size of the set
+			assertEquals(values.size(), tree.valuesForKey(0).size()); //number of values for key 0 should be exactly the size of the set
 		}
 		
 	}
 	
 	@Test
-	public void test00101_rangeSearch() {
+	public void test00101_rangeSearchBasic() {
+		//Setup
+		List<Integer> expected = new ArrayList<Integer>();
+		Set<String> screwyStrings = new HashSet<String>();
+			//test cases
+			screwyStrings.add("hi");
+			screwyStrings.add("");
+			screwyStrings.add(" ");
+			screwyStrings.add("ding dong");
+			screwyStrings.add("asdf");
+			screwyStrings.add("asdf7,@#(*&$_W^$");
+			screwyStrings.add("== ");
+			screwyStrings.add(",<=");
+			screwyStrings.add("> =");
+			screwyStrings.add("=");
+			screwyStrings.add("= =");
+			screwyStrings.add("< =");
+		String comparator;
+		Iterator<String> itr = screwyStrings.iterator();
 		
+		//totally empty tree
+		assertEquals(new ArrayList<Integer>(), expected);
+		//Screwy comparators
+			//Screwy comparators for empty tree with null key
+					itr = screwyStrings.iterator();
+					while (itr.hasNext()) {
+						comparator = itr.next();
+						assertEquals(expected, tree.rangeSearch(null, comparator));
+					}
+			//Screwy comparators for empty tree with non-null, non-existent key
+			itr = screwyStrings.iterator();
+			while (itr.hasNext()) {
+				comparator = itr.next();
+				assertEquals(expected, tree.rangeSearch(0, comparator));
+			}
+			//Screwy comparators for non-empty tree and valid key
+			tree.insert(0, 0);
+			itr = screwyStrings.iterator();
+			while (itr.hasNext()) {
+				comparator = itr.next();
+				assertEquals(expected, tree.rangeSearch(0, comparator));
+			}
+	}
+	
+	@Test
+	public void test00110_rangeSearchEquals() {
+		//Setup
+		List<Integer> expected = new ArrayList<Integer>();
+		comparator = "=="; //less likely to make typos and easier to see syntax
+		//Nulls
+		assertEquals(expected, tree.rangeSearch(null, comparator)); //valid operators + null key should return a new ArrayList
+		//Non-existent key
+		assertEquals(expected, tree.rangeSearch(0, comparator)); //valid operators + non-existent key should return a new ArrayList
+		
+		//test a few easy ones
+		tree.insert(0, 0);
+		expected.add(0);
+		assertEquals(expected, tree.rangeSearch(0, comparator));	
+		tree.insert(0, 1);
+		tree.insert(0, 2);
+		expected.add(1);
+		expected.add(2);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		
+		//insert at other keys, should not affect the search for the search key with ==
+		tree.insert(1, -1);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		tree.insert(1, 10);
+		tree.insert(2, 0);
+		tree.insert(-20, 5);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		
+		//insert at our original key after having inserted at others
+		tree.insert(0, 5);
+		expected.add(5);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		
+		expected = new ArrayList<Integer>();
+		expected.add(-1);
+		expected.add(10);
+		assertEquals(expected, tree.rangeSearch(1, comparator));
+		
+	}
+	
+	@Test
+	public void test00111_rangeSearchGTE() {
+		//Setup
+		List<Integer> expected = new ArrayList<Integer>();
+		comparator = ">="; //less likely to accidentally type the wrong one in the same test
+		//Nulls
+		assertEquals(expected, tree.rangeSearch(null, comparator)); //valid operators + null key should return a new ArrayList
+		//Non-existent key
+		assertEquals(expected, tree.rangeSearch(0, comparator)); //valid operators + non-existent key should return a new ArrayList
+	}
+	
+	@Test
+	public void test00111_rangeSearchLTE() {
+		//Setup
+		List<Integer> expected = new ArrayList<Integer>();
+		comparator = "<="; //less likely to accidentally type the wrong one in the same test
+		//Nulls
+		assertEquals(expected, tree.rangeSearch(null, comparator)); //valid operators + null key should return a new ArrayList
+		//Non-existent key
+		assertEquals(expected, tree.rangeSearch(0, comparator)); //valid operators + non-existent key should return a new ArrayList
 	}
 
 }
