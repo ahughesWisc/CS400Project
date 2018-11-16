@@ -18,14 +18,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeSet;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class BPTreeUnitTests {
 	
 	BPTree<Integer,Integer> tree; //main object
+	List<Integer> expected; //holds testing expectations for 
 	String comparator;
 	final static int branchFact = 3; //branch factor of our tree, good for when we need to reinitialize
 	final static int count = 100; //used for stress testing
@@ -33,11 +34,7 @@ public class BPTreeUnitTests {
 
 	@Before
 	public void setUp() throws Exception {
-		tree = new BPTree<Integer, Integer>(branchFact); //initialize
-	}
-
-	@After
-	public void tearDown() throws Exception {
+		tree = new BPTree<Integer, Integer>(branchFact); //initialize object used in all tests
 	}
 
 	@Test
@@ -348,7 +345,7 @@ public class BPTreeUnitTests {
 	@Test
 	public void test00101_rangeSearchBasic() {
 		//Setup
-		List<Integer> expected = new ArrayList<Integer>();
+		expected = new ArrayList<Integer>();
 		Set<String> screwyStrings = new HashSet<String>();
 			//test cases
 			screwyStrings.add("hi");
@@ -363,7 +360,6 @@ public class BPTreeUnitTests {
 			screwyStrings.add("=");
 			screwyStrings.add("= =");
 			screwyStrings.add("< =");
-		String comparator;
 		Iterator<String> itr = screwyStrings.iterator();
 		
 		//totally empty tree
@@ -393,10 +389,12 @@ public class BPTreeUnitTests {
 	@Test
 	public void test00110_rangeSearchEquals() {
 		//Setup
-		List<Integer> expected = new ArrayList<Integer>();
+		expected = new ArrayList<Integer>();
 		comparator = "=="; //less likely to make typos and easier to see syntax
+		
 		//Nulls
 		assertEquals(expected, tree.rangeSearch(null, comparator)); //valid operators + null key should return a new ArrayList
+		
 		//Non-existent key
 		assertEquals(expected, tree.rangeSearch(0, comparator)); //valid operators + non-existent key should return a new ArrayList
 		
@@ -428,28 +426,90 @@ public class BPTreeUnitTests {
 		expected.add(10);
 		assertEquals(expected, tree.rangeSearch(1, comparator));
 		
+		//TODO: this needs some work depending on how we implement the BPTree values storage per key
+//		//Stress testing
+//		tree = new BPTree<Integer, Integer>(branchFact); //reset for stress test
+//		expected = new ArrayList<Integer>(); //reset for stress test
+//		Set<Integer> inserts = new TreeSet<Integer>(); //when they go into the BPTree the values should come out (per key) sorted so we use a TreeSet
+//		int value;
+//		for (int i = 0; i < count; ++i) { //shove a bunch of values into a set to ensure one copy per
+//			inserts.add(r.nextInt());
+//		}
+//		Iterator<Integer> itr = inserts.iterator();
+//		
+//		while (itr.hasNext()) {
+//			value = itr.next();
+//			tree.insert(0, value);
+//			expected.add(value);
+//		}
+//		assertEquals(expected, tree.rangeSearch(0, comparator)); //list out should be sorted list of values for given key
 	}
 	
 	@Test
 	public void test00111_rangeSearchGTE() {
 		//Setup
-		List<Integer> expected = new ArrayList<Integer>();
+		expected = new ArrayList<Integer>();
 		comparator = ">="; //less likely to accidentally type the wrong one in the same test
+		
 		//Nulls
 		assertEquals(expected, tree.rangeSearch(null, comparator)); //valid operators + null key should return a new ArrayList
+		
 		//Non-existent key
 		assertEquals(expected, tree.rangeSearch(0, comparator)); //valid operators + non-existent key should return a new ArrayList
+		
+		//Basic case
+		tree.insert(0, 0);
+		expected.add(0);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		
+		//No false positives
+		tree.insert(-1, 1);
+		tree.insert(-2, 2);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		
+		//Extend to more than just one key that fits the criterion
+		tree.insert(1, 3);
+		expected.add(3);
+		tree.insert(1, 4);
+		expected.add(4);
+		tree.insert(2, 5);
+		expected.add(5);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		
+		//TODO: add stress test once resolution to value storage resolved
 	}
 	
 	@Test
 	public void test00111_rangeSearchLTE() {
 		//Setup
-		List<Integer> expected = new ArrayList<Integer>();
+		expected = new ArrayList<Integer>();
 		comparator = "<="; //less likely to accidentally type the wrong one in the same test
+		
 		//Nulls
 		assertEquals(expected, tree.rangeSearch(null, comparator)); //valid operators + null key should return a new ArrayList
+		
 		//Non-existent key
 		assertEquals(expected, tree.rangeSearch(0, comparator)); //valid operators + non-existent key should return a new ArrayList
+		
+		//Basic case
+		tree.insert(0, 0);
+		expected.add(0);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		
+		//No false positives
+		tree.insert(1, 1);
+		tree.insert(2, 2);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		
+		//Extend to more than just one key that fits the criterion
+		tree.insert(-1, 3);
+		expected.add(3);
+		tree.insert(-1, 4);
+		expected.add(4);
+		tree.insert(-2, 5);
+		expected.add(5);
+		assertEquals(expected, tree.rangeSearch(0, comparator));
+		
+		//TODO: add stress test once resolution to value storage resolved
 	}
-
 }
