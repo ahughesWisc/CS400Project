@@ -20,7 +20,11 @@ package application;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 
 public class Main extends Application {
@@ -28,10 +32,20 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			BorderPane root = new BorderPane();
-			Scene scene = new Scene(root,800,800);
+			Scene scene = new Scene(root,1400,800);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+			HBox filterLine = new HBox();
+						
+			Button criteriaButton = new Button("Create Criteria");
+			Label nameFilterLabel = new Label("Search Term");
+			TextField nameFilterField = new TextField();
+			nameFilterField.setPromptText("name here");
+			filterLine.getChildren().addAll(nameFilterLabel,nameFilterField,criteriaButton);
+			root.setTop(filterLine);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
