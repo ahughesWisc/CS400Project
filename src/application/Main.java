@@ -25,6 +25,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -40,11 +41,15 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			
 			// filter line
+			
+			// Set the application header
 			primaryStage.setTitle("Food Program");
-			Button criteriaButton = new Button("Create Criteria");
+			
+			// Label and Field for entering a text search term
 			Label nameFilterLabel = new Label("Search Term");
 			TextField nameFilterField = new TextField();
 			
+			// label and combo box for selecting the nutrient for the rule
 			Label nutrientLabel = new Label("Nutrient");
 			ObservableList<String> nutrients = 
 				    FXCollections.observableArrayList(
@@ -55,14 +60,33 @@ public class Main extends Application {
 				        "Protein"
 				    );
 			ComboBox<String> nutrientComboBox = new ComboBox<String>(nutrients);
+			
+			// combo box for selecting the oporator for the rule
+			Label oporatorLabel = new Label("Oporator");
 			ObservableList<String> logicOptions = 
 				    FXCollections.observableArrayList(
 				        "==",
 				        "<=",
 				        ">="
 				    );
-			
 			ComboBox<String> oporatorComboBox = new ComboBox<String>(logicOptions);
+			
+			// text field for entering the nutrient value (example number of grams or number of calories)
+			TextField nutrientValueField = new TextField("Value");
+			
+			// Remove an active rule
+			Button removeRuleButton = new Button("Remove Rule");
+			
+			// Add a rule to the active rules
+			Button addRuleButton = new Button("Add Rule");
+			
+			// View of the active rules
+			ListView<String> ruleList = new ListView<>();
+			ObservableList<String> rules =FXCollections.observableArrayList();
+			ruleList.setItems(rules);
+			ruleList.setPrefWidth(100);
+			ruleList.setPrefHeight(70);
+			
 			nameFilterField.setPromptText("name here");
 
 			
