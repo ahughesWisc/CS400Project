@@ -18,9 +18,12 @@ package application;
  */
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -35,16 +38,33 @@ public class Main extends Application {
 			Scene scene = new Scene(root,1400,800);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
-			primaryStage.show();
 			
-			HBox filterLine = new HBox();
-						
+			// filter line
+			primaryStage.setTitle("Food Program");
 			Button criteriaButton = new Button("Create Criteria");
 			Label nameFilterLabel = new Label("Search Term");
 			TextField nameFilterField = new TextField();
+			
+			Label nutrientLabel = new Label("Nutrient");
+			ObservableList<String> nutrients = 
+				    FXCollections.observableArrayList(
+				        "Calories",
+				        "Fat",
+				        "Carbs",
+				        "Fiber",
+				        "Protein"
+				    );
+			ComboBox<String> nutrientComboBox = new ComboBox<String>(nutrients);
+			ObservableList<String> logicOptions = 
+				    FXCollections.observableArrayList(
+				        "==",
+				        "<=",
+				        ">="
+				    );
+			
+			ComboBox<String> oporatorComboBox = new ComboBox<String>(logicOptions);
 			nameFilterField.setPromptText("name here");
-			filterLine.getChildren().addAll(nameFilterLabel,nameFilterField,criteriaButton);
-			root.setTop(filterLine);
+
 			
 		} catch(Exception e) {
 			e.printStackTrace();
