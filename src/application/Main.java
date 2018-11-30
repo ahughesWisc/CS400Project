@@ -87,8 +87,27 @@ public class Main extends Application {
 			ruleList.setPrefWidth(100);
 			ruleList.setPrefHeight(70);
 			
+			// Run query button
+			Button runSearch = new Button("Run Search");
+			
+			// Master food list
+			ObservableList<String> foods = FXCollections.observableArrayList();
+			ComboBox<String> foodListComboBox = new ComboBox<String>(foods);
+			
+			// Menu food list
+			ObservableList<String> menuFoods = FXCollections.observableArrayList();
+			ComboBox<String> menuFoodListComboBox = new ComboBox<String>(menuFoods);
+			
+			// Add food to menu button
+			Button addFoodtoMenuButton = new Button("Add to Menu");
+			
+			// Remove food from menu button
+			Button removeFoodFromMenuButton = new Button("Remove From Menu");
+			
 			nameFilterField.setPromptText("name here");
-
+			
+			// Adding objects to the pane
+			
 			
 		} catch(Exception e) {
 			e.printStackTrace();
