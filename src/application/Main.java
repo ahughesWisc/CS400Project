@@ -42,6 +42,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
@@ -60,9 +64,9 @@ public class Main extends Application {
 		    GridPane gridpane = new GridPane();
 		    gridpane.setHgap(10); // Horizontal gap between rows
 		    gridpane.setVgap(10); // Vertical gap between columns
-		    gridpane.setPadding(new Insets(0, 12, 0, 12)); // Distance between nodes and edges of pane
-		    gridpane.setGridLinesVisible(false); // FIXME set to false when not testing
-			Scene scene = new Scene(gridpane, 780, 800);
+		    gridpane.setPadding(new Insets(12, 12, 12, 12)); // Distance between nodes and edges of pane
+		    gridpane.setGridLinesVisible(true); // FIXME set to false when not testing
+			Scene scene = new Scene(gridpane, 800, 800);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			
@@ -71,12 +75,16 @@ public class Main extends Application {
 			// Set the application header
 			primaryStage.setTitle("Food Program");
 			
+			Image background = new Image(getClass().getResourceAsStream("fruitBackgroundSmall.png"));
+			BackgroundImage fruitBackground = new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+			gridpane.setBackground(new Background(fruitBackground));
+			
 			
 			// -- Food List Area: --
 			
 			Label foodListLabel = new Label("Food List"); // Food List title
 			foodListLabel.setFont(new Font("Arial", 28));
-			foodListLabel.setPadding(new Insets(10, 0, 10, 0));
+			foodListLabel.setPadding(new Insets(10, 10, 10, 10));
 			
 			// HBox for buttons in food list area
             HBox foodListButtonsHBox = new HBox(); // Load, add, and save buttons in Food List area
@@ -105,22 +113,23 @@ public class Main extends Application {
             // -- Buttons between Food List and Menu List: --
             
             // Add food to menu button
-            Image imageArrowRight = new Image(getClass().getResourceAsStream("arrowRight.png"));
+            Image imageArrowRight = new Image(getClass().getResourceAsStream("goFoward.png"));
             Button addFoodtoMenuButton = new Button();
             addFoodtoMenuButton.setGraphic(new ImageView(imageArrowRight));
             Tooltip addFoodTooltip = new Tooltip("Add the selected foods to the menu");
             addFoodtoMenuButton.setTooltip(addFoodTooltip);
             
             // Remove food from menu button
-            Image imageArrowLeft = new Image(getClass().getResourceAsStream("arrowLeft.png"));
+            Image imageArrowLeft = new Image(getClass().getResourceAsStream("goBack.png"));
             Button removeFoodFromMenuButton = new Button();
             removeFoodFromMenuButton.setGraphic(new ImageView(imageArrowLeft));
             Tooltip removeFoodTooltip = new Tooltip("Remove the selected foods from the menu");
             removeFoodFromMenuButton.setTooltip(removeFoodTooltip);
             
             VBox addAndRemoveButtonsVBox = new VBox();
-            addAndRemoveButtonsVBox.setPadding(new Insets(15, 12, 15, 12));
+            //addAndRemoveButtonsVBox.setPadding(new Insets(15, 12, 15, 12));
             addAndRemoveButtonsVBox.setSpacing(10);
+            addAndRemoveButtonsVBox.setAlignment(Pos.CENTER);
             addAndRemoveButtonsVBox.getChildren().addAll(addFoodtoMenuButton, removeFoodFromMenuButton);
             
             
@@ -176,12 +185,14 @@ public class Main extends Application {
             nutrientValueField.setPromptText("enter value");
             
             // Add a rule to the active rules
-            Image imageSmallArrowRight = new Image(getClass().getResourceAsStream("smallArrowRight.png"));
+            Image imageSmallArrowRight = new Image(getClass().getResourceAsStream("smallGoFoward.png"));
             Button addRuleButton = new Button();
             addRuleButton.setGraphic(new ImageView(imageSmallArrowRight));
             Tooltip addRuleTooltip = new Tooltip("Add the rule to the search");
             addRuleButton.setTooltip(addRuleTooltip);
             
+            VBox addRuleButtonVBox = new VBox();
+            addRuleButtonVBox.getChildren().addAll(addRuleButton);
             
             // -- Filter Foods Area (Right Side): --
             
@@ -205,16 +216,12 @@ public class Main extends Application {
             ruleList.setPrefHeight(70);
             
 			// Remove an active rule
-            Image imageSmallArrowLeft = new Image(getClass().getResourceAsStream("smallArrowLeft.png"));
+            Image imageSmallArrowLeft = new Image(getClass().getResourceAsStream("delte.png"));
 			Button removeRuleButton = new Button();
 			removeRuleButton.setGraphic(new ImageView(imageSmallArrowLeft));
             Tooltip removeRuleTooltip = new Tooltip("remove the rule from the search");
             removeRuleButton.setTooltip(removeRuleTooltip);
 			
-            VBox addAndRemoveRuleButtonsVBox = new VBox();
-            addAndRemoveRuleButtonsVBox.setPadding(new Insets(15, 12, 30, 12));
-            addAndRemoveRuleButtonsVBox.setSpacing(10);
-            addAndRemoveRuleButtonsVBox.getChildren().addAll(addRuleButton, removeRuleButton);
             
 			// Run query button
 			Button runSearch = new Button("Run Search");
@@ -222,30 +229,41 @@ public class Main extends Application {
 			//runSearch.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
 			
 			 HBox searchHBox = new HBox();
-			 searchHBox.setPadding(new Insets(15, 12, 15, 12));
+			 searchHBox.setPadding(new Insets(0, 0, 0, 0));
 			 searchHBox.setSpacing(50);
 			 searchHBox.getChildren().addAll(filterFoodsLabel, runSearch);
 			
+			 
 			
 			
 			// --------- Adding objects to the pane ---------
 			
 			// -- Food List Area: --
+			int foodListY = 1;
 			int foodListX = 0;
-			int menuListX = 5;
-			int filterY = 5;
-			GridPane.setConstraints(foodListLabel, foodListX, 0, 2, 1); // Col span: 2
- 			GridPane.setConstraints(foodListButtonsHBox, foodListX, 1, 2, 1); // Col span: 2
- 			GridPane.setConstraints(foodList, foodListX, 2, 2, 2); // Col span: 2, Row span: 2
+			int menuListX = 3;
+			int filterY = 6;
+			GridPane.setConstraints(foodListLabel, foodListX, foodListY, 2, 1); // Col span: 2
+ 			GridPane.setConstraints(foodListButtonsHBox, foodListX, foodListY+1, 2, 1); // Col span: 2
+ 			GridPane.setConstraints(foodList, foodListX, foodListY+2, 2, 2); // Col span: 2, Row span: 2
  			
  			// -- Buttons between Food List and Menu List: --
- 			GridPane.setConstraints(addAndRemoveButtonsVBox, 3, 2, 1, 4);
+ 			GridPane.setConstraints(addAndRemoveButtonsVBox, foodListX+2, foodListY+2,1,2);
  			
  			// -- Menu List Area: --
- 			GridPane.setConstraints(menuListLabel, menuListX, 0, 2, 1); // Col span: 2
- 			GridPane.setConstraints(menuList, menuListX, 2, 2, 2); // Col span: 2, Row span: 2
- 			GridPane.setConstraints(analyzeMenuButton, menuListX, 1, 2, 1, HPos.LEFT, VPos.TOP); // Col span: 2
+ 			GridPane.setConstraints(menuListLabel, menuListX, foodListY, 2, 1); // Col span: 2
+ 			GridPane.setConstraints(menuList, menuListX, foodListY+2, 3, 2); // Col span: 3, Row span: 2
+ 			GridPane.setConstraints(analyzeMenuButton, menuListX, foodListY+1, 2, 1, HPos.LEFT, VPos.TOP); // Col span: 2
 			
+ 			// -- Horizontal Separator --
+ 			
+ 			Image horizontalLineImage = new Image(getClass().getResourceAsStream("horizontalLine.png"));
+ 			ImageView horizontalLine = new ImageView(horizontalLineImage);
+ 			HBox divider = new HBox();
+ 			divider.getChildren().addAll(horizontalLine);
+ 			divider.setAlignment(Pos.CENTER);
+ 			GridPane.setConstraints(divider, 0, filterY-1, 6, 1);
+ 			
  			// -- Filter Foods Area (Left Side): --
  			// GridPane.setConstraints(filterFoodsLabel, foodListX, filterY, 2, 1); // Col span: 2
  			GridPane.setConstraints(searchHBox, foodListX, filterY, 2, 1);
@@ -266,7 +284,8 @@ public class Main extends Application {
  			//GridPane.setConstraints(addRuleButton, foodListX+1, 9);
  			
  			// -- Buttons between filter area and filter list area
- 			GridPane.setConstraints(addAndRemoveRuleButtonsVBox, 3, 8, 1, 4);
+ 			addRuleButtonVBox.setAlignment(Pos.CENTER);
+ 			GridPane.setConstraints(addRuleButtonVBox, foodListX+2, foodListY+9);
  			
  			// -- Filter Foods Area (Right Side): --
  			GridPane.setConstraints(activeFilterLabel, menuListX, filterY+1);
@@ -274,7 +293,7 @@ public class Main extends Application {
  			GridPane.setConstraints(nameFilterField, menuListX+1, filterY+2);
  			GridPane.setConstraints(nutrientFilterLabel, menuListX, filterY+3, 2, 1); // Col span: 2
  			GridPane.setConstraints(ruleList, menuListX, filterY+4, 2, 2); // Col span: 2, row span: 2
- 			//GridPane.setConstraints(removeRuleButton, menuListX, 9);
+ 			GridPane.setConstraints(removeRuleButton, menuListX+3, filterY+4);
  			// GridPane.setConstraints(runSearch, foodListX+3, filterY);
  			
  			// Adds all nodes to the Grid Pane
@@ -282,7 +301,8 @@ public class Main extends Application {
  			    addAndRemoveButtonsVBox, menuListLabel, menuList, analyzeMenuButton, 
  			   searchHBox, nutrientLabel, nutrientComboBox, operatorLabel, operatorComboBox, 
  			    valueLabel, nutrientValueField, nameFilterLabel, nameFilterField, 
- 			    nutrientFilterLabel, ruleList, addAndRemoveRuleButtonsVBox,activeFilterLabel,createRuleLabel);
+ 			    nutrientFilterLabel, ruleList, addRuleButtonVBox,removeRuleButton,activeFilterLabel,
+ 			    createRuleLabel,divider);
             primaryStage.show();
 			
 		} catch(Exception e) {
