@@ -36,6 +36,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -87,10 +90,7 @@ public class Main extends Application {
             foodListButtonsHBox.getChildren().addAll(loadFoodsButton, addFoodButton, saveFoodsButton);
             
             // Master food list
-            // Referencing this youtube tutorial: https://www.youtube.com/watch?v=GbzKr46VvD0&list=PL6gx4Cwl9DGBzfXLWLSYVy8EbTdpGbUIG&index=15
             ObservableList<String> foods = FXCollections.observableArrayList();
-            //ComboBox<String> foodListComboBox = new ComboBox<String>(foods);
-            // Changing to be a ListView instead of a ComboBox
             ListView<String> foodList = new ListView<String>(foods);
             // The following line is for testing
             foodList.getItems().addAll("Blackberries", "Blueberries", "Raspberries", "Strawberries");
@@ -101,10 +101,18 @@ public class Main extends Application {
             // -- Buttons between Food List and Menu List: --
             
             // Add food to menu button
-            Button addFoodtoMenuButton = new Button("Add to Menu");
+            Image imageArrowRight = new Image(getClass().getResourceAsStream("arrowRight.png"));
+            Button addFoodtoMenuButton = new Button();
+            addFoodtoMenuButton.setGraphic(new ImageView(imageArrowRight));
+            Tooltip addFoodTooltip = new Tooltip("Add the selected foods to the menu");
+            addFoodtoMenuButton.setTooltip(addFoodTooltip);
             
             // Remove food from menu button
-            Button removeFoodFromMenuButton = new Button("Remove From Menu");
+            Image imageArrowLeft = new Image(getClass().getResourceAsStream("arrowLeft.png"));
+            Button removeFoodFromMenuButton = new Button();
+            removeFoodFromMenuButton.setGraphic(new ImageView(imageArrowLeft));
+            Tooltip removeFoodTooltip = new Tooltip("Remove the selected foods from the menu");
+            removeFoodFromMenuButton.setTooltip(removeFoodTooltip);
             
             VBox addAndRemoveButtonsVBox = new VBox();
             addAndRemoveButtonsVBox.setPadding(new Insets(15, 12, 15, 12));
@@ -120,8 +128,6 @@ public class Main extends Application {
             
             // Menu food list
             ObservableList<String> menuFoods = FXCollections.observableArrayList();
-            // ComboBox<String> menuFoodListComboBox = new ComboBox<String>(menuFoods);
-            // Changing to be a ListView instead of a ComboBox
             ListView<String> menuList = new ListView<String>(menuFoods);
             
             Button analyzeMenuButton = new Button("Nutritional Analysis");
@@ -162,7 +168,10 @@ public class Main extends Application {
             nutrientValueField.setPromptText("enter value");
             
             // Add a rule to the active rules
-            Button addRuleButton = new Button("Add Filter");
+            Button addRuleButton = new Button();
+            addRuleButton.setGraphic(new ImageView(imageArrowRight));
+            Tooltip addRuleTooltip = new Tooltip("Add the rule to the search");
+            addRuleButton.setTooltip(addRuleTooltip);
             
             
             // -- Filter Foods Area (Right Side): --
@@ -182,7 +191,10 @@ public class Main extends Application {
             ruleList.setPrefHeight(70);
             
 			// Remove an active rule
-			Button removeRuleButton = new Button("Remove Selected");
+			Button removeRuleButton = new Button();
+			removeRuleButton.setGraphic(new ImageView(imageArrowLeft));
+            Tooltip removeRuleTooltip = new Tooltip("remove the rule from the search");
+            removeRuleButton.setTooltip(removeRuleTooltip);
 			
 			// Run query button
 			Button runSearch = new Button("Run Search");
