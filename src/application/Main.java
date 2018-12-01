@@ -62,7 +62,7 @@ public class Main extends Application {
 		    gridpane.setVgap(10); // Vertical gap between columns
 		    gridpane.setPadding(new Insets(0, 12, 0, 12)); // Distance between nodes and edges of pane
 		    gridpane.setGridLinesVisible(false); // FIXME set to false when not testing
-			Scene scene = new Scene(gridpane, 900, 800);
+			Scene scene = new Scene(gridpane, 780, 800);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			
