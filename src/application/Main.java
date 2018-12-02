@@ -247,7 +247,7 @@ public class Main extends Application {
             //Image imageSmallArrowLeft = new Image(getClass().getResourceAsStream("delte.png"));
 			Button removeRuleButton = new Button();
 			removeRuleButton.setGraphic(new ImageView(imageSmallArrowLeft));
-            Tooltip removeRuleTooltip = new Tooltip("Remove the rule from the search");
+            Tooltip removeRuleTooltip = new Tooltip("Remove the selected rules from the search");
             removeRuleButton.setTooltip(removeRuleTooltip);
 			
 			// Run query button
