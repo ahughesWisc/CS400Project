@@ -41,23 +41,26 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-
+/**
+ * Class used for creating and displaying the GUI and 
+ * launching the food program
+ *
+ */
 public class Main extends Application {
   
+	/**
+	 * Starts the program by launching the GUI
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -79,7 +82,8 @@ public class Main extends Application {
 
 			// Background
 			Image background = new Image(getClass().getResourceAsStream("fruitBackgroundSmall.png"));
-			BackgroundImage fruitBackground = new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+			BackgroundImage fruitBackground = new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, 
+					BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 			gridpane.setBackground(new Background(fruitBackground));
 			
 			// Banner
@@ -89,6 +93,7 @@ public class Main extends Application {
 			bannerTitle.setPadding(new Insets(8, 10, 8, 10));
 			banner.getChildren().add(bannerTitle);
 			
+			// Exit button for the program
 			Image imageSmallArrowLeft = new Image(getClass().getResourceAsStream("delte.png"));
             Button exitProgramButton = new Button();
             exitProgramButton.setGraphic(new ImageView(imageSmallArrowLeft));
@@ -232,10 +237,7 @@ public class Main extends Application {
 	        nameFilterField.setPromptText("enter food name");
 			
             Label nutrientFilterLabel = new Label("Nutrient Filters"); // Label for list of rules
-
-            //nutrientFilterLabel.setFont(new Font("Arial", 18));
-
-			
+	
             // View of the active rules
             ObservableList<String> rules =FXCollections.observableArrayList();
             ListView<String> ruleList = new ListView<>(rules);
@@ -244,7 +246,6 @@ public class Main extends Application {
             
 			// Remove an active rule
 
-            //Image imageSmallArrowLeft = new Image(getClass().getResourceAsStream("delte.png"));
 			Button removeRuleButton = new Button();
 			removeRuleButton.setGraphic(new ImageView(imageSmallArrowLeft));
             Tooltip removeRuleTooltip = new Tooltip("Remove the selected rules from the search");
@@ -253,7 +254,6 @@ public class Main extends Application {
 			// Run query button
 			Button runSearch = new Button("Run Search");
 			runSearch.setMinSize(100, 50);
-			//runSearch.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
 	
 			 HBox searchHBox = new HBox();
 			 searchHBox.setPadding(new Insets(0, 0, 0, 0));
@@ -288,11 +288,9 @@ public class Main extends Application {
  			HBox divider = new HBox();
  			divider.getChildren().addAll(horizontalLine);
  			divider.setAlignment(Pos.CENTER_LEFT); // Formerly CENTER
- 			//divider.setPadding(new Insets(0, 0, 0, 4)); // Visually centers divider better
  			GridPane.setConstraints(divider, 0, filterY-1, 5, 1); // Formerly Col span: 6
  			
  			// -- Filter Foods Area (Left Side): --
- 			// GridPane.setConstraints(filterFoodsLabel, foodListX, filterY, 2, 1); // Col span: 2
  			GridPane.setConstraints(searchHBox, foodListX, filterY, 4, 1); // Col span: 3
  			GridPane.setConstraints(createRuleLabel, foodListX, filterY+1, 2, 1); // Col span: 2
  			GridPane.setConstraints(fillerText, foodListX, filterY+2, 2, 1); // Col span: 2
@@ -307,8 +305,6 @@ public class Main extends Application {
  			
  			GridPane.setConstraints(valueLabel, foodListX, filterY+5);
  			GridPane.setConstraints(nutrientValueField, foodListX+1, filterY+5);
- 			
- 			//GridPane.setConstraints(addRuleButton, foodListX+1, 9);
  			
  			// -- Buttons between filter area and filter list area
  			addRuleButtonVBox.setAlignment(Pos.CENTER);
@@ -327,7 +323,6 @@ public class Main extends Application {
  			removeRuleButtonVBox.getChildren().addAll(removeRuleButton);
  			removeRuleButtonVBox.setAlignment(Pos.TOP_RIGHT);
  			GridPane.setConstraints(removeRuleButtonVBox, menuListX+1, filterY+3, 1, 1);
- 			// GridPane.setConstraints(runSearch, foodListX+3, filterY);
  			
  			// Adds all nodes to the Grid Pane
  			gridpane.getChildren().addAll(foodListLabel, foodListButtonsHBox, foodList, 
@@ -343,6 +338,10 @@ public class Main extends Application {
 		}
 	}
 	
+	/**
+	 * launches the program
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
