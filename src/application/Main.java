@@ -88,7 +88,7 @@ public class Main extends Application {
 	final static String NutrientFiltersLabel = "Nutrient Filters";
 	
 	//Prompts
-	final static String NutrientPromptText = "enter value";
+	final static String NutrientPromptText = "enter positive numeric value (e.g. 1.4)";
 	final static String FoodPromptText = "enter food name";
 	
 	//ToolTips
