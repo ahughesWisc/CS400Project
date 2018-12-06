@@ -96,6 +96,8 @@ public class Main extends Application {
 	final static String NutrientFiltersLabel = "Nutrient Filters";
 	final static String NameFilterLabel = "Search Term";
 	final static String RunSearchCaption = "Run Search";
+	final static String ValueLabel = "Value";
+	final static String RemoveRuleCaption = "Remove Selected Rule";
 	
 	//Prompts
 	final static String NutrientPromptText = "enter positive numeric value (e.g. 1.4)";
@@ -277,7 +279,7 @@ public class Main extends Application {
             ComboBox<String> operatorComboBox = new ComboBox<String>(logicOptions);
             
             // text field for entering the nutrient value (example number of grams or number of calories)
-            Label valueLabel = new Label("Value");
+            Label valueLabel = new Label(ValueLabel);
             TextField nutrientValueField = new TextField();
             nutrientValueField.setPromptText(NutrientPromptText);
             
@@ -313,8 +315,8 @@ public class Main extends Application {
             
 			// Remove an active rule
 
-			Button removeRuleButton = new Button();
-			removeRuleButton.setGraphic(new ImageView(imageSmallArrowLeft));
+			Button removeRuleButton = new Button(RemoveRuleCaption);
+			//removeRuleButton.setGraphic(new ImageView(imageSmallArrowLeft));
             Tooltip removeRuleTooltip = new Tooltip(RemoveRuleToolTip);
             removeRuleButton.setTooltip(removeRuleTooltip);
             removeRuleButton.setOnAction(e -> {
