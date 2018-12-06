@@ -74,10 +74,10 @@ public class Main extends Application {
 	
 	//Captions/Labels
 	final static String Title = "Food Program";
-	final static String LoadActionCaption = "Load Foods";
-	final static String AddActionCaption = "Add Foods";
-	final static String SaveActionCaption = "Save Foods";
-	final static String AnalyzeActionCaption = "Nutritional Analysis";
+	final static String LoadFoodsCaption = "Load Foods";
+	final static String AddFoodCaption = "Add Foods";
+	final static String SaveFoodsCaption = "Save Foods";
+	final static String AnalyzeNutritionCaption = "Nutritional Analysis";
 	final static String FoodListLabel = "Food List";
 	final static String FilterActionLabel = "Food and Nutrient Search";
 	final static String MenuListLabel = "Menu List";
@@ -170,11 +170,11 @@ public class Main extends Application {
             HBox foodListButtonsHBox = new HBox(); // Load, add, and save buttons in Food List area
             //foodListButtonsHBox.setPadding(new Insets(15, 12, 15, 12));
             foodListButtonsHBox.setSpacing(10);
-            Button loadFoodsButton = new Button(LoadActionCaption);
+            Button loadFoodsButton = new Button(LoadFoodsCaption);
             loadFoodsButton.setPrefSize(100, 20); // Sets width and height of button
-            Button addFoodButton = new Button(AddActionCaption);
+            Button addFoodButton = new Button(AddFoodCaption);
             addFoodButton.setPrefSize(100, 20); // Sets width and height of button
-            Button saveFoodsButton = new Button(SaveActionCaption);
+            Button saveFoodsButton = new Button(SaveFoodsCaption);
             saveFoodsButton.setPrefSize(100, 20); // Sets width and height of button
             foodListButtonsHBox.getChildren().addAll(loadFoodsButton, addFoodButton, saveFoodsButton);
             
@@ -228,7 +228,7 @@ public class Main extends Application {
             menuList.setPrefWidth(323);
             menuList.setPrefHeight(320);
             
-            Button analyzeMenuButton = new Button(AnalyzeActionCaption);
+            Button analyzeMenuButton = new Button(AnalyzeNutritionCaption);
             analyzeMenuButton.setPrefHeight(20);
             
             
