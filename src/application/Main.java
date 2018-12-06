@@ -160,9 +160,9 @@ public class Main extends Application {
 			banner.getChildren().add(bannerTitle);
 			
 			// Exit button for the program
-			Image imageSmallArrowLeft = new Image(getClass().getResourceAsStream(XButtonImage));
+			Image imageExit = new Image(getClass().getResourceAsStream(XButtonImage));
             Button exitProgramButton = new Button();
-            exitProgramButton.setGraphic(new ImageView(imageSmallArrowLeft));
+            exitProgramButton.setGraphic(new ImageView(imageExit));
             Tooltip exitProgramTooltip = new Tooltip(ExitToolTip);
             exitProgramButton.setTooltip(exitProgramTooltip);
             
