@@ -105,6 +105,9 @@ public class Main extends Application {
 	final static String LeftArrowImage = "goBack.png";
 	final static String SmallRightArrowImage = "smallGoFoward.png";
 	final static String HorizontalDividerImage = "horizontalLine.png";
+	
+	//Testing
+	final static boolean DEBUG = false;
 	/**
 	 * Starts the program by launching the GUI
 	 */
@@ -116,7 +119,11 @@ public class Main extends Application {
 		    gridpane.setHgap(10); // Horizontal gap between rows
 		    gridpane.setVgap(10); // Vertical gap between columns
 		    gridpane.setPadding(new Insets(0, 12, 20, 12)); // Distance between nodes and edges of pane
-		    gridpane.setGridLinesVisible(false); // FIXME set to false when not testing
+		    
+		    if (DEBUG) { //testing only
+		    	gridpane.setGridLinesVisible(true);
+		    }
+		    
 		    borderpane.setCenter(gridpane);
 			Scene scene = new Scene(borderpane, 768, 830); // width, height
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
