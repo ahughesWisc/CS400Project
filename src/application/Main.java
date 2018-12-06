@@ -64,8 +64,8 @@ public class Main extends Application {
 	final static int SeparatorLength = 29;
 	final static String FilterHorizontalSeparator = horizontalSeparator("v");
   
-	//Similar to a .NET Resources.resx file, used so we can easily change string values in the UI without poking around everywhere in the code
-	//Also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
+	//Similar to a .NET Resources.resx file, these sections are used so we can easily change string values in the UI without poking around everywhere
+	//in the code. It also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
 	final static String Calories = "Calories";
 	final static String Fat = "Fat";
 	final static String Carbs = "Carbs";
