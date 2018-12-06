@@ -125,11 +125,11 @@ public class Main extends Application {
 	
 	//Class Attributes
 	private ObservableList<String> rules = FXCollections.observableArrayList();
-	private ListView<String> ruleList = new ListView<String>();
+	private ListView<String> ruleList = new ListView<String>(rules);
 	private ObservableList<String> foods = FXCollections.observableArrayList();
-    private ListView<String> foodList = new ListView<String>();
+    private ListView<String> foodList = new ListView<String>(foods);
     private ObservableList<String> menuFoods = FXCollections.observableArrayList();
-    private ListView<String> menuList = new ListView<String>();
+    private ListView<String> menuList = new ListView<String>(menuFoods);
 	
 	/**
 	 * Starts the program by launching the GUI
@@ -298,15 +298,14 @@ public class Main extends Application {
             Tooltip addRuleTooltip = new Tooltip(AddRuleToolTip);
             addRuleButton.setTooltip(addRuleTooltip);
             addRuleButton.setOnAction(e -> {
-            	String value = nutrientValueField.getSelectedText();
-            	if (isValidDoubleValue(value)) {
-            		String nutrient = nutrientComboBox.getSelectionModel().getSelectedItem();
-            		String operator = operatorComboBox.getSelectionModel().getSelectedItem();
+            	String nutrient = nutrientComboBox.getSelectionModel().getSelectedItem();
+        		String operator = operatorComboBox.getSelectionModel().getSelectedItem();
+            	String value = nutrientValueField.getText();
+            	if (isValidDoubleValue(value) && nutrient.length() > 0 && operator.length() > 0) {
             		rules.add(String.format("%s%s%s", 
             				nutrient,
             				operator, 
             				value));
-            		setRuleList(rules);
             	}
             });
             
@@ -463,12 +462,5 @@ public class Main extends Application {
 		boolean good2 = Pattern.matches("^[.][0-9]+$", value);
 		
 		return good1 || good2;
-	}
-	
-	/**
-	 * Updates the rule list
-	 */
-	private void setRuleList() {
-		ruleList = new ListView<String>(rules);
 	}
 }
