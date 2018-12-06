@@ -317,9 +317,9 @@ public class Main extends Application {
 			removeRuleButton.setGraphic(new ImageView(imageSmallArrowLeft));
             Tooltip removeRuleTooltip = new Tooltip(RemoveRuleToolTip);
             removeRuleButton.setTooltip(removeRuleTooltip);
-//            removeRuleButton.setOnAction(e -> {
-//            	ruleList.get
-//            	});
+            removeRuleButton.setOnAction(e -> {
+            	return;
+            	});
 			
 			// Run query button
 			Button runSearch = new Button(RunSearchCaption);
@@ -336,16 +336,16 @@ public class Main extends Application {
 
 			// -- Food List Area: --
 			GridPane.setConstraints(foodListLabel, foodListX, foodListY, 2, 1); // Col span: 2
- 			GridPane.setConstraints(foodListButtonsHBox, foodListX, foodListY+1, 2, 1); // Col span: 2
- 			GridPane.setConstraints(foodList, foodListX, foodListY+2, 2, 2); // Col span: 2, Row span: 2
+ 			GridPane.setConstraints(foodListButtonsHBox, foodListX, foodListY + 1, 2, 1); // Col span: 2
+ 			GridPane.setConstraints(foodList, foodListX, foodListY + 2, 2, 2); // Col span: 2, Row span: 2
  			
  			// -- Buttons between Food List and Menu List: --
- 			GridPane.setConstraints(addAndRemoveButtonsVBox, foodListX+2, foodListY+2,1,2);
+ 			GridPane.setConstraints(addAndRemoveButtonsVBox, foodListX + 2, foodListY + 2, 1, 2);
  			
  			// -- Menu List Area: --
  			GridPane.setConstraints(menuListLabel, menuListX, foodListY, 2, 1); // Col span: 2
- 			GridPane.setConstraints(menuList, menuListX, foodListY+2, 2, 2); // Col span: 2, Row span: 2
- 			GridPane.setConstraints(analyzeMenuButton, menuListX, foodListY+1, 2, 1, HPos.LEFT, VPos.TOP); // Col span: 2
+ 			GridPane.setConstraints(menuList, menuListX, foodListY + 2, 2, 2); // Col span: 2, Row span: 2
+ 			GridPane.setConstraints(analyzeMenuButton, menuListX, foodListY + 1, 2, 1, HPos.LEFT, VPos.TOP); // Col span: 2
 			
  			// -- Horizontal Separator --
  			
@@ -354,41 +354,41 @@ public class Main extends Application {
  			HBox divider = new HBox();
  			divider.getChildren().addAll(horizontalLine);
  			divider.setAlignment(Pos.CENTER_LEFT); // Formerly CENTER
- 			GridPane.setConstraints(divider, 0, filterY-1, 5, 1); // Formerly Col span: 6
+ 			GridPane.setConstraints(divider, 0, filterY - 1, 5, 1); // Formerly Col span: 6
  			
  			// -- Filter Foods Area (Left Side): --
  			GridPane.setConstraints(searchHBox, foodListX, filterY, 4, 1); // Col span: 3
- 			GridPane.setConstraints(createRuleLabel, foodListX, filterY+1, 2, 1); // Col span: 2
- 			GridPane.setConstraints(fillerText, foodListX, filterY+2, 2, 1); // Col span: 2
+ 			GridPane.setConstraints(createRuleLabel, foodListX, filterY + 1, 2, 1); // Col span: 2
+ 			GridPane.setConstraints(fillerText, foodListX, filterY + 2, 2, 1); // Col span: 2
  			GridPane.setHalignment(fillerText, HPos.CENTER);
  			GridPane.setValignment(fillerText, VPos.TOP);
  			
- 			GridPane.setConstraints(nutrientLabel, foodListX, filterY+3);
- 			GridPane.setConstraints(nutrientComboBox, foodListX+1, filterY+3);
+ 			GridPane.setConstraints(nutrientLabel, foodListX, filterY + 3);
+ 			GridPane.setConstraints(nutrientComboBox, foodListX + 1, filterY + 3);
  			
- 			GridPane.setConstraints(operatorLabel, foodListX, filterY+4);
- 			GridPane.setConstraints(operatorComboBox, foodListX+1, filterY+4);
+ 			GridPane.setConstraints(operatorLabel, foodListX, filterY + 4);
+ 			GridPane.setConstraints(operatorComboBox, foodListX + 1, filterY + 4);
  			
- 			GridPane.setConstraints(valueLabel, foodListX, filterY+5);
- 			GridPane.setConstraints(nutrientValueField, foodListX+1, filterY+5);
+ 			GridPane.setConstraints(valueLabel, foodListX, filterY + 5);
+ 			GridPane.setConstraints(nutrientValueField, foodListX + 1, filterY + 5);
  			
  			// -- Buttons between filter area and filter list area
  			addRuleButtonVBox.setAlignment(Pos.CENTER);
- 			GridPane.setConstraints(addRuleButtonVBox, foodListX+2, foodListY+9);
+ 			GridPane.setConstraints(addRuleButtonVBox, foodListX + 2, foodListY + 9);
  			
  			// -- Filter Foods Area (Right Side): --
- 			GridPane.setConstraints(activeFilterLabel, menuListX, filterY+1, 2, 1);
- 			GridPane.setConstraints(nameFilterLabel, menuListX, filterY+2);
- 			GridPane.setConstraints(nameFilterField, menuListX+1, filterY+2);
- 			GridPane.setConstraints(nutrientFilterLabel, menuListX, filterY+3, 2, 1); // Col span: 2
+ 			GridPane.setConstraints(activeFilterLabel, menuListX, filterY + 1, 2, 1);
+ 			GridPane.setConstraints(nameFilterLabel, menuListX, filterY + 2);
+ 			GridPane.setConstraints(nameFilterField, menuListX + 1, filterY + 2);
+ 			GridPane.setConstraints(nutrientFilterLabel, menuListX, filterY + 3, 2, 1); // Col span: 2
  			GridPane.setValignment(nutrientFilterLabel, VPos.CENTER);
- 			GridPane.setConstraints(ruleList, menuListX, filterY+4, 2, 2); // Col span: 2, row span: 2
+ 			GridPane.setConstraints(ruleList, menuListX, filterY + 4, 2, 2); // Col span: 2, row span: 2
  			GridPane.setConstraints(runSearch, menuListX, filterY);
  			
  			VBox removeRuleButtonVBox = new VBox();
  			removeRuleButtonVBox.getChildren().addAll(removeRuleButton);
  			removeRuleButtonVBox.setAlignment(Pos.TOP_RIGHT);
- 			GridPane.setConstraints(removeRuleButtonVBox, menuListX+1, filterY+3, 1, 1);
+ 			GridPane.setConstraints(removeRuleButtonVBox, menuListX + 1, filterY + 3, 1, 1);
  			
  			// Adds all nodes to the Grid Pane
  			gridpane.getChildren().addAll(foodListLabel, foodListButtonsHBox, foodList, 
