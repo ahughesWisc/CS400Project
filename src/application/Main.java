@@ -57,6 +57,9 @@ import javafx.scene.text.Font;
  *
  */
 public class Main extends Application {
+	
+	//Settings
+	final static String Font = "Arial"; //now you can change the font anywhere in the application from one place
   
 	//Similar to a .NET Resources.resx file, used so we can easily change string values in the UI without poking around everywhere in the code
 	//Also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
@@ -66,6 +69,7 @@ public class Main extends Application {
 	final static String Protein = "Protein";
 	final static String Fiber = "Fiber";
 	final static String Title = "Food Program";
+	final static String FoodListLabel = "Food List";
 	
 	//Image files for ease of swapping out
 	final static String BackgroundImageFile = "fruitBackgroundSmall.png";
@@ -124,8 +128,8 @@ public class Main extends Application {
 			
 			// -- Food List Area: --
 	
-			Label foodListLabel = new Label("Food List"); // Food List title
-			foodListLabel.setFont(new Font("Arial", 28));
+			Label foodListLabel = new Label(FoodListLabel); // Food List title
+			foodListLabel.setFont(new Font(Font, 28));
 			foodListLabel.setPadding(new Insets(10, 10, 10, 0));
 			
 			// HBox for buttons in food list area
@@ -178,7 +182,7 @@ public class Main extends Application {
             // -- Menu List Area: --
             
             Label menuListLabel = new Label("Menu List"); // Menu List title
-            menuListLabel.setFont(new Font("Arial", 28));
+            menuListLabel.setFont(new Font(Font, 28));
             menuListLabel.setPadding(new Insets(10, 0, 10, 0));
             
             // Menu food list
@@ -194,13 +198,13 @@ public class Main extends Application {
             // -- Filter Foods Area (Left Side): --
             
             Label filterFoodsLabel = new Label("Food and Nutrient Search"); // Filter Foods title, formerly "Filter Foods"
-            filterFoodsLabel.setFont(new Font("Arial", 28));
+            filterFoodsLabel.setFont(new Font(Font, 28));
             filterFoodsLabel.setPadding(new Insets(10, 0, 10, 0));
             
             Label fillerText = new Label("v v v v v v v v v v v v v v v v v v v v v v v v v v v v v");
             
             Label createRuleLabel = new Label("New Search Filter"); // Formerly "Create a Rule"
-            createRuleLabel.setFont(new Font("Arial", 20));
+            createRuleLabel.setFont(new Font(Font, 20));
             createRuleLabel.setPadding(new Insets(10, 0, 10, 0));
             
             // label and combo box for selecting the nutrient for the rule
@@ -244,7 +248,7 @@ public class Main extends Application {
             
             // Label for side
             Label activeFilterLabel = new Label("Selected Filters");
-            activeFilterLabel.setFont(new Font("Arial", 20));
+            activeFilterLabel.setFont(new Font(Font, 20));
             activeFilterLabel.setPadding(new Insets(10, 0, 10, 0));
             
 			// Label and Field for entering a text search term
