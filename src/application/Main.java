@@ -67,7 +67,7 @@ public class Main extends Application {
 	final static String Fiber = "Fiber";
 	final static String Title = "Food Program";
 	
-	//Image files
+	//Image files for ease of swapping out
 	final static String BackgroundImageFile = "fruitBackgroundSmall.png";
 	final static String XButtonImage = "delte.png";
 	final static String RightArrowImage = "goFoward.png";
