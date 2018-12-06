@@ -1,5 +1,7 @@
 package application;
 
+import java.util.regex.Pattern;
+
 /**
  * Purpose: General purpose GUI program for reading a .csv with food data and allowing users to interact
  * with that data including applying filters based on nutritional content and food names, adding foods
@@ -284,11 +286,26 @@ public class Main extends Application {
             nutrientValueField.setPromptText(NutrientPromptText);
             
             // Add a rule to the active rules
+            ObservableList<String> rules = FXCollections.observableArrayList();
+            ListView<String> ruleList = new ListView<>();
+            
             Image imageSmallArrowRight = new Image(getClass().getResourceAsStream(SmallRightArrowImage));
             Button addRuleButton = new Button();
             addRuleButton.setGraphic(new ImageView(imageSmallArrowRight));
             Tooltip addRuleTooltip = new Tooltip(AddRuleToolTip);
             addRuleButton.setTooltip(addRuleTooltip);
+            addRuleButton.setOnAction(e -> {
+            	String value = nutrientValueField.getSelectedText();
+            	if (isValidDoubleValue(value)) {
+            		String nutrient = nutrientComboBox.getSelectionModel().getSelectedItem();
+            		String operator = operatorComboBox.getSelectionModel().getSelectedItem();
+            		rules.add(String.format("%s%s%s", 
+            				nutrient,
+            				operator, 
+            				value));
+            		setRuleList(rules);
+            	}
+            });
             
             VBox addRuleButtonVBox = new VBox();
             addRuleButtonVBox.getChildren().addAll(addRuleButton);
@@ -308,13 +325,11 @@ public class Main extends Application {
             Label nutrientFilterLabel = new Label(NutrientFiltersLabel); // Label for list of rules
 	
             // View of the active rules
-            ObservableList<String> rules =FXCollections.observableArrayList();
             if (DEBUG) {
             	rules.add("Rule1");
             	rules.add("Rule2");
             	rules.add("Rule3");
             }
-            ListView<String> ruleList = new ListView<>(rules);
             ruleList.setPrefWidth(100);
             ruleList.setPrefHeight(70);
             
@@ -421,6 +436,11 @@ public class Main extends Application {
 	}
 	
 	//Private helper functions
+	/**
+	 * Generates a horizontal separator of the given character
+	 * @param character visible part of separator repetition
+	 * @return string separator
+	 */
 	private static String horizontalSeparator(String character) {
 		String ret = "";
 		for (int i = 0; i < SeparatorLength; ++ i) {
@@ -428,5 +448,13 @@ public class Main extends Application {
 		}
 		
 		return ret;
+	}
+	
+	private boolean isValidDoubleValue(String value) {
+		return Pattern.matches("^[0-9]+(.[0-9]*)*$", value);
+	}
+	
+	private void setRuleList(Object rules) {
+		return;
 	}
 }
