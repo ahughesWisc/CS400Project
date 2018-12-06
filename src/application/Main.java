@@ -1,5 +1,6 @@
 package application;
 
+import java.util.Iterator;
 import java.util.regex.Pattern;
 
 /**
@@ -101,6 +102,8 @@ public class Main extends Application {
 	final static String RunSearchCaption = "Run Search";
 	final static String ValueLabel = "Value";
 	final static String RemoveRuleCaption = "Remove Selected Rule";
+	final static String SimplifyRulesCaption = "Consolidate Rules";
+	final static String SimplifyRulesToolTip = "Consolidate your rules into very simple groups!";
 	
 	//Prompts
 	final static String NutrientPromptText = "enter positive numeric value (e.g. 1.4)";
@@ -304,7 +307,7 @@ public class Main extends Application {
             	SingleSelectionModel<String> nutrient = nutrientComboBox.getSelectionModel();
         		SingleSelectionModel<String> operator = operatorComboBox.getSelectionModel();
             	String value = nutrientValueField.getText();
-            	//ensure we have havlid input and don't already have this rule
+            	//ensure we have valid input and don't already have this rule
             	if (isValidDoubleValue(value) && hasSelection(nutrient) && hasSelection(operator) && !rules.contains(makeRule(nutrient, operator, value))) {
             		rules.add(makeRule(nutrient, operator, value));
             	}
@@ -345,6 +348,15 @@ public class Main extends Application {
             removeRuleButton.setOnAction(e -> {
             	String selected = ruleList.getSelectionModel().getSelectedItem();
             	rules.remove(selected);
+            	});
+            
+            //Consolidate rules
+            Button simplifyRulesButton = new Button(SimplifyRulesCaption);
+			//removeRuleButton.setGraphic(new ImageView(imageExit));
+            Tooltip simplifyRulesTooltip = new Tooltip(SimplifyRulesToolTip);
+            simplifyRulesButton.setTooltip(simplifyRulesTooltip);
+            simplifyRulesButton.setOnAction(e -> {
+            	consolidateRules();
             	});
 			
 			// Run query button
