@@ -181,8 +181,11 @@ public class Main extends Application {
             // Master food list
             ObservableList<String> foods = FXCollections.observableArrayList();
             ListView<String> foodList = new ListView<String>(foods);
-            // The following line is for testing
-            foodList.getItems().addAll("Blackberries", "Blueberries", "Raspberries", "Strawberries");
+            
+            if (DEBUG) { //testing only
+            	foodList.getItems().addAll("Blackberries", "Blueberries", "Raspberries", "Strawberries");
+            }
+            
             // Makes multiple selections possible when hitting ctrl
             foodList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             foodList.setPrefWidth(323);
