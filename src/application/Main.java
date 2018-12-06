@@ -37,6 +37,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -130,6 +131,20 @@ public class Main extends Application {
     private ListView<String> foodList = new ListView<String>(foods);
     private ObservableList<String> menuFoods = FXCollections.observableArrayList();
     private ListView<String> menuList = new ListView<String>(menuFoods);
+    private final static ObservableList<String> nutrients = 
+            FXCollections.observableArrayList(
+                Calories,
+                Fat,
+                Carbs,
+                Fiber,
+                Protein
+            );
+    private final static ObservableList<String> logicOptions = 
+            FXCollections.observableArrayList(
+                Equals,
+                LessThanOrEquals,
+                GreaterThanOrEquals
+            );
 	
 	/**
 	 * Starts the program by launching the GUI
@@ -264,24 +279,12 @@ public class Main extends Application {
             
             // label and combo box for selecting the nutrient for the rule
             Label nutrientLabel = new Label(NutrientLabel);
-            ObservableList<String> nutrients = 
-                    FXCollections.observableArrayList(
-                        Calories,
-                        Fat,
-                        Carbs,
-                        Fiber,
-                        Protein
-                    );
+            
             ComboBox<String> nutrientComboBox = new ComboBox<String>(nutrients);
             
             // combo box for selecting the operator for the rule
             Label operatorLabel = new Label(OperatorLabel);
-            ObservableList<String> logicOptions = 
-                    FXCollections.observableArrayList(
-                        Equals,
-                        LessThanOrEquals,
-                        GreaterThanOrEquals
-                    );
+            
             ComboBox<String> operatorComboBox = new ComboBox<String>(logicOptions);
             
             // text field for entering the nutrient value (example number of grams or number of calories)
@@ -298,14 +301,12 @@ public class Main extends Application {
             Tooltip addRuleTooltip = new Tooltip(AddRuleToolTip);
             addRuleButton.setTooltip(addRuleTooltip);
             addRuleButton.setOnAction(e -> {
-            	String nutrient = nutrientComboBox.getSelectionModel().getSelectedItem();
-        		String operator = operatorComboBox.getSelectionModel().getSelectedItem();
+            	SingleSelectionModel<String> nutrient = nutrientComboBox.getSelectionModel();
+        		SingleSelectionModel<String> operator = operatorComboBox.getSelectionModel();
             	String value = nutrientValueField.getText();
-            	if (isValidDoubleValue(value) && nutrient.length() > 0 && operator.length() > 0) {
-            		rules.add(String.format("%s%s%s", 
-            				nutrient,
-            				operator, 
-            				value));
+            	//ensure we have havlid input and don't already have this rule
+            	if (isValidDoubleValue(value) && hasSelection(nutrient) && hasSelection(operator) && !rules.contains(makeRule(nutrient, operator, value))) {
+            		rules.add(makeRule(nutrient, operator, value));
             	}
             });
             
@@ -451,6 +452,17 @@ public class Main extends Application {
 		
 		return ret;
 	}
+	/**
+	 * Determines if user has an opetion selected
+	 * @param value combo box selected item
+	 * @return true if an operator is selected
+	 */
+	private boolean hasSelection(SingleSelectionModel<String> value) {
+		if (value == null || value.getSelectedItem() == null) {
+			return false;
+		}
+		return value.getSelectedItem().length() > 0;
+	}
 	
 	/**
 	 * User input validator for numeric input.
@@ -462,5 +474,21 @@ public class Main extends Application {
 		boolean good2 = Pattern.matches("^[.][0-9]+$", value);
 		
 		return good1 || good2;
+	}
+	
+	/**
+	 * Makes a rule from selections and values
+	 * @param nutrient nutrient combo box selection
+	 * @param operator operator combo box selection
+	 * @param value string representing a double
+	 * @return rule concatenating string form of nutrient, operator, and value
+	 */
+	private String makeRule(SingleSelectionModel<String> nutrient, SingleSelectionModel<String> operator, String value) {
+		String nut = nutrient.getSelectedItem();
+		String op = operator.getSelectedItem();
+		return String.format("%s%s%s", 
+				nut,
+				op, 
+				value);
 	}
 }
