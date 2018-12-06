@@ -309,6 +309,11 @@ public class Main extends Application {
 	
             // View of the active rules
             ObservableList<String> rules =FXCollections.observableArrayList();
+            if (DEBUG) {
+            	rules.add("Rule1");
+            	rules.add("Rule2");
+            	rules.add("Rule3");
+            }
             ListView<String> ruleList = new ListView<>(rules);
             ruleList.setPrefWidth(100);
             ruleList.setPrefHeight(70);
@@ -316,11 +321,12 @@ public class Main extends Application {
 			// Remove an active rule
 
 			Button removeRuleButton = new Button(RemoveRuleCaption);
-			//removeRuleButton.setGraphic(new ImageView(imageSmallArrowLeft));
+			//removeRuleButton.setGraphic(new ImageView(imageExit));
             Tooltip removeRuleTooltip = new Tooltip(RemoveRuleToolTip);
             removeRuleButton.setTooltip(removeRuleTooltip);
             removeRuleButton.setOnAction(e -> {
-            	return;
+            	String selected = ruleList.getSelectionModel().getSelectedItem();
+            	rules.remove(selected);
             	});
 			
 			// Run query button
