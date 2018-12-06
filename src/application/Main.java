@@ -58,6 +58,22 @@ import javafx.scene.text.Font;
  */
 public class Main extends Application {
   
+	//Similar to a .NET Resources.resx file, used so we can easily change string values in the UI without poking around everywhere in the code
+	//Also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
+	final static String Calories = "Calories";
+	final static String Fat = "Fat";
+	final static String Carbs = "Carbs";
+	final static String Protein = "Protein";
+	final static String Fiber = "Fiber";
+	final static String Title = "Food Program";
+	
+	//Image files
+	final static String BackgroundImageFile = "fruitBackgroundSmall.png";
+	final static String XButtonImage = "delte.png";
+	final static String RightArrowImage = "goFoward.png";
+	final static String LeftArrowImage = "goBack.png";
+	final static String SmallRightArrowImage = "smallGoFoward.png";
+	final static String HorizontalDividerImage = "horizontalLine.png";
 	/**
 	 * Starts the program by launching the GUI
 	 */
@@ -78,10 +94,10 @@ public class Main extends Application {
 			// --------- Creating Objects ---------
 			
 			// Set the application header
-			primaryStage.setTitle("Food Program");	
+			primaryStage.setTitle(Title);	
 
 			// Background
-			Image background = new Image(getClass().getResourceAsStream("fruitBackgroundSmall.png"));
+			Image background = new Image(getClass().getResourceAsStream(BackgroundImageFile));
 			BackgroundImage fruitBackground = new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, 
 					BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 			gridpane.setBackground(new Background(fruitBackground));
@@ -94,7 +110,7 @@ public class Main extends Application {
 			banner.getChildren().add(bannerTitle);
 			
 			// Exit button for the program
-			Image imageSmallArrowLeft = new Image(getClass().getResourceAsStream("delte.png"));
+			Image imageSmallArrowLeft = new Image(getClass().getResourceAsStream(XButtonImage));
             Button exitProgramButton = new Button();
             exitProgramButton.setGraphic(new ImageView(imageSmallArrowLeft));
             Tooltip exitProgramTooltip = new Tooltip("Exit Program");
@@ -139,14 +155,14 @@ public class Main extends Application {
             // -- Buttons between Food List and Menu List: --
             
             // Add food to menu button
-            Image imageArrowRight = new Image(getClass().getResourceAsStream("goFoward.png"));
+            Image imageArrowRight = new Image(getClass().getResourceAsStream(RightArrowImage));
             Button addFoodtoMenuButton = new Button();
             addFoodtoMenuButton.setGraphic(new ImageView(imageArrowRight));
             Tooltip addFoodTooltip = new Tooltip("Add the selected foods to the menu");
             addFoodtoMenuButton.setTooltip(addFoodTooltip);
             
             // Remove food from menu button
-            Image imageArrowLeft = new Image(getClass().getResourceAsStream("goBack.png"));
+            Image imageArrowLeft = new Image(getClass().getResourceAsStream(LeftArrowImage));
             Button removeFoodFromMenuButton = new Button();
             removeFoodFromMenuButton.setGraphic(new ImageView(imageArrowLeft));
             Tooltip removeFoodTooltip = new Tooltip("Remove the selected foods from the menu");
@@ -191,11 +207,11 @@ public class Main extends Application {
             Label nutrientLabel = new Label("Nutrient");
             ObservableList<String> nutrients = 
                     FXCollections.observableArrayList(
-                        "Calories",
-                        "Fat",
-                        "Carbs",
-                        "Fiber",
-                        "Protein"
+                        Calories,
+                        Fat,
+                        Carbs,
+                        Fiber,
+                        Protein
                     );
             ComboBox<String> nutrientComboBox = new ComboBox<String>(nutrients);
             
@@ -215,7 +231,7 @@ public class Main extends Application {
             nutrientValueField.setPromptText("enter value");
             
             // Add a rule to the active rules
-            Image imageSmallArrowRight = new Image(getClass().getResourceAsStream("smallGoFoward.png"));
+            Image imageSmallArrowRight = new Image(getClass().getResourceAsStream(SmallRightArrowImage));
             Button addRuleButton = new Button();
             addRuleButton.setGraphic(new ImageView(imageSmallArrowRight));
             Tooltip addRuleTooltip = new Tooltip("Add the rule to the search");
@@ -283,7 +299,7 @@ public class Main extends Application {
 			
  			// -- Horizontal Separator --
  			
- 			Image horizontalLineImage = new Image(getClass().getResourceAsStream("horizontalLine.png"));
+ 			Image horizontalLineImage = new Image(getClass().getResourceAsStream(HorizontalDividerImage));
  			ImageView horizontalLine = new ImageView(horizontalLineImage);
  			HBox divider = new HBox();
  			divider.getChildren().addAll(horizontalLine);
