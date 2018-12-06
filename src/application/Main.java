@@ -60,6 +60,8 @@ public class Main extends Application {
 	
 	//Settings
 	final static String Font = "Arial"; //now you can change the font anywhere in the application from one place
+	final static String BannerFont = "Arial Bold";
+	final static int SeparatorLength = 29;
   
 	//Similar to a .NET Resources.resx file, used so we can easily change string values in the UI without poking around everywhere in the code
 	//Also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
@@ -70,6 +72,16 @@ public class Main extends Application {
 	final static String Fiber = "Fiber";
 	final static String Title = "Food Program";
 	final static String FoodListLabel = "Food List";
+	final static String ExitToolTip = "Exit Program";
+	final static String LoadActionCaption = "Load Foods";
+	final static String AddActionCaption = "Add Foods";
+	final static String SaveActionCaption = "Save Foods";
+	final static String AddActionToolTip = "Add the selected foods to the menu";
+	final static String RemoveActionToolTip = "Remove the selected foods from the menu";
+	final static String AnalyzeActionCaption = "Nutritional Analysis";
+	final static String FilterActionLabel = "Food and Nutrient Search";
+	final static String MenuListLabel = "Menu List";
+	final static String FilterHorizontalSeparator = horizontalSeparator("v");
 	
 	//Image files for ease of swapping out
 	final static String BackgroundImageFile = "fruitBackgroundSmall.png";
@@ -108,8 +120,8 @@ public class Main extends Application {
 			
 			// Banner
 			HBox banner = new HBox();
-			Label bannerTitle = new Label("Food Program");
-			bannerTitle.setFont(new Font("Arial Bold", 22));
+			Label bannerTitle = new Label(Title);
+			bannerTitle.setFont(new Font(BannerFont, 22));
 			bannerTitle.setPadding(new Insets(8, 10, 8, 10));
 			banner.getChildren().add(bannerTitle);
 			
@@ -117,7 +129,7 @@ public class Main extends Application {
 			Image imageSmallArrowLeft = new Image(getClass().getResourceAsStream(XButtonImage));
             Button exitProgramButton = new Button();
             exitProgramButton.setGraphic(new ImageView(imageSmallArrowLeft));
-            Tooltip exitProgramTooltip = new Tooltip("Exit Program");
+            Tooltip exitProgramTooltip = new Tooltip(ExitToolTip);
             exitProgramButton.setTooltip(exitProgramTooltip);
             
             AnchorPane ap = new AnchorPane();
@@ -136,11 +148,11 @@ public class Main extends Application {
             HBox foodListButtonsHBox = new HBox(); // Load, add, and save buttons in Food List area
             //foodListButtonsHBox.setPadding(new Insets(15, 12, 15, 12));
             foodListButtonsHBox.setSpacing(10);
-            Button loadFoodsButton = new Button("Load Foods");
+            Button loadFoodsButton = new Button(LoadActionCaption);
             loadFoodsButton.setPrefSize(100, 20); // Sets width and height of button
-            Button addFoodButton = new Button("Add Food");
+            Button addFoodButton = new Button(AddActionCaption);
             addFoodButton.setPrefSize(100, 20); // Sets width and height of button
-            Button saveFoodsButton = new Button("Save Foods");
+            Button saveFoodsButton = new Button(SaveActionCaption);
             saveFoodsButton.setPrefSize(100, 20); // Sets width and height of button
             foodListButtonsHBox.getChildren().addAll(loadFoodsButton, addFoodButton, saveFoodsButton);
             
@@ -162,14 +174,14 @@ public class Main extends Application {
             Image imageArrowRight = new Image(getClass().getResourceAsStream(RightArrowImage));
             Button addFoodtoMenuButton = new Button();
             addFoodtoMenuButton.setGraphic(new ImageView(imageArrowRight));
-            Tooltip addFoodTooltip = new Tooltip("Add the selected foods to the menu");
+            Tooltip addFoodTooltip = new Tooltip(AddActionToolTip);
             addFoodtoMenuButton.setTooltip(addFoodTooltip);
             
             // Remove food from menu button
             Image imageArrowLeft = new Image(getClass().getResourceAsStream(LeftArrowImage));
             Button removeFoodFromMenuButton = new Button();
             removeFoodFromMenuButton.setGraphic(new ImageView(imageArrowLeft));
-            Tooltip removeFoodTooltip = new Tooltip("Remove the selected foods from the menu");
+            Tooltip removeFoodTooltip = new Tooltip(RemoveActionToolTip);
             removeFoodFromMenuButton.setTooltip(removeFoodTooltip);
             
             VBox addAndRemoveButtonsVBox = new VBox();
@@ -181,7 +193,7 @@ public class Main extends Application {
             
             // -- Menu List Area: --
             
-            Label menuListLabel = new Label("Menu List"); // Menu List title
+            Label menuListLabel = new Label(MenuListLabel); // Menu List title
             menuListLabel.setFont(new Font(Font, 28));
             menuListLabel.setPadding(new Insets(10, 0, 10, 0));
             
@@ -191,17 +203,17 @@ public class Main extends Application {
             menuList.setPrefWidth(323);
             menuList.setPrefHeight(320);
             
-            Button analyzeMenuButton = new Button("Nutritional Analysis");
+            Button analyzeMenuButton = new Button(AnalyzeActionCaption);
             analyzeMenuButton.setPrefHeight(20);
             
             
             // -- Filter Foods Area (Left Side): --
             
-            Label filterFoodsLabel = new Label("Food and Nutrient Search"); // Filter Foods title, formerly "Filter Foods"
+            Label filterFoodsLabel = new Label(FilterActionLabel); // Filter Foods title, formerly "Filter Foods"
             filterFoodsLabel.setFont(new Font(Font, 28));
             filterFoodsLabel.setPadding(new Insets(10, 0, 10, 0));
             
-            Label fillerText = new Label("v v v v v v v v v v v v v v v v v v v v v v v v v v v v v");
+            Label fillerText = new Label(FilterHorizontalSeparator);
             
             Label createRuleLabel = new Label("New Search Filter"); // Formerly "Create a Rule"
             createRuleLabel.setFont(new Font(Font, 20));
@@ -364,5 +376,15 @@ public class Main extends Application {
 	 */
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	//Private helper functions
+	private static String horizontalSeparator(String character) {
+		String ret = "";
+		for (int i = 0; i < SeparatorLength; ++ i) {
+			ret += character + " ";
+		}
+		
+		return ret;
 	}
 }
