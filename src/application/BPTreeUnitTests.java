@@ -147,200 +147,122 @@ public class BPTreeUnitTests {
 		}
 	}
 	
-	@Test
-	public void test00010_remove() {
-		//Setup
-		int key;
-		int value;
-		int[] keys = new int[count];
-		int[] values = new int[count];
-		
-		
-		//null testing
-		try {
-			tree.remove(null, null);
-			tree.remove(null, 0);
-			tree.remove(0, null);
-		}
-		
-		catch (Exception e) {
-			fail("Threw an exception removing with null key or value.");
-		}
-		
-		//Remove from empty
-		try {
-			tree.remove(0, 0);
-		}
-		
-		catch (Exception e) {
-			fail("Threw an exception removing from an empty tree.");
-		}
-		
-		//Setup with some values
-		tree.insert(0, 0);
-		tree.insert(0, 1);
-		tree.insert(0, 2);
-		tree.insert(1, 2);
-		tree.insert(1, 3);
-		tree.insert(4, 5);
-		tree.insert(-5, 3);
-		
-		//Remove key that isn't there
-		try {
-			tree.remove(-1, 0);
-		}
-		
-		catch (Exception e) {
-			fail("Threw an exception removing non-existent key");
-		}
-		
-		//Remove value that isn't there for valid key
-		try {
-			tree.remove(0, -1);
-		}
-		catch (Exception e) {
-			fail("Threw an exception removing non-existent value for valid key.");
-		}
-		
-		//No need for try/catch since we don't care about a custom fail message here
-		tree.remove(0, 0);
-		tree.remove(1, 2);
-		tree.remove(-5, 3);
-		tree.remove(1, 3);
-		tree.remove(0, 2);
-		tree.remove(4, 5);
-		tree.remove(0, 1);
-		
-		//Stress testing
-		for (int i = 0; i < count; ++i) {
-			key = r.nextInt();
-			value = r.nextInt();
-			keys[i] = key;
-			values[i] = value;
-			tree.insert(key, value);
-		}
-		
-		for (int i = 0; i < count; ++i) {
-			tree.remove(keys[i], values[i]);
-		}
-	}
+//	@Test
+//	public void test00011_isEmpty() {
+//		//Setup
+//		
+//		int keyVal;
+//		int[] keyVals = new int[count];
+//		
+//		assertTrue(tree.isEmpty()); //new tree should be empty
+//		
+//		//nulls
+//		tree.insert(null, null);
+//		assertTrue(tree.isEmpty());
+//		
+//		tree.insert(null, 0);
+//		assertTrue(tree.isEmpty());
+//		
+//		tree.insert(0, null);
+//		assertTrue(tree.isEmpty());
+//		
+//		tree.insert(0, 0);
+//		assertFalse(tree.isEmpty()); //now we should have something
+//		
+//		tree.remove(0, 0);
+//		assertTrue(tree.isEmpty()); //should be empty again
+//		
+//		tree.insert(0, 1);
+//		assertFalse(tree.isEmpty());
+//		
+//		tree.remove(0, 0);
+//		assertFalse(tree.isEmpty()); //should not be empty if we remove something not there
+//		
+//		tree.insert(0, 0);
+//		tree.remove(0, 1);
+//		assertFalse(tree.isEmpty());
+//		
+//		tree.remove(0, 0);
+//		assertTrue(tree.isEmpty());
+//		
+//		//Stress testing
+//		for (int i = 0; i < count; ++i) {
+//			keyVal = r.nextInt();
+//			keyVals[i] = keyVal;
+//			tree.insert(keyVal, keyVal);
+//		}
+//		
+//		for (int i = 0; i < count; ++i) {
+//			tree.remove(keyVals[i], keyVals[i]);
+//		}
+//		
+//		assertTrue(tree.isEmpty());
+//	}
 	
-	@Test
-	public void test00011_isEmpty() {
-		//Setup
-		
-		int keyVal;
-		int[] keyVals = new int[count];
-		
-		assertTrue(tree.isEmpty()); //new tree should be empty
-		
-		//nulls
-		tree.insert(null, null);
-		assertTrue(tree.isEmpty());
-		
-		tree.insert(null, 0);
-		assertTrue(tree.isEmpty());
-		
-		tree.insert(0, null);
-		assertTrue(tree.isEmpty());
-		
-		tree.insert(0, 0);
-		assertFalse(tree.isEmpty()); //now we should have something
-		
-		tree.remove(0, 0);
-		assertTrue(tree.isEmpty()); //should be empty again
-		
-		tree.insert(0, 1);
-		assertFalse(tree.isEmpty());
-		
-		tree.remove(0, 0);
-		assertFalse(tree.isEmpty()); //should not be empty if we remove something not there
-		
-		tree.insert(0, 0);
-		tree.remove(0, 1);
-		assertFalse(tree.isEmpty());
-		
-		tree.remove(0, 0);
-		assertTrue(tree.isEmpty());
-		
-		//Stress testing
-		for (int i = 0; i < count; ++i) {
-			keyVal = r.nextInt();
-			keyVals[i] = keyVal;
-			tree.insert(keyVal, keyVal);
-		}
-		
-		for (int i = 0; i < count; ++i) {
-			tree.remove(keyVals[i], keyVals[i]);
-		}
-		
-		assertTrue(tree.isEmpty());
-	}
-	
-	@Test
-	public void test00100_valuesForKey() {
-		//nulls
-		try {
-			tree.valuesForKey(null);
-		}
-		catch (Exception e) {
-			fail("Threw an exception trying to find values for null key");
-		}
-		
-		//non-existent key
-		try {
-			tree.valuesForKey(0);
-		}
-		catch (Exception e) {
-			fail("Threw an exception searching for values of key not in tree");
-		}
-		
-		//Should return 0 for null or keys we don't have
-		assertEquals(0, tree.valuesForKey(null).size());
-		assertEquals(0, tree.valuesForKey(0).size());
-		
-		//simple test
-		tree.insert(0, 0);
-		assertEquals(1, tree.valuesForKey(0).size());
-		
-		//jives with removal
-		tree.remove(0, 0);
-		assertEquals(0, tree.valuesForKey(0).size());
-		
-		//more than one
-		tree.insert(0, 0);
-		tree.insert(0, 1);
-		assertEquals(2, tree.valuesForKey(0).size());
-		
-		//no cross talk
-		tree.insert(1, 0);
-		assertEquals(2, tree.valuesForKey(0).size());
-		
-		//duplicate key value pair
-		tree.insert(0, 0);
-		assertEquals(2, tree.valuesForKey(0).size());
-		
-		//Stress testing
-		for (int testNumber = 0; testNumber < count; ++testNumber) {
-			//Setup
-			tree = new BPTree<Integer, Integer>(branchFact); //clean out old stuff
-			Set<Integer> values = new HashSet<Integer>();
-			
-			for (int i = 0; i < count; ++i) { //shove a bunch of integers into a set
-				values.add(r.nextInt());
-			}
-			
-			Iterator<Integer> itr = values.iterator();
-			
-			while (itr.hasNext()) { //now put all the (unique!) values with the same key
-				tree.insert(0, itr.next());
-			}
-			
-			//Finally check that our count agrees with the set size
-			assertEquals(values.size(), tree.valuesForKey(0).size()); //number of values for key 0 should be exactly the size of the set
-		}
-		
-	}
+//	@Test
+//	public void test00100_valuesForKey() {
+//		//nulls
+//		try {
+//			tree.valuesForKey(null);
+//		}
+//		catch (Exception e) {
+//			fail("Threw an exception trying to find values for null key");
+//		}
+//		
+//		//non-existent key
+//		try {
+//			tree.valuesForKey(0);
+//		}
+//		catch (Exception e) {
+//			fail("Threw an exception searching for values of key not in tree");
+//		}
+//		
+//		//Should return 0 for null or keys we don't have
+//		assertEquals(0, tree.valuesForKey(null).size());
+//		assertEquals(0, tree.valuesForKey(0).size());
+//		
+//		//simple test
+//		tree.insert(0, 0);
+//		assertEquals(1, tree.valuesForKey(0).size());
+//		
+//		//jives with removal
+//		tree.remove(0, 0);
+//		assertEquals(0, tree.valuesForKey(0).size());
+//		
+//		//more than one
+//		tree.insert(0, 0);
+//		tree.insert(0, 1);
+//		assertEquals(2, tree.valuesForKey(0).size());
+//		
+//		//no cross talk
+//		tree.insert(1, 0);
+//		assertEquals(2, tree.valuesForKey(0).size());
+//		
+//		//duplicate key value pair
+//		tree.insert(0, 0);
+//		assertEquals(2, tree.valuesForKey(0).size());
+//		
+//		//Stress testing
+//		for (int testNumber = 0; testNumber < count; ++testNumber) {
+//			//Setup
+//			tree = new BPTree<Integer, Integer>(branchFact); //clean out old stuff
+//			Set<Integer> values = new HashSet<Integer>();
+//			
+//			for (int i = 0; i < count; ++i) { //shove a bunch of integers into a set
+//				values.add(r.nextInt());
+//			}
+//			
+//			Iterator<Integer> itr = values.iterator();
+//			
+//			while (itr.hasNext()) { //now put all the (unique!) values with the same key
+//				tree.insert(0, itr.next());
+//			}
+//			
+//			//Finally check that our count agrees with the set size
+//			assertEquals(values.size(), tree.valuesForKey(0).size()); //number of values for key 0 should be exactly the size of the set
+//		}
+//		
+//	}
 	
 	@Test
 	public void test00101_rangeSearchBasic() {

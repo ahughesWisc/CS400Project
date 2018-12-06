@@ -68,19 +68,10 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
     }
     
     /**
-     * Removes a key/value pair
-     * @param key key to remove at
-     * @param value value to remove
-     */
-    public void remove(K key, V value) {
-    	// TODO : Complete
-    }
-    
-    /**
      * Determines if the tree has any nodes
      * @return true if yes, false if no
      */
-    public boolean isEmpty() {
+    private boolean isEmpty() {
     	return this.root == null;
     }
     
@@ -88,7 +79,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
      * Returns all values associated with a given key
      * @param key key to search for values for
      */
-    public Set<V> valuesForKey(K key) {
+    private Set<V> valuesForKey(K key) {
     	// TODO : Complete
     	return null;
     }
