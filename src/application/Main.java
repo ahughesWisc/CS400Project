@@ -66,6 +66,11 @@ public class Main extends Application {
 	final static String Equals = "==";
 	final static String LessThanOrEquals = "<=";
 	final static String GreaterThanOrEquals = ">=";
+	
+	final static int foodListY = 1;
+	final static int foodListX = 0;
+	final static int menuListX = 3;
+	final static int filterY = 6;
   
 	//Similar to a .NET Resources.resx file, these sections are used so we can easily change string values in the UI without poking around everywhere
 	//in the code. It also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
@@ -89,6 +94,8 @@ public class Main extends Application {
 	final static String OperatorLabel = "Operator";
 	final static String SelectedFiltersLabel ="Selected Filters";
 	final static String NutrientFiltersLabel = "Nutrient Filters";
+	final static String NameFilterLabel = "Search Term";
+	final static String RunSearchCaption = "Run Search";
 	
 	//Prompts
 	final static String NutrientPromptText = "enter positive numeric value (e.g. 1.4)";
@@ -292,7 +299,7 @@ public class Main extends Application {
             activeFilterLabel.setPadding(new Insets(10, 0, 10, 0));
             
 			// Label and Field for entering a text search term
-			Label nameFilterLabel = new Label("Search Term");
+			Label nameFilterLabel = new Label(NameFilterLabel);
 			TextField nameFilterField = new TextField();
 	        nameFilterField.setPromptText(FoodPromptText);
 			
@@ -310,9 +317,12 @@ public class Main extends Application {
 			removeRuleButton.setGraphic(new ImageView(imageSmallArrowLeft));
             Tooltip removeRuleTooltip = new Tooltip(RemoveRuleToolTip);
             removeRuleButton.setTooltip(removeRuleTooltip);
+//            removeRuleButton.setOnAction(e -> {
+//            	ruleList.get
+//            	});
 			
 			// Run query button
-			Button runSearch = new Button("Run Search");
+			Button runSearch = new Button(RunSearchCaption);
 			runSearch.setMinSize(100, 50);
 	
 			 HBox searchHBox = new HBox();
@@ -325,10 +335,6 @@ public class Main extends Application {
 			
 
 			// -- Food List Area: --
-			int foodListY = 1;
-			int foodListX = 0;
-			int menuListX = 3;
-			int filterY = 6;
 			GridPane.setConstraints(foodListLabel, foodListX, foodListY, 2, 1); // Col span: 2
  			GridPane.setConstraints(foodListButtonsHBox, foodListX, foodListY+1, 2, 1); // Col span: 2
  			GridPane.setConstraints(foodList, foodListX, foodListY+2, 2, 2); // Col span: 2, Row span: 2
