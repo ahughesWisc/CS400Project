@@ -122,6 +122,15 @@ public class Main extends Application {
 	
 	//Testing
 	final static boolean DEBUG = false;
+	
+	//Class Attributes
+	private ObservableList<String> rules = FXCollections.observableArrayList();
+	private ListView<String> ruleList = new ListView<String>();
+	private ObservableList<String> foods = FXCollections.observableArrayList();
+    private ListView<String> foodList = new ListView<String>();
+    private ObservableList<String> menuFoods = FXCollections.observableArrayList();
+    private ListView<String> menuList = new ListView<String>();
+	
 	/**
 	 * Starts the program by launching the GUI
 	 */
@@ -192,10 +201,7 @@ public class Main extends Application {
             saveFoodsButton.setPrefSize(100, 20); // Sets width and height of button
             foodListButtonsHBox.getChildren().addAll(loadFoodsButton, addFoodButton, saveFoodsButton);
             
-            // Master food list
-            ObservableList<String> foods = FXCollections.observableArrayList();
-            ListView<String> foodList = new ListView<String>(foods);
-            
+            // Master food list            
             if (DEBUG) { //testing only
             	foodList.getItems().addAll("Blackberries", "Blueberries", "Raspberries", "Strawberries");
             }
@@ -237,8 +243,6 @@ public class Main extends Application {
             menuListLabel.setPadding(new Insets(10, 0, 10, 0));
             
             // Menu food list
-            ObservableList<String> menuFoods = FXCollections.observableArrayList();
-            ListView<String> menuList = new ListView<String>(menuFoods);
             menuList.setPrefWidth(323);
             menuList.setPrefHeight(320);
             
@@ -286,8 +290,7 @@ public class Main extends Application {
             nutrientValueField.setPromptText(NutrientPromptText);
             
             // Add a rule to the active rules
-            ObservableList<String> rules = FXCollections.observableArrayList();
-            ListView<String> ruleList = new ListView<>();
+            
             
             Image imageSmallArrowRight = new Image(getClass().getResourceAsStream(SmallRightArrowImage));
             Button addRuleButton = new Button();
@@ -450,11 +453,22 @@ public class Main extends Application {
 		return ret;
 	}
 	
+	/**
+	 * User input validator for numeric input.
+	 * @param value string being validated
+	 * @return true if value matches pattern for double
+	 */
 	private boolean isValidDoubleValue(String value) {
-		return Pattern.matches("^[0-9]+(.[0-9]*)*$", value);
+		boolean good1 = Pattern.matches("^[0-9]+([.][0-9]+)?$", value);
+		boolean good2 = Pattern.matches("^[.][0-9]+$", value);
+		
+		return good1 || good2;
 	}
 	
-	private void setRuleList(Object rules) {
-		return;
+	/**
+	 * Updates the rule list
+	 */
+	private void setRuleList() {
+		ruleList = new ListView<String>(rules);
 	}
 }
