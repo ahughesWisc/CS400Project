@@ -62,6 +62,7 @@ public class Main extends Application {
 	final static String Font = "Arial"; //now you can change the font anywhere in the application from one place
 	final static String BannerFont = "Arial Bold";
 	final static int SeparatorLength = 29;
+	final static String FilterHorizontalSeparator = horizontalSeparator("v");
   
 	//Similar to a .NET Resources.resx file, used so we can easily change string values in the UI without poking around everywhere in the code
 	//Also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
@@ -70,18 +71,25 @@ public class Main extends Application {
 	final static String Carbs = "Carbs";
 	final static String Protein = "Protein";
 	final static String Fiber = "Fiber";
+	
+	//Captions/Labels
 	final static String Title = "Food Program";
-	final static String FoodListLabel = "Food List";
-	final static String ExitToolTip = "Exit Program";
 	final static String LoadActionCaption = "Load Foods";
 	final static String AddActionCaption = "Add Foods";
 	final static String SaveActionCaption = "Save Foods";
-	final static String AddActionToolTip = "Add the selected foods to the menu";
-	final static String RemoveActionToolTip = "Remove the selected foods from the menu";
 	final static String AnalyzeActionCaption = "Nutritional Analysis";
+	final static String FoodListLabel = "Food List";
 	final static String FilterActionLabel = "Food and Nutrient Search";
 	final static String MenuListLabel = "Menu List";
-	final static String FilterHorizontalSeparator = horizontalSeparator("v");
+	final static String SearchFilterCaption = "New Search Filter";
+	final static String NutrientLabel = "Nutrient";
+	final static String OperatorLabel = "Operator";
+	
+	//ToolTips
+	final static String ExitToolTip = "Exit Program";
+	final static String AddActionToolTip = "Add the selected foods to the menu";
+	final static String RemoveActionToolTip = "Remove the selected foods from the menu";
+	final static String AddRuleToolTip = "Add the rule to the search";
 	
 	//Image files for ease of swapping out
 	final static String BackgroundImageFile = "fruitBackgroundSmall.png";
@@ -215,12 +223,12 @@ public class Main extends Application {
             
             Label fillerText = new Label(FilterHorizontalSeparator);
             
-            Label createRuleLabel = new Label("New Search Filter"); // Formerly "Create a Rule"
+            Label createRuleLabel = new Label(SearchFilterCaption); 
             createRuleLabel.setFont(new Font(Font, 20));
             createRuleLabel.setPadding(new Insets(10, 0, 10, 0));
             
             // label and combo box for selecting the nutrient for the rule
-            Label nutrientLabel = new Label("Nutrient");
+            Label nutrientLabel = new Label(NutrientLabel);
             ObservableList<String> nutrients = 
                     FXCollections.observableArrayList(
                         Calories,
@@ -232,7 +240,7 @@ public class Main extends Application {
             ComboBox<String> nutrientComboBox = new ComboBox<String>(nutrients);
             
             // combo box for selecting the operator for the rule
-            Label operatorLabel = new Label("Operator");
+            Label operatorLabel = new Label(OperatorLabel);
             ObservableList<String> logicOptions = 
                     FXCollections.observableArrayList(
                         "==",
@@ -250,7 +258,7 @@ public class Main extends Application {
             Image imageSmallArrowRight = new Image(getClass().getResourceAsStream(SmallRightArrowImage));
             Button addRuleButton = new Button();
             addRuleButton.setGraphic(new ImageView(imageSmallArrowRight));
-            Tooltip addRuleTooltip = new Tooltip("Add the rule to the search");
+            Tooltip addRuleTooltip = new Tooltip(AddRuleToolTip);
             addRuleButton.setTooltip(addRuleTooltip);
             
             VBox addRuleButtonVBox = new VBox();
