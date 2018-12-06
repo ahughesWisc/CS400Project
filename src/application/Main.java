@@ -84,12 +84,19 @@ public class Main extends Application {
 	final static String SearchFilterCaption = "New Search Filter";
 	final static String NutrientLabel = "Nutrient";
 	final static String OperatorLabel = "Operator";
+	final static String SelectedFiltersLabel ="Selected Filters";
+	final static String NutrientFiltersLabel = "Nutrient Filters";
+	
+	//Prompts
+	final static String NutrientPromptText = "enter value";
+	final static String FoodPromptText = "enter food name";
 	
 	//ToolTips
 	final static String ExitToolTip = "Exit Program";
 	final static String AddActionToolTip = "Add the selected foods to the menu";
-	final static String RemoveActionToolTip = "Remove the selected foods from the menu";
+	final static String RemoveFoodToolTip = "Remove the selected foods from the menu";
 	final static String AddRuleToolTip = "Add the rule to the search";
+	final static String RemoveRuleToolTip = "Remove the selected rules from the search";
 	
 	//Image files for ease of swapping out
 	final static String BackgroundImageFile = "fruitBackgroundSmall.png";
@@ -189,7 +196,7 @@ public class Main extends Application {
             Image imageArrowLeft = new Image(getClass().getResourceAsStream(LeftArrowImage));
             Button removeFoodFromMenuButton = new Button();
             removeFoodFromMenuButton.setGraphic(new ImageView(imageArrowLeft));
-            Tooltip removeFoodTooltip = new Tooltip(RemoveActionToolTip);
+            Tooltip removeFoodTooltip = new Tooltip(RemoveFoodToolTip);
             removeFoodFromMenuButton.setTooltip(removeFoodTooltip);
             
             VBox addAndRemoveButtonsVBox = new VBox();
@@ -252,7 +259,7 @@ public class Main extends Application {
             // text field for entering the nutrient value (example number of grams or number of calories)
             Label valueLabel = new Label("Value");
             TextField nutrientValueField = new TextField();
-            nutrientValueField.setPromptText("enter value");
+            nutrientValueField.setPromptText(NutrientPromptText);
             
             // Add a rule to the active rules
             Image imageSmallArrowRight = new Image(getClass().getResourceAsStream(SmallRightArrowImage));
@@ -267,16 +274,16 @@ public class Main extends Application {
             // -- Filter Foods Area (Right Side): --
             
             // Label for side
-            Label activeFilterLabel = new Label("Selected Filters");
+            Label activeFilterLabel = new Label(SelectedFiltersLabel);
             activeFilterLabel.setFont(new Font(Font, 20));
             activeFilterLabel.setPadding(new Insets(10, 0, 10, 0));
             
 			// Label and Field for entering a text search term
 			Label nameFilterLabel = new Label("Search Term");
 			TextField nameFilterField = new TextField();
-	        nameFilterField.setPromptText("enter food name");
+	        nameFilterField.setPromptText(FoodPromptText);
 			
-            Label nutrientFilterLabel = new Label("Nutrient Filters"); // Label for list of rules
+            Label nutrientFilterLabel = new Label(NutrientFiltersLabel); // Label for list of rules
 	
             // View of the active rules
             ObservableList<String> rules =FXCollections.observableArrayList();
@@ -288,7 +295,7 @@ public class Main extends Application {
 
 			Button removeRuleButton = new Button();
 			removeRuleButton.setGraphic(new ImageView(imageSmallArrowLeft));
-            Tooltip removeRuleTooltip = new Tooltip("Remove the selected rules from the search");
+            Tooltip removeRuleTooltip = new Tooltip(RemoveRuleToolTip);
             removeRuleButton.setTooltip(removeRuleTooltip);
 			
 			// Run query button
