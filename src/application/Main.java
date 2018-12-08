@@ -195,8 +195,11 @@ public class Main extends Application {
             AnchorPane ap = new AnchorPane();
             ap.getChildren().addAll(banner, exitProgramButton);
             AnchorPane.setLeftAnchor(banner, 0.0);
-            AnchorPane.setRightAnchor(exitProgramButton, 48.0); // Sets position of exitProgramButton
+            //AnchorPane.setRightAnchor(exitProgramButton, 48.0); // Sets position of exitProgramButton
+            AnchorPane.setRightAnchor(exitProgramButton, 0.0);
             borderpane.setTop(ap);
+            ap.setMaxWidth(768);
+            ap.setMinWidth(768);
 			
 			// -- Food List Area: --
 	
@@ -223,7 +226,7 @@ public class Main extends Application {
             
             // Makes multiple selections possible when hitting ctrl
             foodList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            foodList.setPrefWidth(323);
+            foodList.setPrefWidth(320); // Formerly 323
             foodList.setPrefHeight(320);
             foodList.setMinHeight(320);
             
@@ -258,7 +261,7 @@ public class Main extends Application {
             menuListLabel.setPadding(new Insets(10, 0, 10, 0));
             
             // Menu food list
-            menuList.setPrefWidth(323);
+            menuList.setPrefWidth(320); // Formerly 323
             menuList.setPrefHeight(320);
             
             Button analyzeMenuButton = new Button(AnalyzeNutritionCaption);
@@ -267,7 +270,7 @@ public class Main extends Application {
             
             // -- Filter Foods Area (Left Side): --
             
-            Label filterFoodsLabel = new Label(FilterActionLabel); // Filter Foods title, formerly "Filter Foods"
+            Label filterFoodsLabel = new Label(FilterActionLabel); // Filter Foods title
             filterFoodsLabel.setFont(new Font(Font, 28));
             filterFoodsLabel.setPadding(new Insets(10, 0, 10, 0));
             
