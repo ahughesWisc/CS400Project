@@ -30,6 +30,7 @@ import java.util.Set;
  * 
  * @author sapan (sapan@cs.wisc.edu)
  * @author ahughes (adam.hughes@wisc.edu)
+ * @author awhitaker (awhitaker3@wisc.edu)
  *
  * @param <K> key - expect a string that is the type of id for each item
  * @param <V> value - expect a user-defined type that stores all data for a food item
@@ -38,72 +39,56 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
 
     // Root of the tree
     private Node root;
-    
-    // Branching factor is the number of children nodes 
+
+    // Branching factor is the number of children nodes
     // for internal nodes of the tree
     private int branchingFactor;
-    
-    
+
+
     /**
      * Public constructor
      * 
-     * @param branchingFactor 
+     * @param branchingFactor
      */
     public BPTree(int branchingFactor) {
         if (branchingFactor <= 2) {
             throw new IllegalArgumentException(
-               "Illegal branching factor: " + branchingFactor);
+                            "Illegal branching factor: " + branchingFactor);
         }
-        // TODO : Complete
+        this.branchingFactor = branchingFactor;
+        root = new LeafNode();
     }
-    
-    
+
+
     /*
      * (non-Javadoc)
+     * 
      * @see BPTreeADT#insert(java.lang.Object, java.lang.Object)
      */
     @Override
     public void insert(K key, V value) {
-        // TODO : Complete
+        root.insert(key, value);
     }
-    
-    /**
-     * Determines if the tree has any nodes
-     * @return true if yes, false if no
-     */
-    private boolean isEmpty() {
-    	return this.root == null;
-    }
-    
-    /**
-     * Returns all values associated with a given key
-     * @param key key to search for values for
-     */
-    private Set<V> valuesForKey(K key) {
-    	// TODO : Complete
-    	return null;
-    }
-    
+
+
     /*
      * (non-Javadoc)
+     * 
      * @see BPTreeADT#rangeSearch(java.lang.Object, java.lang.String)
      */
     @Override
     public List<V> rangeSearch(K key, String comparator) {
-        if (!comparator.contentEquals(">=") && 
-            !comparator.contentEquals("==") && 
-            !comparator.contentEquals("<=") )
-        {
-        	return new ArrayList<V>();
-        }
-            
-        // TODO : Complete
-        return null;
+        if (!comparator.contentEquals(">=") &&
+                        !comparator.contentEquals("==") &&
+                        !comparator.contentEquals("<="))
+            return new ArrayList<V>();
+        return root.rangeSearch(key, comparator);
     }
-    
-    
+
+
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -136,30 +121,30 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         }
         return sb.toString();
     }
-    
-    
+
+
     /**
-     * This abstract class represents any type of node in the tree
-     * This class is a super class of the LeafNode and InternalNode types.
+     * This abstract class represents any type of node in the tree This class is a super class of
+     * the LeafNode and InternalNode types.
      * 
      * @author sapan
      */
     private abstract class Node {
-        
+
         // List of keys
         List<K> keys;
-        
+
         /**
          * Package constructor
          */
         Node() {
-            // TODO : Complete
+            this.keys = new ArrayList<K>();
         }
-        
+
         /**
-         * Inserts key and value in the appropriate leaf node 
-         * and balances the tree if required by splitting
-         *  
+         * Inserts key and value in the appropriate leaf node and balances the tree if required by
+         * splitting
+         * 
          * @param key
          * @param value
          */
@@ -171,16 +156,17 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
          * @return key
          */
         abstract K getFirstLeafKey();
-        
+
         /**
          * Gets the new sibling created after splitting the node
          * 
          * @return Node
          */
         abstract Node split();
-        
+
         /*
          * (non-Javadoc)
+         * 
          * @see BPTree#rangeSearch(java.lang.Object, java.lang.String)
          */
         abstract List<V> rangeSearch(K key, String comparator);
@@ -190,18 +176,17 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
          * @return boolean
          */
         abstract boolean isOverflow();
-        
+
         public String toString() {
             return keys.toString();
         }
-    
+
     } // End of abstract class Node
-    
+
     /**
-     * This class represents an internal node of the tree.
-     * This class is a concrete sub class of the abstract Node class
-     * and provides implementation of the operations
-     * required for internal (non-leaf) nodes.
+     * This class represents an internal node of the tree. This class is a concrete sub class of the
+     * abstract Node class and provides implementation of the operations required for internal
+     * (non-leaf) nodes.
      * 
      * @author sapan
      */
@@ -209,146 +194,264 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
 
         // List of children nodes
         List<Node> children;
-        
+
         /**
          * Package constructor
          */
         InternalNode() {
             super();
-            // TODO : Complete
+            this.children = new ArrayList<Node>();
         }
-        
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#getFirstLeafKey()
          */
         K getFirstLeafKey() {
-            // TODO : Complete
-            return null;
+            return children.get(0).getFirstLeafKey();
         }
-        
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#isOverflow()
          */
         boolean isOverflow() {
-            // TODO : Complete
-            return false;
+            return children.size() > branchingFactor;
         }
-        
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#insert(java.lang.Comparable, java.lang.Object)
          */
         void insert(K key, V value) {
-            // TODO : Complete
+            Node child = getChild(key);
+            child.insert(key, value);
+            if (child.isOverflow()) {
+                Node sibling = child.split();
+                insertChild(sibling.getFirstLeafKey(), sibling);
+            }
+            if(root.isOverflow()) {
+                Node sibling = split();
+                InternalNode temp = new InternalNode();
+                temp.keys.add(sibling.getFirstLeafKey());
+                temp.children.add(this);
+                temp.children.add(sibling);
+                root = temp;
+            }
         }
-        
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#split()
          */
         Node split() {
-            // TODO : Complete
-            return null;
+            int sibStart = keys.size() / 2 + 1; 
+            int sibEnd = keys.size();
+            InternalNode sibling = new InternalNode();
+            sibling.keys.addAll(keys.subList(sibStart, sibEnd));
+            sibling.children.addAll(children.subList(sibStart, sibEnd + 1));
+
+            keys.subList(sibStart - 1, sibEnd).clear();
+            children.subList(sibStart, sibEnd + 1).clear();
+
+            return sibling;
         }
-        
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#rangeSearch(java.lang.Comparable, java.lang.String)
          */
         List<V> rangeSearch(K key, String comparator) {
-            // TODO : Complete
-            return null;
+            return this.getChild(key).rangeSearch(key, comparator);
         }
-    
+
+        Node getChild(K key) {
+            int index = Collections.binarySearch(keys, key);
+            if(index >= 0) index += 1;
+            else index = -index - 1;
+            return children.get(index);
+        }
+
+        void insertChild(K key, Node child) {
+            int index = Collections.binarySearch(keys, key);
+            if (index >= 0) {
+                children.set(index + 1, child);
+            }
+            else{
+                keys.add(-index - 1, key);
+                children.add(-index, child);
+            }
+        }
+
     } // End of class InternalNode
-    
-    
+
+
     /**
-     * This class represents a leaf node of the tree.
-     * This class is a concrete sub class of the abstract Node class
-     * and provides implementation of the operations that
-     * required for leaf nodes.
+     * This class represents a leaf node of the tree. This class is a concrete sub class of the
+     * abstract Node class and provides implementation of the operations that required for leaf
+     * nodes.
      * 
      * @author sapan
      */
     private class LeafNode extends Node {
-        
+
         // List of values
-        List<V> values;
-        
+        List<ArrayList<V>> values;
+
         // Reference to the next leaf node
         LeafNode next;
-        
+
         // Reference to the previous leaf node
         LeafNode previous;
-        
+
         /**
          * Package constructor
          */
         LeafNode() {
             super();
-            // TODO : Complete
+            this.values = new ArrayList<ArrayList<V>>();
+            this.next = null;
+            this.previous = null;
         }
-        
-        
+
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#getFirstLeafKey()
          */
         K getFirstLeafKey() {
-            // TODO : Complete
-            return null;
+            return keys.get(0);
         }
-        
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#isOverflow()
          */
         boolean isOverflow() {
-            // TODO : Complete
-            return false;
+            return values.size() > branchingFactor - 1;
         }
-        
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#insert(Comparable, Object)
          */
         void insert(K key, V value) {
-            // TODO : Complete
+            int index = Collections.binarySearch(keys, key);
+            if(index >= 0) {
+                values.get(index).add(value);
+            }else {
+                keys.add(-index - 1, key);
+                values.add(-index -1, new ArrayList<V>());
+                values.get(-index -1).add(value);
+            }
+            if (root.isOverflow()) {
+                Node sibling = split();
+                InternalNode temp = new InternalNode();
+                temp.keys.add(sibling.getFirstLeafKey());
+                temp.children.add(this);
+                temp.children.add(sibling);
+                root = temp;
+            }
         }
-        
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#split()
          */
         Node split() {
-            // TODO : Complete
-            return null;
+            int sibStart = keys.size()/2 + 1;
+            int sibEnd = keys.size();
+            LeafNode sibling = new LeafNode();
+            sibling.keys.addAll(keys.subList(sibStart, sibEnd));
+            sibling.values.addAll(values.subList(sibStart, sibEnd));
+            keys.subList(sibStart, sibEnd).clear();
+            values.subList(sibStart, sibEnd).clear();
+            
+            sibling.previous = this;
+            this.next = sibling;
+            
+            return sibling;
         }
-        
+
         /**
          * (non-Javadoc)
+         * 
          * @see BPTree.Node#rangeSearch(Comparable, String)
          */
         List<V> rangeSearch(K key, String comparator) {
-            // TODO : Complete
-            return null;
+            ArrayList<V> combined = new ArrayList<V>();   
+            int index;
+            LeafNode node;
+            
+            switch(comparator) {
+                case ">=":
+                    // Add in current key values and all subsequent values in current node
+                    index = Collections.binarySearch(keys,  key);
+                    if(index < 0) {
+                        index = -index - 1;
+                    }
+                    for(int i = index; i < values.size(); i++) {
+                        combined.addAll(values.get(i));
+                    }
+                    
+                    // Iterate through subsequent leaf nodes and add in all their values 
+                    node = this;
+                    while(node.next != null) {
+                        node = node.next;
+                        for(int i = 0; i < node.values.size(); i++) {
+                            combined.addAll(node.values.get(i));
+                        }
+                    }
+                    break;
+                    
+                case "<=":
+                 // Add in current key values and all previous values in current node
+                    index = Collections.binarySearch(keys,  key);
+                    if(index < 0) {
+                        index = -index - 2;
+                    }
+                    for(int i = index; i >= 0; i--) {
+                        combined.addAll(values.get(i));
+                    }
+                    
+                    // Iterate through previous leaf nodes and add in all their values 
+                    node = this;
+                    while(node.previous != null) {
+                        node = node.previous;
+                        for(int i = node.values.size() - 1; i >= 0; i--) {
+                            combined.addAll(node.values.get(i));
+                        }
+                    }
+                    break;
+                    
+                case "==":  
+                    if(!keys.contains(key)) break;
+                    combined.addAll(values.get(keys.indexOf(key)));
+                    break;
+            }
+            return combined;
         }
-        
+
     } // End of class LeafNode
-    
-    
+
+
     /**
-     * Contains a basic test scenario for a BPTree instance.
-     * It shows a simple example of the use of this class
-     * and its related types.
+     * Contains a basic test scenario for a BPTree instance. It shows a simple example of the use of
+     * this class and its related types.
      * 
      * @param args
      */
     public static void main(String[] args) {
-        // create empty BPTree with branching factor of 3
+     // create empty BPTree with branching factor of 3
         BPTree<Double, Double> bpTree = new BPTree<>(3);
 
         // create a pseudo random number generator
@@ -373,5 +476,6 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         List<Double> filteredValues = bpTree.rangeSearch(0.2d, ">=");
         System.out.println("Filtered values: " + filteredValues.toString());
     }
+
 
 } // End of class BPTree
