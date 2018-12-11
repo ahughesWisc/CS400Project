@@ -62,26 +62,30 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
 
 
     /*
-     * (non-Javadoc)
+     * Calls the insert method on the root to insert a key,value pair
      * 
      * @see BPTreeADT#insert(java.lang.Object, java.lang.Object)
      */
     @Override
     public void insert(K key, V value) {
+        if (key == null) {
+            return;
+        }
         root.insert(key, value);
     }
 
 
     /*
-     * (non-Javadoc)
+     * Verifies the format of the comparator and checks that the key is not null, then calls
+     * rangeSearch on the root
      * 
      * @see BPTreeADT#rangeSearch(java.lang.Object, java.lang.String)
      */
     @Override
     public List<V> rangeSearch(K key, String comparator) {
-        if (!comparator.contentEquals(">=") &&
+        if ((!comparator.contentEquals(">=") &&
                         !comparator.contentEquals("==") &&
-                        !comparator.contentEquals("<="))
+                        !comparator.contentEquals("<=")) || key == null)
             return new ArrayList<V>();
         return root.rangeSearch(key, comparator);
     }
@@ -205,7 +209,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         }
 
         /**
-         * (non-Javadoc)
+         * Recursive method to return the smallest key in the subtree
          * 
          * @see BPTree.Node#getFirstLeafKey()
          */
@@ -214,7 +218,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         }
 
         /**
-         * (non-Javadoc)
+         * Checks if current node has too many children
          * 
          * @see BPTree.Node#isOverflow()
          */
@@ -223,7 +227,8 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         }
 
         /**
-         * (non-Javadoc)
+         * Inserts a key into a internal node, and recursively calls itself in order to insert the
+         * value into the correct leaf node.
          * 
          * @see BPTree.Node#insert(java.lang.Comparable, java.lang.Object)
          */
@@ -231,10 +236,20 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
             Node child = getChild(key);
             child.insert(key, value);
             if (child.isOverflow()) {
-                Node sibling = child.split();
-                insertChild(sibling.getFirstLeafKey(), sibling);
+                Node childSibling = child.split();
+                K promotedKey = childSibling.getFirstLeafKey();
+                int index = Collections.binarySearch(keys, promotedKey);
+                if (index >= 0) {
+                    children.set(index + 1, childSibling);
+                } else {
+                    keys.add(-index - 1, promotedKey);
+                    children.add(-index, childSibling);
+                }
             }
-            if(root.isOverflow()) {
+
+            // Check if root node is overflowing, and split if so.
+            // Creates a new root
+            if (root.isOverflow()) {
                 Node sibling = split();
                 InternalNode temp = new InternalNode();
                 temp.keys.add(sibling.getFirstLeafKey());
@@ -244,26 +259,35 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
             }
         }
 
+
         /**
-         * (non-Javadoc)
+         * Method to split an internal node into two. Copies over half the keys and children from
+         * original node into sibling, and then clears them from original node. Returns the newly
+         * created sibling
          * 
          * @see BPTree.Node#split()
          */
         Node split() {
-            int sibStart = keys.size() / 2 + 1; 
+            int sibStart = keys.size() / 2 + 1;
             int sibEnd = keys.size();
             InternalNode sibling = new InternalNode();
-            sibling.keys.addAll(keys.subList(sibStart, sibEnd));
-            sibling.children.addAll(children.subList(sibStart, sibEnd + 1));
 
-            keys.subList(sibStart - 1, sibEnd).clear();
-            children.subList(sibStart, sibEnd + 1).clear();
+            for (int i = sibStart; i < sibEnd; i++) {
+                sibling.keys.add(keys.get(i));
+                sibling.children.add(children.get(i));
+            }
+            sibling.children.add(children.get(sibEnd));
+
+            for (int i = sibStart; i <= sibEnd; i++) {
+                keys.remove(sibStart - 1);
+                children.remove(sibStart);
+            }
 
             return sibling;
         }
 
         /**
-         * (non-Javadoc)
+         * Recursive method that calls range search on the relevant child node
          * 
          * @see BPTree.Node#rangeSearch(java.lang.Comparable, java.lang.String)
          */
@@ -271,22 +295,21 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
             return this.getChild(key).rangeSearch(key, comparator);
         }
 
+        /**
+         * Helper method to get a child node corresponding to a given key. Searches the key list to
+         * find index of given key, and then returns node found in list of children at that index
+         * 
+         * @param key value used to search for child
+         * @return child node associated with that key value
+         */
         Node getChild(K key) {
+            // use binarySearch rather than looping through key list
             int index = Collections.binarySearch(keys, key);
-            if(index >= 0) index += 1;
-            else index = -index - 1;
+            if (index >= 0)
+                index += 1;
+            else
+                index = -index - 1;
             return children.get(index);
-        }
-
-        void insertChild(K key, Node child) {
-            int index = Collections.binarySearch(keys, key);
-            if (index >= 0) {
-                children.set(index + 1, child);
-            }
-            else{
-                keys.add(-index - 1, key);
-                children.add(-index, child);
-            }
         }
 
     } // End of class InternalNode
@@ -322,7 +345,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
 
 
         /**
-         * (non-Javadoc)
+         * Returns the first key in the list, which will be the smallest
          * 
          * @see BPTree.Node#getFirstLeafKey()
          */
@@ -331,7 +354,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         }
 
         /**
-         * (non-Javadoc)
+         * Checks if the list of values is too large
          * 
          * @see BPTree.Node#isOverflow()
          */
@@ -340,19 +363,24 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         }
 
         /**
-         * (non-Javadoc)
+         * Inserts a key value pair into the node. If the key is already present, it adds the new
+         * value to the corresponding ArrayList. Otherwise it inserts a new key and creates a new
+         * value ArrayList
          * 
          * @see BPTree.Node#insert(Comparable, Object)
          */
         void insert(K key, V value) {
             int index = Collections.binarySearch(keys, key);
-            if(index >= 0) {
+            if (index >= 0) {
                 values.get(index).add(value);
-            }else {
+            } else {
                 keys.add(-index - 1, key);
-                values.add(-index -1, new ArrayList<V>());
-                values.get(-index -1).add(value);
+                values.add(-index - 1, new ArrayList<V>());
+                values.get(-index - 1).add(value);
             }
+            // Check if root node is overflowing, and split if so.
+            // This code should only be reached when root is LeafNode (ie: root is only node)
+            // Creates a new root
             if (root.isOverflow()) {
                 Node sibling = split();
                 InternalNode temp = new InternalNode();
@@ -364,78 +392,85 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         }
 
         /**
-         * (non-Javadoc)
+         * Copies over half the keys and values from node to a newly created sibling node.
+         * Simultaneously clears out these copied value from current node
          * 
          * @see BPTree.Node#split()
          */
         Node split() {
-            int sibStart = keys.size()/2 + 1;
+            int sibStart = keys.size() / 2 + 1;
             int sibEnd = keys.size();
             LeafNode sibling = new LeafNode();
-            sibling.keys.addAll(keys.subList(sibStart, sibEnd));
-            sibling.values.addAll(values.subList(sibStart, sibEnd));
-            keys.subList(sibStart, sibEnd).clear();
-            values.subList(sibStart, sibEnd).clear();
-            
+
+            for (int i = sibStart; i < sibEnd; i++) {
+                sibling.keys.add(keys.get(sibStart));
+                sibling.values.add(values.get(sibStart));
+                keys.remove(sibStart);
+                values.remove(sibStart);
+            }
+
             sibling.previous = this;
             this.next = sibling;
-            
+
             return sibling;
         }
 
         /**
-         * (non-Javadoc)
+         * Method that returns a list of values given a search key and comparator. Uses the
+         * linked-list nature of the leaf nodes to iterate through them and find all values
          * 
          * @see BPTree.Node#rangeSearch(Comparable, String)
          */
         List<V> rangeSearch(K key, String comparator) {
-            ArrayList<V> combined = new ArrayList<V>();   
+            ArrayList<V> combined = new ArrayList<V>();
             int index;
             LeafNode node;
-            
-            switch(comparator) {
+
+            switch (comparator) {
                 case ">=":
                     // Add in current key values and all subsequent values in current node
-                    index = Collections.binarySearch(keys,  key);
-                    if(index < 0) {
+                    index = Collections.binarySearch(keys, key);
+                    if (index < 0) {
                         index = -index - 1;
                     }
-                    for(int i = index; i < values.size(); i++) {
+                    for (int i = index; i < values.size(); i++) {
                         combined.addAll(values.get(i));
                     }
-                    
-                    // Iterate through subsequent leaf nodes and add in all their values 
+
+                    // Iterate through subsequent leaf nodes and add in all their values
                     node = this;
-                    while(node.next != null) {
+                    while (node.next != null) {
                         node = node.next;
-                        for(int i = 0; i < node.values.size(); i++) {
+                        for (int i = 0; i < node.values.size(); i++) {
                             combined.addAll(node.values.get(i));
                         }
                     }
                     break;
-                    
+
                 case "<=":
-                 // Add in current key values and all previous values in current node
-                    index = Collections.binarySearch(keys,  key);
-                    if(index < 0) {
+                    // Add in current key values and all previous values in current node
+                    index = Collections.binarySearch(keys, key);
+                    if (index < 0) {
                         index = -index - 2;
                     }
-                    for(int i = index; i >= 0; i--) {
+                    for (int i = index; i >= 0; i--) {
                         combined.addAll(values.get(i));
                     }
-                    
-                    // Iterate through previous leaf nodes and add in all their values 
+
+                    // Iterate through previous leaf nodes and add in all their values
                     node = this;
-                    while(node.previous != null) {
+                    while (node.previous != null) {
                         node = node.previous;
-                        for(int i = node.values.size() - 1; i >= 0; i--) {
+                        for (int i = node.values.size() - 1; i >= 0; i--) {
                             combined.addAll(node.values.get(i));
                         }
                     }
                     break;
-                    
-                case "==":  
-                    if(!keys.contains(key)) break;
+
+                case "==":
+                    // just return values associated with current key, if presentF
+                    if (!keys.contains(key))
+                        break;
                     combined.addAll(values.get(keys.indexOf(key)));
                     break;
             }
