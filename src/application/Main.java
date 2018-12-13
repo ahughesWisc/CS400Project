@@ -122,7 +122,7 @@ public class Main extends Application {
 	final static String HorizontalDividerImage = "horizontalLine.png";
 	
 	//Testing
-	final static boolean DEBUG = false;
+	final static boolean DEBUG = true;
 	
 	//Class Attributes
 	private ObservableList<String> rules = FXCollections.observableArrayList();
@@ -252,6 +252,10 @@ public class Main extends Application {
             addAndRemoveButtonsVBox.setSpacing(10);
             addAndRemoveButtonsVBox.setAlignment(Pos.CENTER);
             addAndRemoveButtonsVBox.getChildren().addAll(addFoodtoMenuButton, removeFoodFromMenuButton);
+            
+            addFoodtoMenuButton.setOnAction(e -> { // incompelte
+            	String selectedFoodString = foodList.getSelectionModel().getSelectedItem();
+            });
             
             
             // -- Menu List Area: --
