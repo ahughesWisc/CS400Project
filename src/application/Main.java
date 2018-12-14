@@ -19,7 +19,13 @@ import java.util.regex.Pattern;
  * 
  * Online Sources: https://youtu.be/GbzKr46VvD0
  * 
- * Notes:
+ * Notes: Currently version is using a List<String> data structure when loading a file and adding a food item,
+ *        once FoodData.java is ready we will need to use this data structure. The loading and parsing of the file
+ *         occurs within the main program along with saving it to a data structure. This will need to be moved to 
+ *         FoodData.loadFoodItems(String filePath). The ability to add a single food item needs to eventually be moved
+ *         to FoodData.addFoodItem(FoodItem foodItem) as this also lives in the main class.  When adding a food data item, 
+ *         method addFoodItem in the main class sets the same id string each time, need to update. Minimal error handling
+ *         occurs in the file processing, To be determined if this requires more work. -Colin Butkus
  * Known Bugs: 
  */
 
@@ -54,12 +60,39 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
+import java.awt.event.ActionEvent;
+import java.util.*; 
+import javafx.stage.Modality;
+import javafx.stage.FileChooser;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 /**
  * Class used for creating and displaying the GUI and 
  * launching the food program
  *
  */
 public class Main extends Application {
+	
+	//Data Structures
+	//list to store each line of string from file
+    static List<List<String>> listOfLines = new ArrayList<>();
+	//Temporarily using the following until FoodData class is ready
+
+    //to hold the id for each food item
+    static List<String> idList = new ArrayList<>();
+    //to hold the name of each food item
+    static List<String> nameList = new ArrayList<>();
+    //to hold the nutrients of each food item
+    static List<HashMap<String, Double>> nutrientsList = new ArrayList<HashMap<String, Double>>();
+	//delete the previous data structure and use FoodData when read and update loadFoodPop and addFoodP
 	
 	//Settings
 	final static String Font = "Arial"; //now you can change the font anywhere in the application from one place
@@ -213,8 +246,10 @@ public class Main extends Application {
             foodListButtonsHBox.setSpacing(10);
             Button loadFoodsButton = new Button(LoadFoodsCaption);
             loadFoodsButton.setPrefSize(100, 20); // Sets width and height of button
+            loadFoodsButton.setOnAction(e -> displayLoadFile());//call displayLoadFile when Load Food Button clicked, opens popup window
             Button addFoodButton = new Button(AddFoodCaption);
             addFoodButton.setPrefSize(100, 20); // Sets width and height of button
+            addFoodButton.setOnAction(e -> displayAddFood());//call displayAddFood when Add Food Button clicked, opens popup window
             Button saveFoodsButton = new Button(SaveFoodsCaption);
             saveFoodsButton.setPrefSize(100, 20); // Sets width and height of button
             foodListButtonsHBox.getChildren().addAll(loadFoodsButton, addFoodButton, saveFoodsButton);
@@ -498,4 +533,267 @@ public class Main extends Application {
 				op, 
 				value);
 	}
+	
+	//method will be called when the LoadFood button is clicked from main GUI
+    public static void displayLoadFile()
+	{
+    	Stage loadPopupWindow =new Stage();
+    	FileChooser fileChooser = new FileChooser();
+    	
+    	//this object will be used to have user select file from their computer
+    	fileChooser.setTitle("Open Resource File");
+    	File selectedFile = fileChooser.showOpenDialog(loadPopupWindow);
+    	
+					      
+		loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
+		loadPopupWindow.setTitle("Load File Pop Up Screen");
+		
+		//creating a gridpane to store the javafx buttons and text fields in
+		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.CENTER);
+		      
+		 //create label to place on top of selected file
+        Label fileLabel = new Label("File Selected"); 
+        fileLabel.setFont(new Font("Arial", 14));
+	
+		      
+		//create a cancel button to close out of load popup screen     
+		Button cancelButton= new Button("Cancel");
+		cancelButton.setPrefSize(80,40);     
+		cancelButton.setOnAction(e -> loadPopupWindow.close());
+		
+		//create a load button that takes the selected file and parses it and saves it into our FoodData structure
+		Button loadButton= new Button("Load");
+		loadButton.setPrefSize(80,40);
+		//loads file into data struce when load button is clicked
+		loadButton.setOnAction(e -> { loadFile(selectedFile); loadPopupWindow.close();});
+
+		
+		//Create text field that shows the path of the file selected
+		TextField nameFilterField = new TextField("No File Selected");
+		nameFilterField.setPrefWidth(600);
+		nameFilterField.setDisable(true);
+		
+		
+		//add buttons,label and textbox to grid
+		gridPane.add(nameFilterField, 0, 1, 3, 1); 
+		gridPane.add(fileLabel, 1, 0, 1, 1);
+		gridPane.add(cancelButton, 0, 2, 1, 1);
+		gridPane.add(loadButton, 2, 2, 1, 1);
+		
+		//add gridPane to the scene      
+		Scene scene1= new Scene(gridPane, 300, 250);
+		
+		//set the scene to the popup window
+		loadPopupWindow.setScene(scene1);
+    	
+	
+		
+    	if( selectedFile == null ) {
+    		nameFilterField.setText("No File Selected");
+    		
+    	}
+    	else {
+    		nameFilterField.setText(selectedFile.toString());
+    	
+    	}
+			
+			//make the load Popup window visible
+			loadPopupWindow.showAndWait();
+    }//end of displayLoadFile()
+	
+    //method will be called when the addFood button is clicked from main GUI
+    public static void displayAddFood()
+	{
+    	Stage loadPopupWindow =new Stage();
+    	
+    	loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
+		loadPopupWindow.setTitle("Add Food Pop Up Screen");
+		
+		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.CENTER);
+		      
+		 //create labels for name of food and nutrients for user input
+        Label nameLabel = new Label("Name: "); 
+        nameLabel.setFont(new Font("Arial", 14));
+        
+        Label caloriesLabel = new Label("Calories: "); 
+        caloriesLabel.setFont(new Font("Arial", 14));
+        
+        Label fatLabel = new Label("Fat: "); 
+        fatLabel.setFont(new Font("Arial", 14));
+
+        Label carbLabel = new Label("Carbohydrates: "); 
+        carbLabel.setFont(new Font("Arial", 14));
+        
+        Label fiberLabel = new Label("Fiber: "); 
+        fiberLabel.setFont(new Font("Arial", 14));
+        
+        Label proteinLabel = new Label("Protein: "); 
+        proteinLabel.setFont(new Font("Arial", 14));
+        
+        TextField nameField = new TextField();
+		nameField.setPrefWidth(100);
+		
+		TextField caloriesField = new TextField();
+		caloriesField.setPrefWidth(100);
+		
+		TextField fatField = new TextField();
+		fatField.setPrefWidth(100);
+		
+		TextField carbField = new TextField();
+		carbField.setPrefWidth(100);
+		
+		TextField fiberField = new TextField();
+		fiberField.setPrefWidth(100);
+		
+		TextField proteinField = new TextField();
+		proteinField.setPrefWidth(100);
+		      
+		//create a cancel button to close out of load popup screen     
+		Button cancelButton= new Button("Cancel");
+		cancelButton.setPrefSize(80,40);     
+		cancelButton.setOnAction(e -> loadPopupWindow.close());
+		
+		//create a add button that takes the user input from textfields and saves it into our FoodData structure
+		Button loadButton= new Button("Add");
+		loadButton.setPrefSize(80,40);
+		loadButton.setOnAction(e -> {addFoodItem(nameField.getText(),caloriesField.getText(), fatField.getText(), carbField.getText(), fiberField.getText(), proteinField.getText());
+				loadPopupWindow.close();});
+
+
+		
+		
+		//add buttons,label and textbox to grid
+		gridPane.add(nameField, 1, 0, 1, 1); 
+		gridPane.add(nameLabel, 0, 0, 1, 1);
+		gridPane.add(caloriesLabel, 0, 1, 1, 1);
+		gridPane.add(caloriesField, 1,1,1,1);
+		gridPane.add(fatLabel, 0, 2, 1, 1);
+		gridPane.add(fatField, 1,2,1,1);
+		gridPane.add(carbLabel, 0, 3, 1, 1);
+		gridPane.add(carbField, 1,3,1,1);
+		gridPane.add(fiberLabel, 0, 4, 1, 1);
+		gridPane.add(fiberField, 1,4,1,1);
+		gridPane.add(proteinLabel, 0, 5, 1, 1);
+		gridPane.add(proteinField, 1,5,1,1);
+		gridPane.add(cancelButton, 0, 6, 1, 1);
+		gridPane.add(loadButton, 2, 6, 1, 1);
+	    
+		//add gridPane to the scene      
+		Scene scene1= new Scene(gridPane, 300, 250);
+		
+		//set the scene to the popup window
+		loadPopupWindow.setScene(scene1);
+		loadPopupWindow.showAndWait();
+		
+	}//end of displayAddFood()
+    
+    //method that loadFile method uses to check if the line read in is of valid data format
+    private static boolean isValidDataField(List<String> lineInput) {
+    	//first check if there are 12 seperate data fields that were parsed, split by commas in input file
+    	if(lineInput.size() == 12) {
+    		//now check if column 3,5,7,9,11 have the correct name of the nutrient: calories, fat, carbohydrate, fiber and protein
+    		if(lineInput.get(2).equals("calories") && lineInput.get(4).equals("fat") && lineInput.get(6).equals("carbohydrate") && lineInput.get(8).equals("fiber") && lineInput.get(10).equals("protein")) { 
+    			//check if the column to the right of the nutrient contains a number that be of type double
+    			if(isPositiveDouble(lineInput.get(3)) && isPositiveDouble(lineInput.get(5)) && isPositiveDouble(lineInput.get(7)) && isPositiveDouble(lineInput.get(9)) && isPositiveDouble(lineInput.get(11))) {
+    				return true;
+    			}
+    			else {
+    				return false;
+    			}
+    		}
+    		else {
+    			return false;
+    		}
+    	}else {
+    		return false;
+    	}
+    }//end of isValidDataField()
+    
+   //method to check if a string can be converted into a non-negative double
+    private static boolean isPositiveDouble(String str) {
+        try {
+            if(Double.parseDouble(str) >=0.0) {
+            	 return true;
+            }
+            return false;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }//end of isPositiveDouble
+    
+    private static void loadFile(File selectedFile) {
+    	
+		//process each item in list and save into 3 separate data structures: list of ids, list of names and list ofHashMap nutrient
+		//ToDo
+    	//once the FoodData class is created will store this a FoodData data structure
+    	
+    	//check if file selected was not null
+    	if( selectedFile == null ) {
+    		System.out.println("File Name Missing");
+    		
+    	}
+    	else {
+    		
+    		try (Stream<String> stream = Files.lines(Paths.get(selectedFile.toString()))) {
+
+	    		listOfLines = stream
+	    				.map(line -> Arrays.asList(line.split(",")))
+				.collect(Collectors.toList());
+	
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    		catch (Exception e) {
+    			e.printStackTrace();
+    		}
+
+			
+			//go through each line in input file and decide if the format is valid to save to our foodData structure
+			//<id>,<food_name>,<calories>,<calorie_count>,<fat>,<fat_grams>,<carbohydrate>,<carbohydrate_grams>,<fiber>,<fiber_grams>,<protein>,<protein_grams>,
+			//Example row of a valid data file:
+			//556540ff5d613c9d5f5935a9,Stewarts_PremiumDarkChocolatewithMintCookieCrunch,calories,280,fat,18,carbohydrate,34,fiber,3,protein,3,
+			for(int i =0; i < listOfLines.size();i++) {
+				//List<String> tempList = itr.next(); //this is looking at each line from the input file
+				if(isValidDataField(listOfLines.get(i))) {
+					//add dataitem to our foodData structure
+					idList.add(listOfLines.get(i).get(0));
+					nameList.add(listOfLines.get(i).get(1));
+					//load in nutrient values
+					HashMap<String, Double> temp = new HashMap<String, Double>();
+					temp.put(listOfLines.get(i).get(2), Double.parseDouble(listOfLines.get(i).get(3)));
+					temp.put(listOfLines.get(i).get(4), Double.parseDouble(listOfLines.get(i).get(5)));
+					temp.put(listOfLines.get(i).get(6), Double.parseDouble(listOfLines.get(i).get(7)));
+					temp.put(listOfLines.get(i).get(8), Double.parseDouble(listOfLines.get(i).get(9)));
+					temp.put(listOfLines.get(i).get(10), Double.parseDouble(listOfLines.get(i).get(11)));
+					nutrientsList.add(temp);
+				}
+	
+			}
+				
+    
+    	}//end of else statement
+    }//end of loadFile(File selectedFile)
+    
+    private static void addFoodItem(String name, String calories, String fat, String carbohydrates, String fiber, String protein) {
+    	//check to make sure all fields are not null
+    	if( name != null && calories != null && fat != null && carbohydrates != null && fiber != null && protein != null){
+    		//check all fields are not zero length
+    		if(!name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && !carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
+    			//check if the nutrient values are positive doubles
+    			if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && isPositiveDouble(fiber) && isPositiveDouble(protein)) {
+    				nameList.add(name);
+    				idList.add("1010101");//need to create a unique id will need hash table for this need to update
+    				HashMap<String, Double> temp = new HashMap<String, Double>();
+					temp.put("calories", Double.parseDouble(calories));
+					temp.put("fat", Double.parseDouble(fat));
+					temp.put("carbohydrate", Double.parseDouble(carbohydrates));
+					temp.put("fiber", Double.parseDouble(fiber));
+					temp.put("protein", Double.parseDouble(protein));
+					nutrientsList.add(temp);
+    			}
+    		}
+    	}
+    }//end of addFoodItem
 }
