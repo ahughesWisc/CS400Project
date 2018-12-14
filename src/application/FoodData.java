@@ -1,6 +1,7 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -80,7 +81,6 @@ public class FoodData implements FoodDataADT<FoodItem> {
       double value; // Amount of nutrient: in count (calories) or grams (fat, carbohydrate, fiber, protein)
       int ruleListNum = 0; // Counts the rules as they are added to trigger list intersection
       
-      // FIXME assumes rules is correctly formatted
       // Parses rules list, performs range search on each rule, and intersects all filtered lists
       while (rulesIt.hasNext()) {
         rule = rulesIt.next();
@@ -114,6 +114,10 @@ public class FoodData implements FoodDataADT<FoodItem> {
           filteredFoodList = newFilteredFoodList;
         }
       }
+      
+      // Source: https://stackoverflow.com/questions/49821774/sorting-string-value-in-a-case-insensitive-manner-in-java-8/49821834
+      // Sorts the filteredFoodList, case insensitive
+      filteredFoodList.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
       
       return filteredFoodList;
     }
