@@ -25,7 +25,8 @@ public class FoodItem {
      * @param id unique id of the food item 
      */
     public FoodItem(String id, String name) {
-        // TODO : Complete
+        this.id = id;
+        this.name = name;
     }
     
     /**
@@ -43,8 +44,7 @@ public class FoodItem {
      * @return id of the food item
      */
     public String getID() {
-        // TODO : Complete
-        return null;
+        return id;
     }
     
     /**
@@ -72,6 +72,10 @@ public class FoodItem {
     public double getNutrientValue(String name) {
         // TODO : Complete
         return 0;
+    }
+    
+    public String toString() {
+    	return getName();
     }
     
 }

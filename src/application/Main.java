@@ -1,5 +1,7 @@
 package application;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.regex.Pattern;
 
 /**
@@ -26,6 +28,7 @@ import java.util.regex.Pattern;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -127,10 +130,10 @@ public class Main extends Application {
 	//Class Attributes
 	private ObservableList<String> rules = FXCollections.observableArrayList();
 	private ListView<String> ruleList = new ListView<String>(rules);
-	private ObservableList<String> foods = FXCollections.observableArrayList();
-    private ListView<String> foodList = new ListView<String>(foods);
-    private ObservableList<String> menuFoods = FXCollections.observableArrayList();
-    private ListView<String> menuList = new ListView<String>(menuFoods);
+	private ObservableList<FoodItem> foods = FXCollections.observableArrayList();
+    private ListView<FoodItem> foodList = new ListView<FoodItem>(foods);
+    private ObservableList<FoodItem> menuFoods = FXCollections.observableArrayList();
+    private ListView<FoodItem> menuList = new ListView<FoodItem>(menuFoods);
     private final static ObservableList<String> nutrients = 
             FXCollections.observableArrayList(
                 Calories,
@@ -221,7 +224,11 @@ public class Main extends Application {
             
             // Master food list            
             if (DEBUG) { //testing only
-            	foodList.getItems().addAll("Blackberries", "Blueberries", "Raspberries", "Strawberries");
+            	FoodItem blackberries = new FoodItem("1","Blackberries");
+            	FoodItem blueberries = new FoodItem("A","Blueberries");
+            	FoodItem raspberries = new FoodItem("12312","Raspberries");
+            	FoodItem strawberries = new FoodItem("2","Strawberries");
+            	foodList.getItems().addAll(blackberries,blueberries,raspberries,strawberries);
             }
             
             // Makes multiple selections possible when hitting ctrl
@@ -253,8 +260,29 @@ public class Main extends Application {
             addAndRemoveButtonsVBox.setAlignment(Pos.CENTER);
             addAndRemoveButtonsVBox.getChildren().addAll(addFoodtoMenuButton, removeFoodFromMenuButton);
             
-            addFoodtoMenuButton.setOnAction(e -> { // incompelte
-            	String selectedFoodString = foodList.getSelectionModel().getSelectedItem();
+            // comparator for sorting food lists by name
+            Comparator<? super FoodItem> comparatorFoodItembyName = new Comparator<FoodItem>() {
+            	@Override
+            	public int compare(FoodItem food1, FoodItem food2) {
+            		return food1.getName().compareToIgnoreCase(food2.getName());
+            	}
+            };
+            
+            // add a food from the food list to the menu list
+            addFoodtoMenuButton.setOnAction(e -> {
+            	FoodItem selectedFood = foodList.getSelectionModel().getSelectedItem();
+            	if (selectedFood != null) {
+            		menuFoods.add(selectedFood);
+            	}
+            	Collections.sort(menuFoods, comparatorFoodItembyName);
+            });
+            
+            // remove a food from the menu list
+            removeFoodFromMenuButton.setOnAction(e -> {
+            	FoodItem selectedFood = menuList.getSelectionModel().getSelectedItem();
+            	if (selectedFood != null) {
+            		menuFoods.remove(selectedFood);
+            	}
             });
             
             
