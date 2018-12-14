@@ -116,8 +116,10 @@ public class FoodData implements FoodDataADT<FoodItem> {
       }
       
       // Source: https://stackoverflow.com/questions/49821774/sorting-string-value-in-a-case-insensitive-manner-in-java-8/49821834
-      // Sorts the filteredFoodList, case insensitive
-      filteredFoodList.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
+      // Sorts the filteredFoodList alphabetically, case insensitive, if it's not empty
+      if (!filteredFoodList.isEmpty()) {
+        filteredFoodList.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
+      }
       
       return filteredFoodList;
     }
