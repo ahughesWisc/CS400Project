@@ -167,7 +167,7 @@ public class Main extends Application {
 	private ObservableList<String> rules = FXCollections.observableArrayList();
 	private ListView<String> ruleList = new ListView<String>(rules);
 	private FoodData foodData = new FoodData();
-	private ObservableList<FoodItem> foods = FXCollections.observableArrayList(foodData.getAllFoodItems());
+	private ObservableList<FoodItem> foods = FXCollections.observableArrayList();
 	private ListView<FoodItem> foodList = new ListView<FoodItem>(foods);
 	private ObservableList<FoodItem> menuFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> menuList = new ListView<FoodItem>(menuFoods);
@@ -241,6 +241,14 @@ public class Main extends Application {
 			ap.setMaxWidth(768);
 			ap.setMinWidth(768);
 
+			// comparator for sorting food lists by name
+			Comparator<? super FoodItem> comparatorFoodItembyName = new Comparator<FoodItem>() {
+				@Override
+				public int compare(FoodItem food1, FoodItem food2) {
+					return food1.getName().compareToIgnoreCase(food2.getName());
+				}
+			};
+			
 			// -- Food List Area: --
 
 			Label foodListLabel = new Label(FoodListLabel); // Food List title
@@ -256,7 +264,10 @@ public class Main extends Application {
 			loadFoodsButton.setOnAction(e -> displayLoadFile());//call displayLoadFile when Load Food Button clicked, opens popup window
 			Button addFoodButton = new Button(AddFoodCaption);
 			addFoodButton.setPrefSize(100, 20); // Sets width and height of button
-			addFoodButton.setOnAction(e -> displayAddFood());//call displayAddFood when Add Food Button clicked, opens popup window
+			addFoodButton.setOnAction(e -> {
+				displayAddFood();
+				Collections.sort(foods, comparatorFoodItembyName);	
+			});//call displayAddFood when Add Food Button clicked, opens popup window
 			Button saveFoodsButton = new Button(SaveFoodsCaption);
 			saveFoodsButton.setPrefSize(100, 20); // Sets width and height of button
 			foodListButtonsHBox.getChildren().addAll(loadFoodsButton, addFoodButton, saveFoodsButton);
@@ -274,6 +285,7 @@ public class Main extends Application {
 				foods = FXCollections.observableArrayList(foodData.getAllFoodItems());
 				foodList = new ListView<FoodItem>(foods);
 			}
+			
 
 			foodList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 			foodList.setPrefWidth(320); // Formerly 323
@@ -303,13 +315,7 @@ public class Main extends Application {
 			addAndRemoveButtonsVBox.setAlignment(Pos.CENTER);
 			addAndRemoveButtonsVBox.getChildren().addAll(addFoodtoMenuButton, removeFoodFromMenuButton);
 
-			// comparator for sorting food lists by name
-			Comparator<? super FoodItem> comparatorFoodItembyName = new Comparator<FoodItem>() {
-				@Override
-				public int compare(FoodItem food1, FoodItem food2) {
-					return food1.getName().compareToIgnoreCase(food2.getName());
-				}
-			};
+			
 
 			// add a food from the food list to the menu list
 			addFoodtoMenuButton.setOnAction(e -> {
@@ -700,7 +706,7 @@ public class Main extends Application {
 	}
 
 	//method will be called when the addFood button is clicked from main GUI
-	public static void displayAddFood()
+	public void displayAddFood()
 	{
 		Stage loadPopupWindow =new Stage();
 
@@ -755,8 +761,37 @@ public class Main extends Application {
 		//create a add button that takes the user input from textfields and saves it into our FoodData structure
 		Button loadButton= new Button("Add");
 		loadButton.setPrefSize(80,40);
-		loadButton.setOnAction(e -> {addFoodItem(nameField.getText(),caloriesField.getText(), fatField.getText(), carbField.getText(), fiberField.getText(), proteinField.getText());
-		loadPopupWindow.close();});
+		loadButton.setOnAction(e -> {
+			addFoodItem(nameField.getText(),caloriesField.getText(), fatField.getText(), carbField.getText(), fiberField.getText(), proteinField.getText());
+			if( nameField.getText() != null && caloriesField.getText() != null && fatField.getText() != null && carbField.getText() != null && fiberField.getText() != null && proteinField.getText() != null){
+				String name = nameField.getText();
+				String calories = caloriesField.getText();
+				String fat = fatField.getText();
+				String carbohydrates = carbField.getText();
+				String fiber = fiberField.getText();
+				String protein = proteinField.getText();
+				//check all fields are not zero length
+				if(!name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && !carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
+					//check if the nutrient values are positive doubles
+					if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && isPositiveDouble(fiber) && isPositiveDouble(protein)) {
+						nameList.add(name);
+						idList.add("1010101");//need to create a unique id will need hash table for this need to update
+						
+						FoodItem foodItem = new FoodItem("123",name);
+						
+						foodItem.addNutrient("calories", Double.parseDouble(calories));
+						foodItem.addNutrient("fat", Double.parseDouble(fat));
+						foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrates));
+						foodItem.addNutrient("fiber", Double.parseDouble(fiber));
+						foodItem.addNutrient("protein", Double.parseDouble(protein));
+						foodData.addFoodItem(foodItem);
+						foods.add(foodItem);
+					}
+					
+				}
+			}
+			loadPopupWindow.close();
+		});
 
 
 
