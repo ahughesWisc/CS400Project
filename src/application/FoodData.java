@@ -14,6 +14,11 @@ import java.util.stream.Collectors;
 * Course:		CS400
 * Section:		004
 * 
+* Credit Outside Help
+* 
+* Online Sources: https://stackoverflow.com/questions/31683375/java-8-lambda-intersection-of-two-lists
+* https://stackoverflow.com/questions/49821774/sorting-string-value-in-a-case-insensitive-manner-in-java-8/49821834
+* 
 * Notes:
 */
 
@@ -112,7 +117,6 @@ public class FoodData implements FoodDataADT<FoodItem> {
         // If more than one rule list has been created, then intersection is needed
         if (ruleListNum > 1) {
         
-          // Source: https://stackoverflow.com/questions/31683375/java-8-lambda-intersection-of-two-lists
           // Gets intersection of two FoodItem lists
           List<FoodItem> intersection = newFilteredFoodList.stream()
               .filter(filteredFoodList::contains)
@@ -125,7 +129,6 @@ public class FoodData implements FoodDataADT<FoodItem> {
         }
       }
       
-      // Source: https://stackoverflow.com/questions/49821774/sorting-string-value-in-a-case-insensitive-manner-in-java-8/49821834
       // Sorts the filteredFoodList alphabetically, case insensitive, if it's not empty
       if (!filteredFoodList.isEmpty()) {
         filteredFoodList.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
