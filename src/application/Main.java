@@ -63,6 +63,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.awt.event.ActionEvent;
 import java.util.*; 
@@ -664,9 +665,9 @@ public class Main extends Application {
 			
 			// format food names in a list
 			if (foods == "") {
-				foods = entry.getValue() + "x" + entry.getKey().getName();
+				foods = "\t" + entry.getValue() + "x" + entry.getKey().getName();
 			} else {
-				foods = foods + ", " + entry.getValue() + "x" + entry.getKey().getName();
+				foods = foods + "\n\t\t\t\t " + entry.getValue() + "x" + entry.getKey().getName();
 			}
 
 			// add nutrient values
@@ -677,22 +678,14 @@ public class Main extends Application {
 			fiber = fiber + entry.getValue()*entry.getKey().getNutrientValue("fiber");
 		}
 
-		// create labels for displaying nutrients
-		Label menuFoodLabel = new Label("Foods in Meal: " + foods);
-		Label caloriesLabel = new Label("Total calories: " + calories);
-		Label fatLabel = new Label("Total fat(g): " + fat);
-		Label carbsLabel = new Label("Total carbs(g): " + carbs);
-		Label proteinLabel = new Label("Total protein(g): " + protein);
-		Label fiberLabel = new Label("Total fiber(g): " + fiber);
-
+		// create text for displaying nutrients
+		Text output = new Text("Foods in Meal: " + foods + "\n" + "Total calories:\t\t" + calories +
+				"\n" + "Total fat(g):\t\t" + fat +"\nTotal carbs(g):\t\t" + carbs + "\nTotal protein(g):\t" +
+				protein + "\nTotal fiber(g):\t\t" + fiber);
+		
 		// add all elements to the grid
-		gridPane.add(menuFoodLabel, 0, 0);
-		gridPane.add(caloriesLabel, 0, 1);
-		gridPane.add(fatLabel, 0, 2);
-		gridPane.add(carbsLabel, 0, 3);
-		gridPane.add(proteinLabel, 0, 4);
-		gridPane.add(fiberLabel, 0, 5);
-
+		gridPane.add(output, 0, 0);
+		
 		//add gridPane to the scene      
 		Scene scene1= new Scene(gridPane, 300, 250);
 
