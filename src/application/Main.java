@@ -161,7 +161,7 @@ public class Main extends Application {
 	final static String HorizontalDividerImage = "horizontalLine.png";
 
 	//Testing
-	final static boolean DEBUG = true;
+	final static boolean DEBUG = false;
 
 	//Class Attributes
 	private ObservableList<String> rules = FXCollections.observableArrayList();
