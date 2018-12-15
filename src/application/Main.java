@@ -571,7 +571,7 @@ public class Main extends Application {
 	private String makeRule(SingleSelectionModel<String> nutrient, SingleSelectionModel<String> operator, String value) {
 		String nut = nutrient.getSelectedItem();
 		String op = operator.getSelectedItem();
-		return String.format("%s%s%s", 
+		return String.format("%s %s %s", 
 				nut,
 				op, 
 				value);
