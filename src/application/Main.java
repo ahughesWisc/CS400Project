@@ -275,6 +275,7 @@ public class Main extends Application {
 			// Master food list            
 			if (DEBUG) { //testing only
 				FoodItem blackberries = new FoodItem("1","Blackberries");
+				blackberries.addNutrient("calories", 5.0);
 				foodData.addFoodItem(blackberries);
 				FoodItem blueberries = new FoodItem("A","Blueberries");
 				foodData.addFoodItem(blueberries);
