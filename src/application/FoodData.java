@@ -128,23 +128,45 @@ public class FoodData implements FoodDataADT<FoodItem> {
       return filteredFoodList;
     }
 
-    /*
+    /* Adds a food item to the food list and the nutriant indices
      * (non-Javadoc)
      * @see skeleton.FoodDataADT#addFoodItem(skeleton.FoodItem)
      */
     @Override
     public void addFoodItem(FoodItem foodItem) {
-        // TODO : Complete
+        
+    	// add the food to the list
+    	foodItemList.add(foodItem);
+    	
+    	// add all nutriant values to the relevant indices
+    	BPTree<Double,FoodItem> calorieTree = indexes.get("calories");
+    	calorieTree.insert(foodItem.getNutrientValue("calories"), foodItem);
+    	indexes.put("calories", calorieTree);
+    	
+    	BPTree<Double,FoodItem> fatTree = indexes.get("fats");
+    	fatTree.insert(foodItem.getNutrientValue("fats"), foodItem);
+    	indexes.put("fats", fatTree);
+    	
+    	BPTree<Double,FoodItem> carbohydratesTree = indexes.get("carbohydratess");
+    	carbohydratesTree.insert(foodItem.getNutrientValue("carbohydratess"), foodItem);
+    	indexes.put("carbohydratess", carbohydratesTree);
+    	
+    	BPTree<Double,FoodItem> proteinTree = indexes.get("proteins");
+    	proteinTree.insert(foodItem.getNutrientValue("proteins"), foodItem);
+    	indexes.put("proteins", proteinTree);
+    	
+    	BPTree<Double,FoodItem> fiberTree = indexes.get("fibers");
+    	fiberTree.insert(foodItem.getNutrientValue("fibers"), foodItem);
+    	indexes.put("fibers", fiberTree);
     }
 
     /*
-     * (non-Javadoc)
+     * retrieves a list of all food items
      * @see skeleton.FoodDataADT#getAllFoodItems()
      */
     @Override
     public List<FoodItem> getAllFoodItems() {
-        // TODO : Complete
-        return null;
+        return foodItemList;
     }
     
     /*
