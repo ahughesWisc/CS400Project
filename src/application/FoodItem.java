@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * This class represents a food item with all its properties.
  * 
- * @author aka
+ * @author Aaron Whitaker (awhitaker3@wisc.edu);
  */
 public class FoodItem {
     // The name of the food item.
@@ -25,8 +25,6 @@ public class FoodItem {
      * @param id unique id of the food item 
      */
     public FoodItem(String id, String name) {
-        this.id = id;
-        this.name = name;
     }
     
     /**
@@ -75,7 +73,9 @@ public class FoodItem {
      * If not present, then returns 0.
      */
     public double getNutrientValue(String name) {
-        // TODO : Complete
+        if(nutrients.containsKey(name)) {
+            return nutrients.get(name);
+        }
         return 0;
     }
     
@@ -84,3 +84,4 @@ public class FoodItem {
     }
     
 }
+

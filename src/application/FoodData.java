@@ -56,8 +56,12 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public List<FoodItem> filterByName(String substring) {
-        // TODO : Complete
-        return null;
+        String lcSub = substring.toLowerCase();
+        List<FoodItem> filteredByNames = 
+                        foodItemList.stream()
+                        .filter(x -> x.getName().toLowerCase().contains(lcSub))
+                        .collect(Collectors.toList());
+             return filteredByNames;
     }
 
     /*
