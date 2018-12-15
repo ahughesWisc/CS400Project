@@ -53,8 +53,7 @@ public class FoodItem {
      * @return nutrients of the food item
      */
     public HashMap<String, Double> getNutrients() {
-        // TODO : Complete
-        return null;
+        return nutrients;
     }
 
     /**
@@ -62,7 +61,13 @@ public class FoodItem {
      * If nutrient already exists, updates its value.
      */
     public void addNutrient(String name, double value) {
-        // TODO : Complete
+    	if (name != "calories" && name != "fat" && name != "carbohydrate" && name != "fiber" && name != "protein") {
+    		return;
+    	}
+    	if (value < 0) {
+    		return;
+    	}
+        nutrients.put(name, value);
     }
 
     /**
