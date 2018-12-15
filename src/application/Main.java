@@ -415,9 +415,9 @@ public class Main extends Application {
 
 			// View of the active rules
 			if (DEBUG) {
-				rules.add("Rule1");
-				rules.add("Rule2");
-				rules.add("Rule3");
+				rules.add("Fiber == 20");
+				rules.add("Fat >= 5");
+				rules.add("Protein >= 3");
 			}
 			ruleList.setPrefWidth(100);
 			ruleList.setPrefHeight(70);
