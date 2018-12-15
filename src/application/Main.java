@@ -718,6 +718,9 @@ public class Main extends Application {
 		gridPane.setAlignment(Pos.CENTER);
 
 		//create labels for name of food and nutrients for user input
+		Label idLabel = new Label("ID: ");
+		idLabel.setFont(new Font("Arial",14));
+		
 		Label nameLabel = new Label("Name: "); 
 		nameLabel.setFont(new Font("Arial", 14));
 
@@ -736,6 +739,9 @@ public class Main extends Application {
 		Label proteinLabel = new Label("Protein: "); 
 		proteinLabel.setFont(new Font("Arial", 14));
 
+		TextField idField = new TextField();
+		idField.setPrefWidth(100);
+		
 		TextField nameField = new TextField();
 		nameField.setPrefWidth(100);
 
@@ -764,54 +770,59 @@ public class Main extends Application {
 		loadButton.setPrefSize(80,40);
 		loadButton.setOnAction(e -> {
 			addFoodItem(nameField.getText(),caloriesField.getText(), fatField.getText(), carbField.getText(), fiberField.getText(), proteinField.getText());
-			if( nameField.getText() != null && caloriesField.getText() != null && fatField.getText() != null && carbField.getText() != null && fiberField.getText() != null && proteinField.getText() != null){
-				String name = nameField.getText();
-				String calories = caloriesField.getText();
-				String fat = fatField.getText();
-				String carbohydrates = carbField.getText();
-				String fiber = fiberField.getText();
-				String protein = proteinField.getText();
-				//check all fields are not zero length
-				if(!name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && !carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
-					//check if the nutrient values are positive doubles
-					if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && isPositiveDouble(fiber) && isPositiveDouble(protein)) {
-						nameList.add(name);
-						idList.add("1010101");//need to create a unique id will need hash table for this need to update
-						
-						FoodItem foodItem = new FoodItem("123",name);
-						
-						foodItem.addNutrient("calories", Double.parseDouble(calories));
-						foodItem.addNutrient("fat", Double.parseDouble(fat));
-						foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrates));
-						foodItem.addNutrient("fiber", Double.parseDouble(fiber));
-						foodItem.addNutrient("protein", Double.parseDouble(protein));
-						foodData.addFoodItem(foodItem);
-						foods.add(foodItem);
+			if (foodData.isUniqueID(idField.getText())) {
+				if(idField.getText() != null && nameField.getText() != null && caloriesField.getText() != null && fatField.getText() != null && carbField.getText() != null && fiberField.getText() != null && proteinField.getText() != null){
+					String id = idField.getText();
+					String name = nameField.getText();
+					String calories = caloriesField.getText();
+					String fat = fatField.getText();
+					String carbohydrates = carbField.getText();
+					String fiber = fiberField.getText();
+					String protein = proteinField.getText();
+					//check all fields are not zero length
+					if(!id.isEmpty() && !name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && !carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
+						//check if the nutrient values are positive doubles
+						if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && isPositiveDouble(fiber) && isPositiveDouble(protein)) {
+							FoodItem foodItem = new FoodItem(id,name);
+							foodItem.addNutrient("calories", Double.parseDouble(calories));
+							foodItem.addNutrient("fat", Double.parseDouble(fat));
+							foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrates));
+							foodItem.addNutrient("fiber", Double.parseDouble(fiber));
+							foodItem.addNutrient("protein", Double.parseDouble(protein));
+							foodData.addFoodItem(foodItem);
+							foods.add(foodItem);
+							loadPopupWindow.close();
+						} else {
+							displayError("Nutrient values must be numeric and non-negative");
+						}
+					} else {
+						displayError("All fields in the form must be filled out");
 					}
-					
+				} else {
+					displayError("All fields in the form must be filled out");
 				}
+			} else {
+				displayError("The selected ID is already in use, select a unique ID");
 			}
-			loadPopupWindow.close();
 		});
 
-
-
-
 		//add buttons,label and textbox to grid
-		gridPane.add(nameField, 1, 0, 1, 1); 
-		gridPane.add(nameLabel, 0, 0, 1, 1);
-		gridPane.add(caloriesLabel, 0, 1, 1, 1);
-		gridPane.add(caloriesField, 1,1,1,1);
-		gridPane.add(fatLabel, 0, 2, 1, 1);
-		gridPane.add(fatField, 1,2,1,1);
-		gridPane.add(carbLabel, 0, 3, 1, 1);
-		gridPane.add(carbField, 1,3,1,1);
-		gridPane.add(fiberLabel, 0, 4, 1, 1);
-		gridPane.add(fiberField, 1,4,1,1);
-		gridPane.add(proteinLabel, 0, 5, 1, 1);
-		gridPane.add(proteinField, 1,5,1,1);
-		gridPane.add(cancelButton, 0, 6, 1, 1);
-		gridPane.add(loadButton, 2, 6, 1, 1);
+		gridPane.add(idLabel, 0, 0,1,1);
+		gridPane.add(idField, 1, 0,1,1);
+		gridPane.add(nameField, 1, 1, 1, 1); 
+		gridPane.add(nameLabel, 0, 1, 1, 1);
+		gridPane.add(caloriesLabel, 0, 2, 1, 1);
+		gridPane.add(caloriesField, 1,2,1,1);
+		gridPane.add(fatLabel, 0, 3, 1, 1);
+		gridPane.add(fatField, 1,3,1,1);
+		gridPane.add(carbLabel, 0, 4, 1, 1);
+		gridPane.add(carbField, 1,4,1,1);
+		gridPane.add(fiberLabel, 0, 5, 1, 1);
+		gridPane.add(fiberField, 1,5,1,1);
+		gridPane.add(proteinLabel, 0, 6, 1, 1);
+		gridPane.add(proteinField, 1,6,1,1);
+		gridPane.add(cancelButton, 0, 7, 1, 1);
+		gridPane.add(loadButton, 2, 7, 1, 1);
 
 		//add gridPane to the scene      
 		Scene scene1= new Scene(gridPane, 300, 250);
@@ -821,6 +832,30 @@ public class Main extends Application {
 		loadPopupWindow.showAndWait();
 
 	}//end of displayAddFood()
+	
+	private void displayError(String message) {
+		Stage loadPopupWindow =new Stage();
+
+		loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
+		loadPopupWindow.setTitle("Error");
+
+		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.CENTER);
+		
+		Text errorMessageText = new Text(message);
+		Button acceptButton = new Button("OK");
+		acceptButton.setPrefSize(80,40);     
+		acceptButton.setOnAction(e -> loadPopupWindow.close());
+		
+		gridPane.add(errorMessageText, 0, 0);
+		gridPane.add(acceptButton, 0, 2);
+		//add gridPane to the scene      
+		Scene scene1= new Scene(gridPane, 300, 250);
+
+		//set the scene to the popup window
+		loadPopupWindow.setScene(scene1);
+		loadPopupWindow.showAndWait();	
+	}
 
 	//method that loadFile method uses to check if the line read in is of valid data format
 	private static boolean isValidDataField(List<String> lineInput) {

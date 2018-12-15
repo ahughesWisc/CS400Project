@@ -36,6 +36,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
 
     // Map of nutrients and their corresponding index
     private HashMap<String, BPTree<Double, FoodItem>> indexes;
+    private List<String> usedIDs;
     
     
     /**
@@ -49,6 +50,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
         indexes.put("carbohydrates", new BPTree<Double,FoodItem>(64));
         indexes.put("protein", new BPTree<Double,FoodItem>(64));
         indexes.put("fiber", new BPTree<Double,FoodItem>(64));
+        this.usedIDs = new ArrayList<String>();
     }
     
     
@@ -170,6 +172,9 @@ public class FoodData implements FoodDataADT<FoodItem> {
     	BPTree<Double,FoodItem> fiberTree = indexes.get("fiber");
     	fiberTree.insert(foodItem.getNutrientValue("fiber"), foodItem);
     	indexes.put("fiber", fiberTree);
+    	
+    	//mark this ID as used
+    	usedIDs.add(foodItem.getID());
     }
 
     /*
@@ -189,5 +194,23 @@ public class FoodData implements FoodDataADT<FoodItem> {
     public void saveFoodItems(String filename) {
     	// TODO : Complete
     }
-
+    
+    /**
+     * check to make sure an ID can be used. IDs
+     * must be unique
+     * @param id
+     * @return
+     */
+    public boolean isUniqueID(String id) {
+    	if (id == null) {
+    		return false;
+    	}
+    	
+    	if(usedIDs.contains(id)) {
+    		return false;
+    	}
+    	
+    	return true;
+    }
+    
 }
