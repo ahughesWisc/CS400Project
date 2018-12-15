@@ -37,7 +37,13 @@ public class FoodData implements FoodDataADT<FoodItem> {
      * Public constructor
      */
     public FoodData() {
-        // TODO : Complete
+        this.foodItemList = new ArrayList<FoodItem>();
+        this.indexes = new HashMap<String, BPTree<Double, FoodItem>>();
+        indexes.put("calories", new BPTree<Double,FoodItem>(3));
+        indexes.put("fat", new BPTree<Double,FoodItem>(3));
+        indexes.put("carbohydrates", new BPTree<Double,FoodItem>(3));
+        indexes.put("protein", new BPTree<Double,FoodItem>(3));
+        indexes.put("fiber", new BPTree<Double,FoodItem>(3));
     }
     
     
@@ -134,7 +140,10 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public void addFoodItem(FoodItem foodItem) {
-        
+        if (foodItem == null) {
+        	return;
+        }
+    	
     	// add the food to the list
     	foodItemList.add(foodItem);
     	
@@ -143,21 +152,21 @@ public class FoodData implements FoodDataADT<FoodItem> {
     	calorieTree.insert(foodItem.getNutrientValue("calories"), foodItem);
     	indexes.put("calories", calorieTree);
     	
-    	BPTree<Double,FoodItem> fatTree = indexes.get("fats");
-    	fatTree.insert(foodItem.getNutrientValue("fats"), foodItem);
-    	indexes.put("fats", fatTree);
+    	BPTree<Double,FoodItem> fatTree = indexes.get("fat");
+    	fatTree.insert(foodItem.getNutrientValue("fat"), foodItem);
+    	indexes.put("fat", fatTree);
     	
-    	BPTree<Double,FoodItem> carbohydratesTree = indexes.get("carbohydratess");
-    	carbohydratesTree.insert(foodItem.getNutrientValue("carbohydratess"), foodItem);
-    	indexes.put("carbohydratess", carbohydratesTree);
+    	BPTree<Double,FoodItem> carbohydratesTree = indexes.get("carbohydrates");
+    	carbohydratesTree.insert(foodItem.getNutrientValue("carbohydrates"), foodItem);
+    	indexes.put("carbohydrates", carbohydratesTree);
     	
-    	BPTree<Double,FoodItem> proteinTree = indexes.get("proteins");
-    	proteinTree.insert(foodItem.getNutrientValue("proteins"), foodItem);
-    	indexes.put("proteins", proteinTree);
+    	BPTree<Double,FoodItem> proteinTree = indexes.get("protein");
+    	proteinTree.insert(foodItem.getNutrientValue("protein"), foodItem);
+    	indexes.put("protein", proteinTree);
     	
-    	BPTree<Double,FoodItem> fiberTree = indexes.get("fibers");
-    	fiberTree.insert(foodItem.getNutrientValue("fibers"), foodItem);
-    	indexes.put("fibers", fiberTree);
+    	BPTree<Double,FoodItem> fiberTree = indexes.get("fiber");
+    	fiberTree.insert(foodItem.getNutrientValue("fiber"), foodItem);
+    	indexes.put("fiber", fiberTree);
     }
 
     /*

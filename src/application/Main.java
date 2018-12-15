@@ -166,7 +166,8 @@ public class Main extends Application {
 	//Class Attributes
 	private ObservableList<String> rules = FXCollections.observableArrayList();
 	private ListView<String> ruleList = new ListView<String>(rules);
-	private ObservableList<FoodItem> foods = FXCollections.observableArrayList();
+	private FoodData foodData = new FoodData();
+	private ObservableList<FoodItem> foods = FXCollections.observableArrayList(foodData.getAllFoodItems());
 	private ListView<FoodItem> foodList = new ListView<FoodItem>(foods);
 	private ObservableList<FoodItem> menuFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> menuList = new ListView<FoodItem>(menuFoods);
@@ -263,14 +264,18 @@ public class Main extends Application {
 			// Master food list            
 			if (DEBUG) { //testing only
 				FoodItem blackberries = new FoodItem("1","Blackberries");
+				foodData.addFoodItem(blackberries);
 				FoodItem blueberries = new FoodItem("A","Blueberries");
+				foodData.addFoodItem(blueberries);
 				FoodItem raspberries = new FoodItem("12312","Raspberries");
+				foodData.addFoodItem(raspberries);
 				FoodItem strawberries = new FoodItem("2","Strawberries");
-				foodList.getItems().addAll(blackberries,blueberries,raspberries,strawberries);
+				foodData.addFoodItem(strawberries);
+				foods = FXCollections.observableArrayList(foodData.getAllFoodItems());
+				foodList = new ListView<FoodItem>(foods);
 			}
 
-			// Makes multiple selections possible when hitting ctrl
-			foodList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+			foodList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 			foodList.setPrefWidth(320); // Formerly 323
 			foodList.setPrefHeight(320);
 			foodList.setMinHeight(320);
