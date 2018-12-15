@@ -630,6 +630,33 @@ public class Main extends Application {
 			loadPopupWindow.showAndWait();
     }//end of displayLoadFile()
 	
+    public static void displayNutrients(ObservableList<FoodItem> menuFoods) {
+    	Stage loadPopupWindow =new Stage();
+    	
+    	loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
+		loadPopupWindow.setTitle("Nutritional Analysis");
+		
+		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.CENTER);
+		
+		Label menuFoodLabel = new Label("Foods in Meal: ");
+		Label caloriesLabel = new Label("Total calories: ");
+		Label fatLabel = new Label("Total fat(g): ");
+		Label carbsLabel = new Label("Total carbs(g): ");
+		Label proteinLabel = new Label("Total protein(g): ");
+		Label fiberLabel = new Label("Total fiber(g): ");
+		
+		double calories = 0;
+		double fat = 0;
+		double carbs = 0;
+		double protein = 0;
+		double fiber = 0;
+		String foods = "";
+		String ID="";
+		int countCurrent = 0;
+		
+    }
+    
     //method will be called when the addFood button is clicked from main GUI
     public static void displayAddFood()
 	{

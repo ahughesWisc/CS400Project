@@ -25,6 +25,8 @@ public class FoodItem {
      * @param id unique id of the food item 
      */
     public FoodItem(String id, String name) {
+    	this.id=id;
+    	this.name=name;
     }
     
     /**
