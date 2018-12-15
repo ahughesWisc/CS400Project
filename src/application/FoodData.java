@@ -39,11 +39,11 @@ public class FoodData implements FoodDataADT<FoodItem> {
     public FoodData() {
         this.foodItemList = new ArrayList<FoodItem>();
         this.indexes = new HashMap<String, BPTree<Double, FoodItem>>();
-        indexes.put("calories", new BPTree<Double,FoodItem>(3));
-        indexes.put("fat", new BPTree<Double,FoodItem>(3));
-        indexes.put("carbohydrates", new BPTree<Double,FoodItem>(3));
-        indexes.put("protein", new BPTree<Double,FoodItem>(3));
-        indexes.put("fiber", new BPTree<Double,FoodItem>(3));
+        indexes.put("calories", new BPTree<Double,FoodItem>(64));
+        indexes.put("fat", new BPTree<Double,FoodItem>(64));
+        indexes.put("carbohydrates", new BPTree<Double,FoodItem>(64));
+        indexes.put("protein", new BPTree<Double,FoodItem>(64));
+        indexes.put("fiber", new BPTree<Double,FoodItem>(64));
     }
     
     
