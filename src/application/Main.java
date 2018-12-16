@@ -66,6 +66,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Class used for creating and displaying the GUI and 
@@ -257,6 +258,7 @@ public class Main extends Application {
 			
 			Button saveFoodsButton = new Button(SaveFoodsCaption);
 			saveFoodsButton.setPrefSize(100, 20); // Sets width and height of button
+			saveFoodsButton.setOnAction(e -> displaySaveFile());
 			foodListButtonsHBox.getChildren().addAll(loadFoodsButton, addFoodButton, saveFoodsButton);
 
 			// Master food list            
@@ -642,6 +644,45 @@ public class Main extends Application {
 		//make the load Popup window visible
 		loadPopupWindow.showAndWait();
 	}//end of displayLoadFile()
+	
+	//method to save foodData to a file, if no file extension string contained automatically appends ".csv"
+	public void displaySaveFile()
+	{
+		Stage loadPopupWindow =new Stage();
+		FileChooser fileChooser = new FileChooser();
+
+		File saveFile = fileChooser.showSaveDialog(loadPopupWindow);
+		//save empty file first
+		String content = "";
+		String filePath = saveFile.getAbsolutePath();
+		if(!saveFile.getName().contains(".")) {
+			filePath = filePath + ".csv";
+		}
+
+		try {
+			Files.write(Paths.get(filePath), content.getBytes());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		//add to lines to file
+		
+		Iterator<FoodItem> itr = foodData.getAllFoodItems().iterator();
+		while(itr.hasNext()) {
+			FoodItem foodItemTemp = (FoodItem) itr.next();
+			String appendLineToFile = foodItemTemp.getID() +"," + foodItemTemp.getName() + ",calories," + foodItemTemp.getNutrientValue("calories") +",fat," + 
+					foodItemTemp.getNutrientValue("fat")+ ",carbohydrate," + foodItemTemp.getNutrientValue("carbohydrate") +  ",fiber," +
+					foodItemTemp.getNutrientValue("fiber") + ",protein," + foodItemTemp.getNutrientValue("protein") +"\n";
+			try {
+				Files.write(Paths.get(saveFile.getAbsolutePath()  + ".csv"), appendLineToFile.getBytes(),StandardOpenOption.APPEND);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+	}//end of save to file
 
 	/**
 	 * Displays a nutritional analysis of the foods in the menu
@@ -727,7 +768,7 @@ public class Main extends Application {
 		Label fatLabel = new Label("Fat: "); 
 		fatLabel.setFont(new Font("Arial", 14));
 
-		Label carbLabel = new Label("carbohydrate: "); 
+		Label carbLabel = new Label("Carbohydrate: "); 
 		carbLabel.setFont(new Font("Arial", 14));
 
 		Label fiberLabel = new Label("Fiber: "); 
