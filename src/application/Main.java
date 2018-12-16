@@ -857,6 +857,10 @@ public class Main extends Application {
 		return false;
 	}
 	
+	/**
+	 * displays an error message with an okay button to the user
+	 * @param message
+	 */
 	private void displayError(String message) {
 		Stage loadPopupWindow =new Stage();
 
