@@ -579,7 +579,7 @@ public class Main extends Application {
 	}
 
 	//method will be called when the LoadFood button is clicked from main GUI
-	public static void displayLoadFile()
+	public void displayLoadFile()
 	{
 		Stage loadPopupWindow =new Stage();
 		FileChooser fileChooser = new FileChooser();
@@ -769,41 +769,8 @@ public class Main extends Application {
 		Button loadButton= new Button("Add");
 		loadButton.setPrefSize(80,40);
 		loadButton.setOnAction(e -> {
-			addFoodItem(nameField.getText(),caloriesField.getText(), fatField.getText(), carbField.getText(), fiberField.getText(), proteinField.getText());
-			if (foodData.isUniqueID(idField.getText())) {
-				if(idField.getText() != null && nameField.getText() != null && caloriesField.getText() != null && fatField.getText() != null && carbField.getText() != null && fiberField.getText() != null && proteinField.getText() != null){
-					String id = idField.getText();
-					String name = nameField.getText();
-					String calories = caloriesField.getText();
-					String fat = fatField.getText();
-					String carbohydrates = carbField.getText();
-					String fiber = fiberField.getText();
-					String protein = proteinField.getText();
-					//check all fields are not zero length
-					if(!id.isEmpty() && !name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && !carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
-						//check if the nutrient values are positive doubles
-						if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && isPositiveDouble(fiber) && isPositiveDouble(protein)) {
-							FoodItem foodItem = new FoodItem(id,name);
-							foodItem.addNutrient("calories", Double.parseDouble(calories));
-							foodItem.addNutrient("fat", Double.parseDouble(fat));
-							foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrates));
-							foodItem.addNutrient("fiber", Double.parseDouble(fiber));
-							foodItem.addNutrient("protein", Double.parseDouble(protein));
-							foodData.addFoodItem(foodItem);
-							foods.add(foodItem);
-							loadPopupWindow.close();
-						} else {
-							displayError("Nutrient values must be numeric and non-negative");
-						}
-					} else {
-						displayError("All fields in the form must be filled out");
-					}
-				} else {
-					displayError("All fields in the form must be filled out");
-				}
-			} else {
-				displayError("The selected ID is already in use, select a unique ID");
-			}
+			addFoodtoFoodData(true,idField.getText(),nameField.getText(),caloriesField.getText(),fatField.getText(),
+					carbField.getText(),fiberField.getText(),proteinField.getText(),loadPopupWindow);
 		});
 
 		//add buttons,label and textbox to grid
@@ -832,6 +799,62 @@ public class Main extends Application {
 		loadPopupWindow.showAndWait();
 
 	}//end of displayAddFood()
+	
+	/**
+	 * validates user entered data and adds foods to the food data.
+	 * May optionally display error messages
+	 * @param triggerErrors
+	 * @param id
+	 * @param name
+	 * @param calories
+	 * @param fat
+	 * @param carbohydrates
+	 * @param fiber
+	 * @param protein
+	 * @param stage
+	 * @return
+	 */
+	private boolean addFoodtoFoodData(Boolean triggerErrors,String id, String name,String calories,String fat,String carbohydrates,String fiber,String protein, Stage stage) {
+		if (foodData.isUniqueID(id)) {
+			if(id != null && name != null && calories != null && fat != null && carbohydrates != null && fiber != null && protein != null){
+				//check all fields are not zero length
+				if(!id.isEmpty() && !name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && !carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
+					//check if the nutrient values are positive doubles
+					if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && isPositiveDouble(fiber) && isPositiveDouble(protein)) {
+						FoodItem foodItem = new FoodItem(id,name);
+						foodItem.addNutrient("calories", Double.parseDouble(calories));
+						foodItem.addNutrient("fat", Double.parseDouble(fat));
+						foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrates));
+						foodItem.addNutrient("fiber", Double.parseDouble(fiber));
+						foodItem.addNutrient("protein", Double.parseDouble(protein));
+						foodData.addFoodItem(foodItem);
+						foods.add(foodItem);
+						if (stage != null) {
+							stage.close();
+						}
+						return true;
+					} else {
+						if (triggerErrors) {
+								displayError("Nutrient values must be numeric and non-negative");
+						}
+					}
+				} else {
+					if (triggerErrors) {
+					displayError("All fields in the form must be filled out");
+					}
+				}
+			} else {
+				if (triggerErrors) {
+				displayError("All fields in the form must be filled out");
+				}
+			}
+		} else {
+			if (triggerErrors) {
+			displayError("The selected ID is already in use, select a unique ID");
+			}
+		}
+		return false;
+	}
 	
 	private void displayError(String message) {
 		Stage loadPopupWindow =new Stage();
@@ -891,7 +914,7 @@ public class Main extends Application {
 		}
 	}//end of isPositiveDouble
 
-	private static void loadFile(File selectedFile) {
+	private void loadFile(File selectedFile) {
 
 		//process each item in list and save into 3 separate data structures: list of ids, list of names and list ofHashMap nutrient
 		//ToDo
@@ -916,8 +939,16 @@ public class Main extends Application {
 			catch (Exception e) {
 				e.printStackTrace();
 			}
-
-
+			
+			ArrayList<List<String>> failedLines = new ArrayList<List<String>>();
+			
+			String id = new String();
+			String name = new String();
+			String calories = new String();
+			String fat = new String();
+			String carbohydrates = new String();
+			String fiber = new String();
+			String protein = new String();
 			//go through each line in input file and decide if the format is valid to save to our foodData structure
 			//<id>,<food_name>,<calories>,<calorie_count>,<fat>,<fat_grams>,<carbohydrate>,<carbohydrate_grams>,<fiber>,<fiber_grams>,<protein>,<protein_grams>,
 			//Example row of a valid data file:
@@ -925,43 +956,25 @@ public class Main extends Application {
 			for(int i =0; i < listOfLines.size();i++) {
 				//List<String> tempList = itr.next(); //this is looking at each line from the input file
 				if(isValidDataField(listOfLines.get(i))) {
-					//add dataitem to our foodData structure
-					idList.add(listOfLines.get(i).get(0));
-					nameList.add(listOfLines.get(i).get(1));
-					//load in nutrient values
-					HashMap<String, Double> temp = new HashMap<String, Double>();
-					temp.put(listOfLines.get(i).get(2), Double.parseDouble(listOfLines.get(i).get(3)));
-					temp.put(listOfLines.get(i).get(4), Double.parseDouble(listOfLines.get(i).get(5)));
-					temp.put(listOfLines.get(i).get(6), Double.parseDouble(listOfLines.get(i).get(7)));
-					temp.put(listOfLines.get(i).get(8), Double.parseDouble(listOfLines.get(i).get(9)));
-					temp.put(listOfLines.get(i).get(10), Double.parseDouble(listOfLines.get(i).get(11)));
-					nutrientsList.add(temp);
+					//parse out the food values
+					id = listOfLines.get(i).get(0);
+					name = listOfLines.get(i).get(1);
+					calories = listOfLines.get(i).get(3);
+					fat = listOfLines.get(i).get(5);
+					carbohydrates = listOfLines.get(i).get(7);
+					fiber = listOfLines.get(i).get(9);
+					protein = listOfLines.get(i).get(11);
+					
+					if (addFoodtoFoodData(false,id,name,calories,fat,carbohydrates,fiber,protein,null) == false) {
+						failedLines.add(listOfLines.get(i));
+					}
+
 				}
 
 			}
 
-
+			displayError("The following lines were not able to be added: " + failedLines);
 		}//end of else statement
 	}//end of loadFile(File selectedFile)
 
-	private static void addFoodItem(String name, String calories, String fat, String carbohydrates, String fiber, String protein) {
-		//check to make sure all fields are not null
-		if( name != null && calories != null && fat != null && carbohydrates != null && fiber != null && protein != null){
-			//check all fields are not zero length
-			if(!name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && !carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
-				//check if the nutrient values are positive doubles
-				if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && isPositiveDouble(fiber) && isPositiveDouble(protein)) {
-					nameList.add(name);
-					idList.add("1010101");//need to create a unique id will need hash table for this need to update
-					HashMap<String, Double> temp = new HashMap<String, Double>();
-					temp.put("calories", Double.parseDouble(calories));
-					temp.put("fat", Double.parseDouble(fat));
-					temp.put("carbohydrate", Double.parseDouble(carbohydrates));
-					temp.put("fiber", Double.parseDouble(fiber));
-					temp.put("protein", Double.parseDouble(protein));
-					nutrientsList.add(temp);
-				}
-			}
-		}
-	}//end of addFoodItem
 }
