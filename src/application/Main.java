@@ -1,7 +1,5 @@
 package application;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -223,6 +221,7 @@ public class Main extends Application {
 			exitProgramButton.setGraphic(new ImageView(imageExit));
 			Tooltip exitProgramTooltip = new Tooltip(ExitToolTip);
 			exitProgramButton.setTooltip(exitProgramTooltip);
+		
 
 			AnchorPane ap = new AnchorPane();
 			ap.getChildren().addAll(banner, exitProgramButton);
@@ -436,6 +435,8 @@ public class Main extends Application {
 			// Run query button
 			Button runSearch = new Button(RunSearchCaption);
 			runSearch.setMinSize(100, 50);
+			runSearch.setOnAction(e -> 
+			displayRunSearch(nameFilterField.getText(), rules, foodData, foods));
 
 			HBox searchHBox = new HBox();
 			searchHBox.setPadding(new Insets(0, 0, 0, 0));
@@ -978,5 +979,112 @@ public class Main extends Application {
 			}
 		}//end of else statement
 	}//end of loadFile(File selectedFile)
+	
+	
+	/**
+	 * Method will be called when the runSearch button is clicked from main GUI. Intentionally does 
+	 * not block user interaction with the Main window to allow for the user to use the information 
+	 * from this list to make other meal choices
+	 * 
+	 * @param foodName
+	 * @param rules
+	 * @param foodData
+	 * @param foods
+	 */
+	public static void displayRunSearch(String foodName, ObservableList<String> rules, FoodData 
+	    foodData, ObservableList<FoodItem> foods) {
+	  
+	  Stage loadPopupWindow = new Stage(); // Stage for the popup window
+	  loadPopupWindow.setTitle("Search Results");
+	  
+	  GridPane gridpane = new GridPane(); // Gridpane for layout of the stage
+	  gridpane.setAlignment(Pos.CENTER);
+	  
+	  // Variables for storing retrieved information
+	  List<FoodItem> nameSearchResults = null; // Stores the results of filtering by name
+	  List<FoodItem> nutrientSearchResults = null; // Stores the results of filtering by nutrients
+	  List<FoodItem> result = null; // Stores result of intersecting lists
+	  boolean noResultsFound = false; // True if there are no foods, both lists are empty, or both lists are null
+
+	  // If no foodName is entered, then the text field returns an empty String. Checks for empty String
+	  if (foodName.length() > 0) {
+	    nameSearchResults = foodData.filterByName(foodName);
+	  }
+
+	  // Checks there are foods to search
+	  if (foods.size() > 0) {
+	    nutrientSearchResults = foodData.filterByNutrients(rules);
+	    
+	  } else {
+	    noResultsFound = true;
+	  }
+	  
+	  // Intersects lists, if needed
+	  if (nameSearchResults != null && nutrientSearchResults != null) {
+	    
+	    if (nameSearchResults.size() > 0 && nutrientSearchResults.size() > 0) {
+
+	      // Intersect lists
+	      result = nameSearchResults.stream()
+	          .filter(nutrientSearchResults::contains)
+	          .collect(Collectors.toList());
+
+	    } else if (nameSearchResults.size() > 0) {
+	      result = nameSearchResults;
+
+	    } else if (nutrientSearchResults.size() > 0) {
+	      result = nutrientSearchResults;
+
+	    } else {
+	      // Both lists are empty
+	      noResultsFound = true;
+	    }
+
+	  } else if (nameSearchResults != null) {
+	    result = nameSearchResults;
+
+	  } else if (nutrientSearchResults != null) {
+	    result = nutrientSearchResults;
+
+	  } else {
+	    // Both lists are null
+	    noResultsFound = true;
+	  }
+	  
+	  // Checks if there are no results
+	  if (result.size() < 1) {
+	    noResultsFound = true;
+	  }
+
+	  // Displays list of food names or "No matching results found"
+	  if (noResultsFound == true) {
+	    Label noResultsLabel = new Label("No matching results found");
+	    gridpane.add(noResultsLabel, 0, 0);
+
+	  } else {
+	    
+	    // Sorts results list in alphabetical, case-insensitive ordering
+	    result.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
+	    
+	    ObservableList<String> resultsList = FXCollections.observableArrayList(); // list to collect foodItem names
+	    
+	    // source: https://www.mkyong.com/java8/java-8-foreach-examples/
+	    // Puts every food item name into a list
+	    result.forEach(foodItem -> {
+	      resultsList.add(foodItem.getName());
+	    });
+	    
+	    ListView<String> searchResultsList = new ListView<String>(resultsList); // display list for search results
+	    gridpane.add(searchResultsList, 0, 0);
+	  }
+
+	  // adds gridPane to the scene      
+	  Scene scene = new Scene(gridpane, 300, 250);
+
+	  // sets the scene to the popup window
+	  loadPopupWindow.setScene(scene);
+	  loadPopupWindow.show();
+	} // end of displayRunSearch
+	
 
 }
