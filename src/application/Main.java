@@ -284,6 +284,8 @@ public class Main extends Application {
 			foodList.setPrefHeight(320);
 			foodList.setMinHeight(320);
 
+			Label foodCount = new Label(foods.size() + " in the availible food list");
+			//foodCount.textProperty().bind(foodList.itemsProperty().);
 
 			// -- Buttons between Food List and Menu List: --
 
@@ -448,6 +450,7 @@ public class Main extends Application {
 			GridPane.setConstraints(foodListLabel, foodListX, foodListY, 2, 1); // Col span: 2
 			GridPane.setConstraints(foodListButtonsHBox, foodListX, foodListY + 1, 2, 1); // Col span: 2
 			GridPane.setConstraints(foodList, foodListX, foodListY + 2, 2, 2); // Col span: 2, Row span: 2
+			GridPane.setConstraints(foodCount, foodListX, foodListY+3, 1, 1);
 
 			// -- Buttons between Food List and Menu List: --
 			GridPane.setConstraints(addAndRemoveButtonsVBox, foodListX + 2, foodListY + 2, 1, 2);
@@ -457,6 +460,7 @@ public class Main extends Application {
 			GridPane.setConstraints(menuList, menuListX, foodListY + 2, 2, 2); // Col span: 2, Row span: 2
 			GridPane.setConstraints(analyzeMenuButton, menuListX, foodListY + 1, 2, 1, HPos.LEFT, VPos.TOP); // Col span: 2
 
+			
 			// -- Horizontal Separator --
 
 			Image horizontalLineImage = new Image(getClass().getResourceAsStream(HorizontalDividerImage));
