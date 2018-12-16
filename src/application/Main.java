@@ -780,7 +780,7 @@ public class Main extends Application {
 			protein + "\nTotal fiber(g):\t\t" + fiber);
 		}
 		else {
-			output = new Text("Add some foods to the meal to be analyzed!");
+			output = new Text("\n\n\n\t\t\t\tAdd some foods to the meal to be analyzed!");
 		}
 				
 		
