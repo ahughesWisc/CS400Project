@@ -152,7 +152,9 @@ public class Main extends Application {
 	private ListView<String> ruleList = new ListView<String>(rules);
 	private FoodData foodData = new FoodData();
 	private ObservableList<FoodItem> foods = FXCollections.observableArrayList();
+	private ObservableList<FoodItem> filteredFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> foodList = new ListView<FoodItem>(foods);
+	private boolean foodListToggle = false;
 	private ObservableList<FoodItem> menuFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> menuList = new ListView<FoodItem>(menuFoods);
 	private final static ObservableList<String> nutrients = 
