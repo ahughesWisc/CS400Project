@@ -527,6 +527,13 @@ public class Main extends Application {
 			try {
 				File foodFile = new File(FoodFileName);
 				loadFile(foodFile);
+				//add all items that made it inot   foods the shadowarray used to display on the screen
+				//load each item in the foodData into the foods shadow array that is used for display
+				Iterator<FoodItem> itr = foodData.getAllFoodItems().iterator();
+				while(itr.hasNext()) {
+					FoodItem foodItemTemp = (FoodItem) itr.next();
+					foods.add(foodItemTemp);
+				}
 				Collections.sort(foods, comparatorFoodItembyName);
 				foodCount.setText(foods.size() + " in the availible food list");
 			} catch(Exception e) {
@@ -661,6 +668,12 @@ public class Main extends Application {
 			foodData = new FoodData();
 			foods.clear();
 			loadFile(selectedFile); 
+			//load each item in the foodData into the foods shadow array that is used for display
+			Iterator<FoodItem> itr = foodData.getAllFoodItems().iterator();
+			while(itr.hasNext()) {
+				FoodItem foodItemTemp = (FoodItem) itr.next();
+				foods.add(foodItemTemp);
+			}
 			loadPopupWindow.close();
 		});
 		
@@ -1091,60 +1104,9 @@ public class Main extends Application {
 
 		}
 		else {
-
-			try (Stream<String> stream = Files.lines(Paths.get(selectedFile.toString()))) {
-
-				listOfLines = stream
-						.map(line -> Arrays.asList(line.split(",")))
-						.collect(Collectors.toList());
-
-			} catch (IOException e) {
-				e.printStackTrace();
-				displayError("There was an error loading foods from" + selectedFile +". Adjust the file "
-						+ "input, and use the Load Food and Add Food buttons to add foods to the program.");
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				displayError("There was an error loading foods from" + selectedFile +". Adjust the file "
-						+ "input, and use the Load Food and Add Food buttons to add foods to the program.");
-			}
+			foodData.loadFoodItems(selectedFile.toString());
 			
-			int failedLines = 0;
-			String id = new String();
-			String name = new String();
-			String calories = new String();
-			String fat = new String();
-			String carbohydrate = new String();
-			String fiber = new String();
-			String protein = new String();
-			//go through each line in input file and decide if the format is valid to save to our foodData structure
-			//<id>,<food_name>,<calories>,<calorie_count>,<fat>,<fat_grams>,<carbohydrate>,<carbohydrate_grams>,<fiber>,<fiber_grams>,<protein>,<protein_grams>,
-			//Example row of a valid data file:
-			//556540ff5d613c9d5f5935a9,Stewarts_PremiumDarkChocolatewithMintCookieCrunch,calories,280,fat,18,carbohydrate,34,fiber,3,protein,3,
-			for(int i =0; i < listOfLines.size();i++) {
-				//List<String> tempList = itr.next(); //this is looking at each line from the input file
-				if(isValidDataField(listOfLines.get(i))) {
-					//parse out the food values
-					id = listOfLines.get(i).get(0);
-					name = listOfLines.get(i).get(1);
-					calories = listOfLines.get(i).get(3);
-					fat = listOfLines.get(i).get(5);
-					carbohydrate = listOfLines.get(i).get(7);
-					fiber = listOfLines.get(i).get(9);
-					protein = listOfLines.get(i).get(11);
-					
-					if (addFoodtoFoodData(false,id,name,calories,fat,carbohydrate,fiber,protein,null) == false) {
-						failedLines++;
-					}
-
-				} else {
-					failedLines++;
-				}
-
-			}
-			if (failedLines > 0) {
-				displayError(failedLines + " lines of the input file failed to load");
-			}
+			
 		}//end of else statement
 	}//end of loadFile(File selectedFile)
 	

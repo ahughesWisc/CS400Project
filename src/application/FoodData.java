@@ -5,11 +5,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**Filename:	FoodItemUnitTests.java
 * Project:		Final Project (p5)
@@ -63,8 +76,201 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public void loadFoodItems(String filePath) {
-        // TODO : Complete
+    	List<List<String>> listOfLines = new ArrayList<>();
+    	try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
+
+			listOfLines = stream
+					.map(line -> Arrays.asList(line.split(",")))
+					.collect(Collectors.toList());
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			displayError("There was an error loading foods from" + filePath +". Adjust the file "
+					+ "input, and use the Load Food and Add Food buttons to add foods to the program.");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			displayError("There was an error loading foods from" + filePath +". Adjust the file "
+					+ "input, and use the Load Food and Add Food buttons to add foods to the program.");
+		}
+		
+		int failedLines = 0;
+		String id = new String();
+		String name = new String();
+		String calories = new String();
+		String fat = new String();
+		String carbohydrate = new String();
+		String fiber = new String();
+		String protein = new String();
+		//go through each line in input file and decide if the format is valid to save to our foodData structure
+		//<id>,<food_name>,<calories>,<calorie_count>,<fat>,<fat_grams>,<carbohydrate>,<carbohydrate_grams>,<fiber>,<fiber_grams>,<protein>,<protein_grams>,
+		//Example row of a valid data file:
+		//556540ff5d613c9d5f5935a9,Stewarts_PremiumDarkChocolatewithMintCookieCrunch,calories,280,fat,18,carbohydrate,34,fiber,3,protein,3,
+		for(int i =0; i < listOfLines.size();i++) {
+			//List<String> tempList = itr.next(); //this is looking at each line from the input file
+			if(isValidDataField(listOfLines.get(i))) {
+				//parse out the food values
+				id = listOfLines.get(i).get(0);
+				name = listOfLines.get(i).get(1);
+				calories = listOfLines.get(i).get(3);
+				fat = listOfLines.get(i).get(5);
+				carbohydrate = listOfLines.get(i).get(7);
+				fiber = listOfLines.get(i).get(9);
+				protein = listOfLines.get(i).get(11);
+				
+				if (addFoodtoFoodData(false,id,name,calories,fat,carbohydrate,fiber,protein,null) == false) {
+					failedLines++;
+				}
+
+			} else {
+				failedLines++;
+			}
+
+		}
+		if (failedLines > 0) {
+			displayError(failedLines + " lines of the input file failed to load");
+		}
+    	
     }
+    
+    private boolean addFoodtoFoodData(Boolean triggerErrors,String id, String name,String calories,String 
+			fat,String carbohydrate,String fiber,String protein, Stage stage) {
+		if (isUniqueID(id)) {
+			if(id != null && name != null && calories != null && fat != null && carbohydrate != null &&
+					fiber != null && protein != null){
+				//check all fields are not zero length
+				if(!id.isEmpty() && !name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && 
+						!carbohydrate.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
+					//check if the ID or name contain commas
+					if (!id.contains(",") && !name.contains(",")) {
+
+						//check if the nutrient values are positive doubles
+						if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrate) && 
+								isPositiveDouble(fiber) && isPositiveDouble(protein)) {
+							FoodItem foodItem = new FoodItem(id,name);
+							foodItem.addNutrient("calories", Double.parseDouble(calories));
+							foodItem.addNutrient("fat", Double.parseDouble(fat));
+							foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrate));
+							foodItem.addNutrient("fiber", Double.parseDouble(fiber));
+							foodItem.addNutrient("protein", Double.parseDouble(protein));
+							addFoodItem(foodItem);
+							//foods.add(foodItem);//need to do something about this shadow array used for display
+							if (stage != null) {
+								stage.close();
+							}
+							return true;
+						} else {
+							if (triggerErrors) {
+								displayError("Nutrient values must be numeric and non-negative");
+							}
+						}
+					} else {
+						if (triggerErrors) {
+							displayError("The ID and name must not contain commas");
+						}
+					}
+				} else {
+					if (triggerErrors) {
+						displayError("All fields in the form must be filled out");
+					}
+				}
+			} else {
+				if (triggerErrors) {
+					displayError("All fields in the form must be filled out");
+				}
+			}
+		} else {
+			if (triggerErrors) {
+				displayError("The selected ID is already in use, select a unique ID");
+			}
+		}
+		return false;
+	}
+    
+	/**
+	 * Used by loadFile to check if a given line is in the expected format
+	 * @param lineInput an array of lines of data
+	 * @return true if valid, false otherwise
+	 */
+	private static boolean isValidDataField(List<String> lineInput) {
+		//first check if there are 12 seperate data fields that were parsed, split by commas in input file
+		if(lineInput.size() == 12) {
+			//now check if column 3,5,7,9,11 have the correct name of the nutrient: calories,
+			//fat, carbohydrate, fiber and protein
+			if(lineInput.get(2).equals("calories") && lineInput.get(4).equals("fat") && 
+					lineInput.get(6).equals("carbohydrate") && lineInput.get(8).equals("fiber") && 
+					lineInput.get(10).equals("protein")) { 
+				//check if the column to the right of the nutrient contains a number that be of type double
+				if(isPositiveDouble(lineInput.get(3)) && isPositiveDouble(lineInput.get(5)) &&
+						isPositiveDouble(lineInput.get(7)) && isPositiveDouble(lineInput.get(9)) && 
+						isPositiveDouble(lineInput.get(11))) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}else {
+			return false;
+		}
+	}//end of isValidDataField()
+	
+	/**
+	 * method to check if a string can be converted into a non-negative double
+	 * @param str string to check
+	 * @return true if string represents a positive double, false otherwise
+	 */
+	private static boolean isPositiveDouble(String str) {
+		try {
+			if(Double.parseDouble(str) >=0.0) {
+				return true;
+			}
+			return false;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}//end of isPositiveDouble
+	
+	
+	private void displayError(String message) {
+		Stage loadPopupWindow =new Stage();
+		String ErrorPopupTitle = "Error";
+		String AcceptButtonCaption = "OK";
+		
+		loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
+		loadPopupWindow.setTitle(ErrorPopupTitle);
+
+		ScrollPane scrollPane = new ScrollPane();
+		GridPane gridPane = new GridPane();
+		gridPane.setAlignment(Pos.CENTER);
+		
+		scrollPane.setPadding(new Insets(20, 12, 20, 12));
+		gridPane.setHgap(10); // Horizontal gap between rows
+		gridPane.setVgap(10); // Vertical gap between columns
+		
+		Text errorMessageText = new Text(message);
+		errorMessageText.setWrappingWidth(275);
+		Button acceptButton = new Button(AcceptButtonCaption);
+		acceptButton.setPrefSize(80,40);   
+		acceptButton.setOnAction(e -> loadPopupWindow.close());
+		
+		HBox acceptButtonHBox = new HBox(); // Load, add, and save buttons in Food List area
+		acceptButtonHBox.setSpacing(10);
+		acceptButtonHBox.getChildren().add(acceptButton);
+		acceptButtonHBox.setAlignment(Pos.CENTER);
+		
+		gridPane.add(errorMessageText, 0, 0);
+		gridPane.add(acceptButtonHBox, 0, 2);
+		scrollPane.setContent(gridPane);
+		Scene scene1= new Scene(scrollPane, 300, 200);
+
+		//set the scene to the popup window
+		loadPopupWindow.setScene(scene1);
+		loadPopupWindow.showAndWait();	
+	}
 
     /*
      * (non-Javadoc)
