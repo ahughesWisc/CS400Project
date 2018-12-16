@@ -122,6 +122,7 @@ public class Main extends Application {
 	final static String NutrientFiltersLabel = "Nutrient Filters";
 	final static String NameFilterLabel = "Search Term";
 	final static String RunSearchCaption = "Run Search";
+	final static String ClearSearchCaption = "Clear Search";
 	final static String ValueLabel = "Value";
 	final static String RemoveRuleCaption = "Remove Selected Rule";
 
@@ -433,6 +434,10 @@ public class Main extends Application {
 			runSearch.setMinSize(100, 50);
 			runSearch.setOnAction(e -> 
 			displayRunSearch(nameFilterField.getText(), rules, foodData, foods));
+			
+			// Clear query button
+			Button clearSearch = new Button(ClearSearchCaption);
+			clearSearch.setMinSize(100, 50);
 
 			HBox searchHBox = new HBox();
 			searchHBox.setPadding(new Insets(0, 0, 0, 0));
