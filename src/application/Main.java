@@ -216,7 +216,6 @@ public class Main extends Application {
 			AnchorPane ap = new AnchorPane();
 			ap.getChildren().addAll(banner, exitProgramButton);
 			AnchorPane.setLeftAnchor(banner, 0.0);
-			//AnchorPane.setRightAnchor(exitProgramButton, 48.0); // Sets position of exitProgramButton
 			AnchorPane.setRightAnchor(exitProgramButton, 0.0);
 			borderpane.setTop(ap);
 			ap.setMaxWidth(768);
@@ -238,7 +237,6 @@ public class Main extends Application {
 
 			// HBox for buttons in food list area
 			HBox foodListButtonsHBox = new HBox(); // Load, add, and save buttons in Food List area
-			//foodListButtonsHBox.setPadding(new Insets(15, 12, 15, 12));
 			foodListButtonsHBox.setSpacing(10);
 			
 			// button for adding foods from file
@@ -278,7 +276,7 @@ public class Main extends Application {
 			
 
 			foodList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-			foodList.setPrefWidth(320); // Formerly 323
+			foodList.setPrefWidth(320);
 			foodList.setPrefHeight(320);
 			foodList.setMinHeight(320);
 
@@ -302,7 +300,6 @@ public class Main extends Application {
 			removeFoodFromMenuButton.setTooltip(removeFoodTooltip);
 
 			VBox addAndRemoveButtonsVBox = new VBox();
-			//addAndRemoveButtonsVBox.setPadding(new Insets(15, 12, 15, 12));
 			addAndRemoveButtonsVBox.setSpacing(10);
 			addAndRemoveButtonsVBox.setAlignment(Pos.CENTER);
 			addAndRemoveButtonsVBox.getChildren().addAll(addFoodtoMenuButton, removeFoodFromMenuButton);
@@ -334,7 +331,7 @@ public class Main extends Application {
 			menuListLabel.setPadding(new Insets(10, 0, 10, 0));
 
 			// Menu food list
-			menuList.setPrefWidth(320); // Formerly 323
+			menuList.setPrefWidth(320);
 			menuList.setPrefHeight(320);
 
 			Button analyzeMenuButton = new Button(AnalyzeNutritionCaption);
@@ -417,7 +414,6 @@ public class Main extends Application {
 			// Remove an active rule
 
 			Button removeRuleButton = new Button(RemoveRuleCaption);
-			//removeRuleButton.setGraphic(new ImageView(imageExit));
 			Tooltip removeRuleTooltip = new Tooltip(RemoveRuleToolTip);
 			removeRuleButton.setTooltip(removeRuleTooltip);
 			removeRuleButton.setOnAction(e -> {
