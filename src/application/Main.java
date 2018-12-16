@@ -191,7 +191,7 @@ public class Main extends Application {
 			}
 
 			borderpane.setCenter(gridpane);
-			Scene scene = new Scene(borderpane, 768, 830); // width, height
+			Scene scene = new Scene(borderpane, 768, 860); // width, height
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 
@@ -457,7 +457,7 @@ public class Main extends Application {
 			GridPane.setConstraints(foodListLabel, foodListX, foodListY, 2, 1); // Col span: 2
 			GridPane.setConstraints(foodListButtonsHBox, foodListX, foodListY + 1, 2, 1); // Col span: 2
 			GridPane.setConstraints(foodList, foodListX, foodListY + 2, 2, 2); // Col span: 2, Row span: 2
-			GridPane.setConstraints(foodCount, foodListX, foodListY+4, 1, 1);
+			GridPane.setConstraints(foodCount, foodListX, foodListY+4, 3, 1); // Col span: 3
 
 			// -- Buttons between Food List and Menu List: --
 			GridPane.setConstraints(addAndRemoveButtonsVBox, foodListX + 2, foodListY + 2, 1, 2);
