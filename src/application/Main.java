@@ -229,7 +229,7 @@ public class Main extends Application {
 			exitProgramButton.setGraphic(new ImageView(imageExit));
 			Tooltip exitProgramTooltip = new Tooltip(ExitToolTip);
 			exitProgramButton.setTooltip(exitProgramTooltip);
-			exitProgramButton.setOnMouseClicked(actionEvent -> primaryStage.close());
+		
 
 			AnchorPane ap = new AnchorPane();
 			ap.getChildren().addAll(banner, exitProgramButton);
