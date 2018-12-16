@@ -434,7 +434,8 @@ public class Main extends Application {
 			//Run query button
 			Button runSearch = new Button(RunSearchCaption);
 			runSearch.setMinSize(100, 50);
-			runSearch.setOnAction(e -> runTheSearch(nameFilterField.getText(), rules, foodData, foods));
+			runSearch.setOnAction(e -> {runTheSearch(nameFilterField.getText(), rules, foodData, foods);
+					foodCount.setText(amountInTheFoodList(foods.size()));});
 
 			// Clear query button
 			Button clearSearch = new Button(ClearSearchCaption);
@@ -442,6 +443,7 @@ public class Main extends Application {
 			clearSearch.setOnAction(e -> {
 				clearTheSearch(foodData, foods);
 				Collections.sort(foods, comparatorFoodItembyName);
+				foodCount.setText(amountInTheFoodList(foods.size()));
 			});
 
 
