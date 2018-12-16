@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -64,18 +63,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import java.awt.event.ActionEvent;
 import java.util.*; 
 import javafx.stage.Modality;
 import javafx.stage.FileChooser;
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
