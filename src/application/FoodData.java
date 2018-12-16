@@ -131,11 +131,6 @@ public class FoodData implements FoodDataADT<FoodItem> {
         }
       }
       
-      // Sorts the filteredFoodList alphabetically, case insensitive, if it's not empty
-      if (!filteredFoodList.isEmpty()) {
-        filteredFoodList.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
-      }
-      
       return filteredFoodList;
     }
 
