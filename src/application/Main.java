@@ -88,6 +88,7 @@ public class Main extends Application {
 	final static String Equals = "==";
 	final static String LessThanOrEquals = "<=";
 	final static String GreaterThanOrEquals = ">=";
+	final static String FoodFileName = "foodItems.csv";
 
 	final static int foodListY = 1;
 	final static int foodListX = 0;
@@ -516,7 +517,7 @@ public class Main extends Application {
 
 			// add foodItems from the directory foodItems.csv file
 			try {
-				File foodFile = new File("foodItems.csv");
+				File foodFile = new File(FoodFileName);
 				loadFile(foodFile);
 				Collections.sort(foods, comparatorFoodItembyName);
 				foodCount.setText(foods.size() + " in the availible food list");
@@ -699,9 +700,7 @@ public class Main extends Application {
 		Iterator<FoodItem> itr = foodData.getAllFoodItems().iterator();
 		while(itr.hasNext()) {
 			FoodItem foodItemTemp = (FoodItem) itr.next();
-			String appendLineToFile = foodItemTemp.getID() +"," + foodItemTemp.getName() + ",calories," + foodItemTemp.getNutrientValue("calories") +",fat," + 
-					foodItemTemp.getNutrientValue("fat")+ ",carbohydrate," + foodItemTemp.getNutrientValue("carbohydrate") +  ",fiber," +
-					foodItemTemp.getNutrientValue("fiber") + ",protein," + foodItemTemp.getNutrientValue("protein") +"\n";
+			String appendLineToFile = lineAppend(foodItemTemp);
 			try {
 				Files.write(Paths.get(filePath), appendLineToFile.getBytes(),StandardOpenOption.APPEND);
 			} catch (IOException e1) {
@@ -711,6 +710,22 @@ public class Main extends Application {
 		}
 	
 	}//end of save to file
+	
+	/**
+	 * Produces the formatted string to append to a file when saving.
+	 * @param foodItemTemp a food item to be written to a line in the file
+	 * @return string in the expected format
+	 */
+	private String lineAppend(FoodItem foodItemTemp) {
+		return String.format("%s,%s,calories,%f,fat,%f,carbohydrate,%f,fiber,%f,protein,%f\n",
+				foodItemTemp.getID(),
+				foodItemTemp.getName(),
+				foodItemTemp.getNutrientValue("calories"),
+				foodItemTemp.getNutrientValue("fat"),
+				foodItemTemp.getNutrientValue("carbohydrate"),
+				foodItemTemp.getNutrientValue("fiber"),
+				foodItemTemp.getNutrientValue("protein"));
+	}
 
 	/**
 	 * Displays a nutritional analysis of the foods in the menu
