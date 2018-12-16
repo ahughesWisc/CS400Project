@@ -140,7 +140,7 @@ public class Main extends Application {
 	final static String HorizontalDividerImage = "horizontalLine.png";
 
 	//Testing
-	final static boolean DEBUG = true;
+	final static boolean DEBUG = false;
 
 	//Class Attributes
 	private ObservableList<String> rules = FXCollections.observableArrayList();
@@ -424,20 +424,15 @@ public class Main extends Application {
 			//Run query button
 			Button runSearch = new Button(RunSearchCaption);
 			runSearch.setMinSize(100, 50);
-<<<<<<< HEAD
-			runSearch.setOnAction(e -> {
-			    filteredFoods = runTheSearch(nameFilterField.getText(), rules, foodData, foods);
-			    foodList = new ListView<FoodItem>(filteredFoods);
-			    System.out.println(filteredFoods.toString()); // FIXME
-			});
-=======
 			runSearch.setOnAction(e -> runTheSearch(nameFilterField.getText(), rules, foodData, foods));
->>>>>>> refs/remotes/origin/master
 
 			// Clear query button
 			Button clearSearch = new Button(ClearSearchCaption);
 			clearSearch.setMinSize(100, 50);
-			clearSearch.setOnAction(e -> clearTheSearch(foodData, foods));
+			clearSearch.setOnAction(e -> {
+				clearTheSearch(foodData, foods);
+				Collections.sort(foods, comparatorFoodItembyName);
+			});
 
 
 			// --------- Adding objects to the pane ---------
@@ -1009,11 +1004,7 @@ public class Main extends Application {
 	 * @param foodData FoodData object that enables searching
 	 * @param foods list of foods to run the search on
 	 */
-<<<<<<< HEAD
-	public ObservableList<FoodItem> runTheSearch(String foodName, ObservableList<String> 
-=======
 	public static void runTheSearch(String foodName, ObservableList<String> 
->>>>>>> refs/remotes/origin/master
 	    rules, FoodData foodData, ObservableList<FoodItem> foods) {
 	  
 	  List<FoodItem> nameSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by name
