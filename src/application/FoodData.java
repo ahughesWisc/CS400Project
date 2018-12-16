@@ -9,15 +9,14 @@ import java.util.stream.Collectors;
 
 /**Filename:	FoodItemUnitTests.java
 * Project:		Final Project (p5)
-* Authors: 		Adam Hughes
-* Emails:		adam.hughes@wisc.edu
+* Authors: 		Adam Hughes, Sadie Sturgeon
+* Emails:		adam.hughes@wisc.edu, ssturgeon@wisc.edu
 * Course:		CS400
 * Section:		004
 * 
 * Credit Outside Help
 * 
 * Online Sources: https://stackoverflow.com/questions/31683375/java-8-lambda-intersection-of-two-lists
-* https://stackoverflow.com/questions/49821774/sorting-string-value-in-a-case-insensitive-manner-in-java-8/49821834
 * 
 * Notes:
 */
