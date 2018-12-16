@@ -1002,7 +1002,6 @@ public class Main extends Application {
 		}//end of else statement
 	}//end of loadFile(File selectedFile)
 	
-	
 	/**
 	 * Method will be called when the runSearch button is clicked from main GUI
 	 * 
@@ -1016,7 +1015,7 @@ public class Main extends Application {
 	  
 	  List<FoodItem> nameSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by name
 	  List<FoodItem> nutrientSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by nutrients
-	  List<FoodItem> result = new ArrayList<FoodItem>(); // 
+	  List<FoodItem> result = new ArrayList<FoodItem>(); // Stores the final intersected food list
 
 	  // If no foodName is entered, then the text field returns an empty String. Checks for empty String
 	  if (foodName.length() > 0) {
