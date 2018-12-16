@@ -689,7 +689,7 @@ public class Main extends Application {
 
 		// create text for displaying nutrients
 		Text output = new Text("Foods in Meal:\t" + foods + "\n\n" + "Total calories:\t\t" + calories +
-				"\n" + "Total fat(g):\t\t" + fat +"\nTotal carbohydrates(g):\t\t" + carbohydrate + "\nTotal protein(g):\t" +
+				"\n" + "Total fat(g):\t\t" + fat +"\nTotal carbs(g):\t\t" + carbohydrate + "\nTotal protein(g):\t" +
 				protein + "\nTotal fiber(g):\t\t" + fiber);
 		
 		// add all elements to the grid
