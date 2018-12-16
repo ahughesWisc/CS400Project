@@ -199,7 +199,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
      * check to make sure an ID can be used. IDs
      * must be unique
      * @param id
-     * @return
+     * @return true if ID is non-null and has not yet been used
      */
     public boolean isUniqueID(String id) {
     	if (id == null) {
