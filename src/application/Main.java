@@ -124,6 +124,7 @@ public class Main extends Application {
 	final static String RemoveRuleCaption = "Remove Selected Rule";
 	final static String AcceptButtonCaption = "OK";
 	final static String AnalysisPopupTitle = "Nutritional Analysis";
+	final static String ErrorPopupTitle = "Error";
 
 	//Prompts
 	final static String NutrientPromptText = "enter positive numeric value (e.g. 1.4)";
@@ -986,7 +987,7 @@ public class Main extends Application {
 		Stage loadPopupWindow =new Stage();
 
 		loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
-		loadPopupWindow.setTitle("Error");
+		loadPopupWindow.setTitle(ErrorPoputTitle);
 
 		ScrollPane scrollPane = new ScrollPane();
 		GridPane gridPane = new GridPane();
