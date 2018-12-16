@@ -46,6 +46,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
@@ -90,15 +91,6 @@ public class Main extends Application {
 	//Data Structures
 	//list to store each line of string from file
 	static List<List<String>> listOfLines = new ArrayList<>();
-	//Temporarily using the following until FoodData class is ready
-
-	//to hold the id for each food item
-	static List<String> idList = new ArrayList<>();
-	//to hold the name of each food item
-	static List<String> nameList = new ArrayList<>();
-	//to hold the nutrients of each food item
-	static List<HashMap<String, Double>> nutrientsList = new ArrayList<HashMap<String, Double>>();
-	//delete the previous data structure and use FoodData when read and update loadFoodPop and addFoodP
 
 	//Settings
 	final static String Font = "Arial"; //now you can change the font anywhere in the application from one place
@@ -185,7 +177,7 @@ public class Main extends Application {
 					LessThanOrEquals,
 					GreaterThanOrEquals
 					);
-
+	
 	/**
 	 * Starts the program by launching the GUI
 	 */
@@ -259,15 +251,23 @@ public class Main extends Application {
 			HBox foodListButtonsHBox = new HBox(); // Load, add, and save buttons in Food List area
 			//foodListButtonsHBox.setPadding(new Insets(15, 12, 15, 12));
 			foodListButtonsHBox.setSpacing(10);
+			
+			// button for adding foods from file
 			Button loadFoodsButton = new Button(LoadFoodsCaption);
 			loadFoodsButton.setPrefSize(100, 20); // Sets width and height of button
-			loadFoodsButton.setOnAction(e -> displayLoadFile());//call displayLoadFile when Load Food Button clicked, opens popup window
+			loadFoodsButton.setOnAction(e -> {
+				displayLoadFile();
+				Collections.sort(foods,comparatorFoodItembyName);
+			});//call displayLoadFile when Load Food Button clicked, opens popup window
+			
+			// button for adding foods from form
 			Button addFoodButton = new Button(AddFoodCaption);
 			addFoodButton.setPrefSize(100, 20); // Sets width and height of button
 			addFoodButton.setOnAction(e -> {
 				displayAddFood();
 				Collections.sort(foods, comparatorFoodItembyName);	
 			});//call displayAddFood when Add Food Button clicked, opens popup window
+			
 			Button saveFoodsButton = new Button(SaveFoodsCaption);
 			saveFoodsButton.setPrefSize(100, 20); // Sets width and height of button
 			foodListButtonsHBox.getChildren().addAll(loadFoodsButton, addFoodButton, saveFoodsButton);
@@ -657,8 +657,8 @@ public class Main extends Application {
 		loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
 		loadPopupWindow.setTitle("Nutritional Analysis");
 
-		GridPane gridPane = new GridPane();
-		gridPane.setAlignment(Pos.CENTER);
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setPadding(new Insets(20, 12, 20, 12));
 
 		// variables for storing combined information
 		double calories = 0;
@@ -677,9 +677,9 @@ public class Main extends Application {
 			
 			// format food names in a list
 			if (foods == "") {
-				foods = "\t" + entry.getValue() + "x" + entry.getKey().getName();
+				foods = "\t" + entry.getValue() + "x " + entry.getKey().getName();
 			} else {
-				foods = foods + "\n\t\t\t\t " + entry.getValue() + "x" + entry.getKey().getName();
+				foods = foods + "\n\t\t\t\t " + entry.getValue() + "x " + entry.getKey().getName();
 			}
 
 			// add nutrient values
@@ -691,15 +691,15 @@ public class Main extends Application {
 		}
 
 		// create text for displaying nutrients
-		Text output = new Text("Foods in Meal: " + foods + "\n" + "Total calories:\t\t" + calories +
+		Text output = new Text("Foods in Meal:\t" + foods + "\n\n" + "Total calories:\t\t" + calories +
 				"\n" + "Total fat(g):\t\t" + fat +"\nTotal carbs(g):\t\t" + carbs + "\nTotal protein(g):\t" +
 				protein + "\nTotal fiber(g):\t\t" + fiber);
 		
 		// add all elements to the grid
-		gridPane.add(output, 0, 0);
+		scrollPane.setContent(output);
 		
 		//add gridPane to the scene      
-		Scene scene1= new Scene(gridPane, 300, 250);
+		Scene scene1= new Scene(scrollPane, 500, 400);
 
 		//set the scene to the popup window
 		loadPopupWindow.setScene(scene1);
@@ -940,8 +940,7 @@ public class Main extends Application {
 				e.printStackTrace();
 			}
 			
-			ArrayList<List<String>> failedLines = new ArrayList<List<String>>();
-			
+			int failedLines = 0;
 			String id = new String();
 			String name = new String();
 			String calories = new String();
@@ -966,14 +965,17 @@ public class Main extends Application {
 					protein = listOfLines.get(i).get(11);
 					
 					if (addFoodtoFoodData(false,id,name,calories,fat,carbohydrates,fiber,protein,null) == false) {
-						failedLines.add(listOfLines.get(i));
+						failedLines++;
 					}
 
+				} else {
+					failedLines++;
 				}
 
 			}
-
-			displayError("The following lines were not able to be added: " + failedLines);
+			if (failedLines > 0) {
+				displayError(failedLines + " lines of the input file failed to load");
+			}
 		}//end of else statement
 	}//end of loadFile(File selectedFile)
 
