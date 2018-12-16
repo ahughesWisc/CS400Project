@@ -435,11 +435,6 @@ public class Main extends Application {
 			clearSearch.setMinSize(100, 50);
 			clearSearch.setOnAction(e -> clearTheSearch(foodData, foods));
 
-			HBox searchHBox = new HBox();
-			searchHBox.setPadding(new Insets(0, 0, 0, 0));
-			searchHBox.setSpacing(50);
-			searchHBox.getChildren().addAll(filterFoodsLabel); // Formerly runSearch was included
-
 
 			// --------- Adding objects to the pane ---------
 
@@ -469,7 +464,7 @@ public class Main extends Application {
 			GridPane.setConstraints(divider, 0, filterY - 1, 5, 1); // Formerly Col span: 6
 
 			// -- Filter Foods Area (Left Side): --
-			GridPane.setConstraints(searchHBox, foodListX, filterY, 4, 1); // Col span: 3
+			GridPane.setConstraints(filterFoodsLabel, foodListX, filterY, 4, 1); // Col span: 3
 			GridPane.setConstraints(createRuleLabel, foodListX, filterY + 1, 2, 1); // Col span: 2
 			GridPane.setConstraints(fillerText, foodListX, filterY + 2, 2, 1); // Col span: 2
 			GridPane.setHalignment(fillerText, HPos.CENTER);
@@ -506,7 +501,7 @@ public class Main extends Application {
 			// Adds all nodes to the Grid Pane
 			gridpane.getChildren().addAll(foodListLabel, foodListButtonsHBox, foodList, 
 					addAndRemoveButtonsVBox, menuListLabel, menuList, analyzeMenuButton, 
-					searchHBox, nutrientLabel, nutrientComboBox, operatorLabel, operatorComboBox, 
+					filterFoodsLabel, nutrientLabel, nutrientComboBox, operatorLabel, operatorComboBox, 
 					valueLabel, nutrientValueField, nameFilterLabel, nameFilterField, 
 					nutrientFilterLabel, ruleList, addRuleButtonVBox,activeFilterLabel,
 					createRuleLabel,divider, removeRuleButtonVBox, fillerText, runSearch, 
