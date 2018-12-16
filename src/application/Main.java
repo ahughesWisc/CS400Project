@@ -147,7 +147,6 @@ public class Main extends Application {
 	private ListView<String> ruleList = new ListView<String>(rules);
 	private FoodData foodData = new FoodData();
 	private ObservableList<FoodItem> foods = FXCollections.observableArrayList();
-	private ObservableList<FoodItem> filteredFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> foodList = new ListView<FoodItem>(foods);
 	private ObservableList<FoodItem> menuFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> menuList = new ListView<FoodItem>(menuFoods);
@@ -429,16 +428,12 @@ public class Main extends Application {
 			//Run query button
 			Button runSearch = new Button(RunSearchCaption);
 			runSearch.setMinSize(100, 50);
-			runSearch.setOnAction(e -> {
-			    filteredFoods = runTheSearch(nameFilterField.getText(), rules, foodData, foods);
-			    //foodList = new ListView<FoodItem>(filteredFoods);
-			    System.out.println(filteredFoods.toString()); // FIXME
-			});
+			runSearch.setOnAction(e -> runTheSearch(nameFilterField.getText(), rules, foodData, foods));
 
 			// Clear query button
 			Button clearSearch = new Button(ClearSearchCaption);
 			clearSearch.setMinSize(100, 50);
-			//clearSearch.setOnAction(e -> foodList = new ListView<FoodItem>(foods);); // FIXME
+			clearSearch.setOnAction(e -> clearTheSearch(foodData, foods));
 
 			HBox searchHBox = new HBox();
 			searchHBox.setPadding(new Insets(0, 0, 0, 0));
@@ -1016,7 +1011,7 @@ public class Main extends Application {
 	 * @param foodData
 	 * @param foods
 	 */
-	public static ObservableList<FoodItem> runTheSearch(String foodName, ObservableList<String> 
+	public static void runTheSearch(String foodName, ObservableList<String> 
 	    rules, FoodData foodData, ObservableList<FoodItem> foods) {
 	  
 	  List<FoodItem> nameSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by name
@@ -1061,8 +1056,25 @@ public class Main extends Application {
 	    result.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
 	  }
 	  
-	  return FXCollections.observableArrayList(result);
+	  // Clear foods
+	  foods.clear();
+	  
+	  // Rebuild foods
+	  result.forEach(foodItem -> foods.add(foodItem));
+	      
 	} // end of runTheSearch
+
+	/**
+	 * Method will be called when the clearSearch button is clicked from main GUI
+	 * 
+	 * @param foodData
+	 * @param foods
+	 */
+	public static void clearTheSearch(FoodData foodData, ObservableList<FoodItem> foods) {
+	  foods.clear();
+	  
+	  foodData.getAllFoodItems().forEach(foodItem -> foods.add(foodItem));
+	} // end of clearTheSearch
 	
 
 }
