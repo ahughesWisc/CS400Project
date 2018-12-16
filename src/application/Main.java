@@ -149,7 +149,6 @@ public class Main extends Application {
 	private ObservableList<FoodItem> foods = FXCollections.observableArrayList();
 	private ObservableList<FoodItem> filteredFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> foodList = new ListView<FoodItem>(foods);
-	private boolean foodListToggle = false;
 	private ObservableList<FoodItem> menuFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> menuList = new ListView<FoodItem>(menuFoods);
 	private final static ObservableList<String> nutrients = 
@@ -427,15 +426,19 @@ public class Main extends Application {
 				rules.remove(selected);
 			});
 
-			// Run query button
+			//Run query button
 			Button runSearch = new Button(RunSearchCaption);
 			runSearch.setMinSize(100, 50);
-			runSearch.setOnAction(e -> 
-			displayRunSearch(nameFilterField.getText(), rules, foodData, foods));
-			
+			runSearch.setOnAction(e -> {
+			    filteredFoods = runTheSearch(nameFilterField.getText(), rules, foodData, foods);
+			    //foodList = new ListView<FoodItem>(filteredFoods);
+			    System.out.println(filteredFoods.toString()); // FIXME
+			});
+
 			// Clear query button
 			Button clearSearch = new Button(ClearSearchCaption);
 			clearSearch.setMinSize(100, 50);
+			//clearSearch.setOnAction(e -> foodList = new ListView<FoodItem>(foods);); // FIXME
 
 			HBox searchHBox = new HBox();
 			searchHBox.setPadding(new Insets(0, 0, 0, 0));
@@ -1006,29 +1009,19 @@ public class Main extends Application {
 	
 	
 	/**
-	 * Method will be called when the runSearch button is clicked from main GUI. Intentionally does 
-	 * not block user interaction with the Main window to allow for the user to use the information 
-	 * from this list to make other meal choices
+	 * Method will be called when the runSearch button is clicked from main GUI
 	 * 
 	 * @param foodName
 	 * @param rules
 	 * @param foodData
 	 * @param foods
 	 */
-	public static void displayRunSearch(String foodName, ObservableList<String> rules, FoodData 
-	    foodData, ObservableList<FoodItem> foods) {
+	public static ObservableList<FoodItem> runTheSearch(String foodName, ObservableList<String> 
+	    rules, FoodData foodData, ObservableList<FoodItem> foods) {
 	  
-	  Stage loadPopupWindow = new Stage(); // Stage for the popup window
-	  loadPopupWindow.setTitle("Search Results");
-	  
-	  GridPane gridpane = new GridPane(); // Gridpane for layout of the stage
-	  gridpane.setAlignment(Pos.CENTER);
-	  
-	  // Variables for storing retrieved information
-	  List<FoodItem> nameSearchResults = null; // Stores the results of filtering by name
-	  List<FoodItem> nutrientSearchResults = null; // Stores the results of filtering by nutrients
-	  List<FoodItem> result = null; // Stores result of intersecting lists
-	  boolean noResultsFound = false; // True if there are no foods, both lists are empty, or both lists are null
+	  List<FoodItem> nameSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by name
+	  List<FoodItem> nutrientSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by nutrients
+	  List<FoodItem> result = new ArrayList<FoodItem>(); // 
 
 	  // If no foodName is entered, then the text field returns an empty String. Checks for empty String
 	  if (foodName.length() > 0) {
@@ -1038,9 +1031,6 @@ public class Main extends Application {
 	  // Checks there are foods to search
 	  if (foods.size() > 0) {
 	    nutrientSearchResults = foodData.filterByNutrients(rules);
-	    
-	  } else {
-	    noResultsFound = true;
 	  }
 	  
 	  // Intersects lists, if needed
@@ -1048,7 +1038,6 @@ public class Main extends Application {
 	    
 	    if (nameSearchResults.size() > 0 && nutrientSearchResults.size() > 0) {
 
-	      // Intersect lists
 	      result = nameSearchResults.stream()
 	          .filter(nutrientSearchResults::contains)
 	          .collect(Collectors.toList());
@@ -1058,10 +1047,6 @@ public class Main extends Application {
 
 	    } else if (nutrientSearchResults.size() > 0) {
 	      result = nutrientSearchResults;
-
-	    } else {
-	      // Both lists are empty
-	      noResultsFound = true;
 	    }
 
 	  } else if (nameSearchResults != null) {
@@ -1069,46 +1054,15 @@ public class Main extends Application {
 
 	  } else if (nutrientSearchResults != null) {
 	    result = nutrientSearchResults;
-
-	  } else {
-	    // Both lists are null
-	    noResultsFound = true;
 	  }
 	  
-	  // Checks if there are no results
-	  if (result.size() < 1) {
-	    noResultsFound = true;
-	  }
-
-	  // Displays list of food names or "No matching results found"
-	  if (noResultsFound == true) {
-	    Label noResultsLabel = new Label("No matching results found");
-	    gridpane.add(noResultsLabel, 0, 0);
-
-	  } else {
-	    
-	    // Sorts results list in alphabetical, case-insensitive ordering
+	  // If results isn't empty, then it is sorted alphabetically, case insensitive
+	  if (!result.isEmpty()) {
 	    result.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
-	    
-	    ObservableList<String> resultsList = FXCollections.observableArrayList(); // list to collect foodItem names
-	    
-	    // source: https://www.mkyong.com/java8/java-8-foreach-examples/
-	    // Puts every food item name into a list
-	    result.forEach(foodItem -> {
-	      resultsList.add(foodItem.getName());
-	    });
-	    
-	    ListView<String> searchResultsList = new ListView<String>(resultsList); // display list for search results
-	    gridpane.add(searchResultsList, 0, 0);
 	  }
-
-	  // adds gridPane to the scene      
-	  Scene scene = new Scene(gridpane, 300, 250);
-
-	  // sets the scene to the popup window
-	  loadPopupWindow.setScene(scene);
-	  loadPopupWindow.show();
-	} // end of displayRunSearch
+	  
+	  return FXCollections.observableArrayList(result);
+	} // end of runTheSearch
 	
 
 }
