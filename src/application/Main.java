@@ -102,7 +102,7 @@ public class Main extends Application {
 	final static String Fiber = "Fiber";
 
 	//Captions/Labels
-	final static String Title = "Food Program";
+	final static String Title = "Foodapolooza";
 	final static String LoadFoodsCaption = "Load Foods";
 	final static String AddFoodCaption = "Add Foods";
 	final static String SaveFoodsCaption = "Save Foods";
@@ -511,9 +511,15 @@ public class Main extends Application {
 			primaryStage.show();
 
 			// add foodItems from the directory foodItems.csv file
-			File foodFile = new File("foodItems.csv");
-			loadFile(foodFile);
-			Collections.sort(foods, comparatorFoodItembyName);
+			try {
+				File foodFile = new File("foodItems.csv");
+				loadFile(foodFile);
+				Collections.sort(foods, comparatorFoodItembyName);
+			} catch(Exception e) {
+				displayError("There was an error loading foods from foodItems.csv. Use the Load Food and Add Food "
+						+ "buttons to add foods to the program.");
+			}
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -598,7 +604,10 @@ public class Main extends Application {
 
 		//creating a gridpane to store the javafx buttons and text fields in
 		GridPane gridPane = new GridPane();
-		gridPane.setAlignment(Pos.CENTER);
+		gridPane.setAlignment(Pos.TOP_CENTER);
+		gridPane.setPadding(new Insets(20, 12, 20, 12));
+		gridPane.setHgap(10); // Horizontal gap between rows
+		gridPane.setVgap(10); // Vertical gap between columns
 
 		//create label to place on top of selected file
 		Label fileLabel = new Label("File Selected"); 
@@ -637,7 +646,7 @@ public class Main extends Application {
 		gridPane.add(loadButton, 2, 2, 1, 1);
 
 		//add gridPane to the scene      
-		Scene scene1= new Scene(gridPane, 300, 250);
+		Scene scene1= new Scene(gridPane, 300, 150);
 
 		//set the scene to the popup window
 		loadPopupWindow.setScene(scene1);
@@ -766,6 +775,9 @@ public class Main extends Application {
 
 		GridPane gridPane = new GridPane();
 		gridPane.setAlignment(Pos.CENTER);
+		gridPane.setPadding(new Insets(20, 12, 20, 12));
+		gridPane.setHgap(10); // Horizontal gap between rows
+		gridPane.setVgap(10); // Vertical gap between columns
 
 		//create labels for name of food and nutrients for user input
 		Label idLabel = new Label("ID: ");
@@ -839,10 +851,10 @@ public class Main extends Application {
 		gridPane.add(proteinLabel, 0, 6, 1, 1);
 		gridPane.add(proteinField, 1,6,1,1);
 		gridPane.add(cancelButton, 0, 7, 1, 1);
-		gridPane.add(loadButton, 2, 7, 1, 1);
+		gridPane.add(loadButton, 1, 7, 1, 1);
 
 		//add gridPane to the scene      
-		Scene scene1= new Scene(gridPane, 300, 250);
+		Scene scene1= new Scene(gridPane, 275, 325);
 
 		//set the scene to the popup window
 		loadPopupWindow.setScene(scene1);
@@ -920,7 +932,7 @@ public class Main extends Application {
 	
 	/**
 	 * displays an error message with an okay button to the user
-	 * @param message
+	 * @param message - String message to display
 	 */
 	private void displayError(String message) {
 		Stage loadPopupWindow =new Stage();
@@ -928,18 +940,29 @@ public class Main extends Application {
 		loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
 		loadPopupWindow.setTitle("Error");
 
+		ScrollPane scrollPane = new ScrollPane();
 		GridPane gridPane = new GridPane();
 		gridPane.setAlignment(Pos.CENTER);
 		
+		scrollPane.setPadding(new Insets(20, 12, 20, 12));
+		gridPane.setHgap(10); // Horizontal gap between rows
+		gridPane.setVgap(10); // Vertical gap between columns
+		
 		Text errorMessageText = new Text(message);
+		errorMessageText.setWrappingWidth(275);
 		Button acceptButton = new Button("OK");
-		acceptButton.setPrefSize(80,40);     
+		acceptButton.setPrefSize(80,40);   
 		acceptButton.setOnAction(e -> loadPopupWindow.close());
 		
+		HBox acceptButtonHBox = new HBox(); // Load, add, and save buttons in Food List area
+		acceptButtonHBox.setSpacing(10);
+		acceptButtonHBox.getChildren().add(acceptButton);
+		acceptButtonHBox.setAlignment(Pos.CENTER);
+		
 		gridPane.add(errorMessageText, 0, 0);
-		gridPane.add(acceptButton, 0, 2);
-		//add gridPane to the scene      
-		Scene scene1= new Scene(gridPane, 300, 250);
+		gridPane.add(acceptButtonHBox, 0, 2);
+		scrollPane.setContent(gridPane);
+		Scene scene1= new Scene(scrollPane, 300, 200);
 
 		//set the scene to the popup window
 		loadPopupWindow.setScene(scene1);
@@ -1005,9 +1028,13 @@ public class Main extends Application {
 
 			} catch (IOException e) {
 				e.printStackTrace();
+				displayError("There was an error loading foods from foodItems.csv. Adjust the file "
+						+ "input, and use the Load Food and Add Food buttons to add foods to the program.");
 			}
 			catch (Exception e) {
 				e.printStackTrace();
+				displayError("There was an error loading foods from foodItems.csv. Adjust the file "
+						+ "input, and use the Load Food and Add Food buttons to add foods to the program.");
 			}
 			
 			int failedLines = 0;
