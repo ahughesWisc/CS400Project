@@ -140,7 +140,7 @@ public class Main extends Application {
 	final static String HorizontalDividerImage = "horizontalLine.png";
 
 	//Testing
-	final static boolean DEBUG = false;
+	final static boolean DEBUG = true;
 
 	//Class Attributes
 	private ObservableList<String> rules = FXCollections.observableArrayList();
@@ -431,7 +431,7 @@ public class Main extends Application {
 			runSearch.setMinSize(100, 50);
 			runSearch.setOnAction(e -> {
 			    filteredFoods = runTheSearch(nameFilterField.getText(), rules, foodData, foods);
-			    //foodList = new ListView<FoodItem>(filteredFoods);
+			    foodList = new ListView<FoodItem>(filteredFoods);
 			    System.out.println(filteredFoods.toString()); // FIXME
 			});
 
@@ -1016,7 +1016,7 @@ public class Main extends Application {
 	 * @param foodData
 	 * @param foods
 	 */
-	public static ObservableList<FoodItem> runTheSearch(String foodName, ObservableList<String> 
+	public ObservableList<FoodItem> runTheSearch(String foodName, ObservableList<String> 
 	    rules, FoodData foodData, ObservableList<FoodItem> foods) {
 	  
 	  List<FoodItem> nameSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by name
