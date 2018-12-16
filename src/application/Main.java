@@ -121,6 +121,7 @@ public class Main extends Application {
 	final static String ClearSearchCaption = "Clear Search";
 	final static String ValueLabel = "Value";
 	final static String RemoveRuleCaption = "Remove Selected Rule";
+	final static String AcceptButtonCaption = "OK";
 
 	//Prompts
 	final static String NutrientPromptText = "enter positive numeric value (e.g. 1.4)";
@@ -232,7 +233,7 @@ public class Main extends Application {
 			};
 			
 			// -- Food List Area: --
-			Label foodCount = new Label(foods.size() + " in the availible food list");
+			Label foodCount = new Label(amountInTheFoodList(foods.size()));
 			Label foodListLabel = new Label(FoodListLabel); // Food List title
 			foodListLabel.setFont(new Font(Font, 28));
 			foodListLabel.setPadding(new Insets(10, 10, 10, 0));
@@ -247,7 +248,7 @@ public class Main extends Application {
 			loadFoodsButton.setOnAction(e -> {
 				displayLoadFile();
 				Collections.sort(foods,comparatorFoodItembyName);
-				foodCount.setText(foods.size() + " in the availible food list");
+				foodCount.setText(amountInTheFoodList(foods.size()));
 			});//call displayLoadFile when Load Food Button clicked, opens popup window
 			
 			// button for adding foods from form
@@ -256,7 +257,7 @@ public class Main extends Application {
 			addFoodButton.setOnAction(e -> {
 				displayAddFood();
 				Collections.sort(foods, comparatorFoodItembyName);
-				foodCount.setText(foods.size() + " in the availible food list");
+				foodCount.setText(amountInTheFoodList(foods.size()));
 			});//call displayAddFood when Add Food Button clicked, opens popup window
 			
 			Button saveFoodsButton = new Button(SaveFoodsCaption);
@@ -937,6 +938,15 @@ public class Main extends Application {
 	}
 	
 	/**
+	 * Used to produce repeatedly used string
+	 * @param number number of items available
+	 * @return the user string needed to describe availability in the food list based on the amount
+	 */
+	private String amountInTheFoodList(int number) {
+		return String.format("%d in the available food list", number);
+	}
+	
+	/**
 	 * displays an error message with an okay button to the user
 	 * @param message - String message to display
 	 */
@@ -956,7 +966,7 @@ public class Main extends Application {
 		
 		Text errorMessageText = new Text(message);
 		errorMessageText.setWrappingWidth(275);
-		Button acceptButton = new Button("OK");
+		Button acceptButton = new Button(AcceptButtonCaption);
 		acceptButton.setPrefSize(80,40);   
 		acceptButton.setOnAction(e -> loadPopupWindow.close());
 		
