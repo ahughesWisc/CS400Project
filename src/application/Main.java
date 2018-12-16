@@ -99,7 +99,7 @@ public class Main extends Application {
 	//in the code. It also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
 	final static String Calories = "Calories";
 	final static String Fat = "Fat";
-	final static String carbohydrate = "Carbohydrate";
+	final static String Carbohydrate = "Carbohydrate";
 	final static String Protein = "Protein";
 	final static String Fiber = "Fiber";
 
@@ -158,7 +158,7 @@ public class Main extends Application {
 			FXCollections.observableArrayList(
 					Calories,
 					Fat,
-					carbohydrate,
+					Carbohydrate,
 					Fiber,
 					Protein
 					);
@@ -617,7 +617,7 @@ public class Main extends Application {
 
 		//create label to place on top of selected file
 		Label fileLabel = new Label("File Selected"); 
-		fileLabel.setFont(new Font("Arial", 14));
+		fileLabel.setFont(new Font(Font, 14));
 
 
 		//create a cancel button to close out of load popup screen     
@@ -802,26 +802,26 @@ public class Main extends Application {
 		gridPane.setVgap(10); // Vertical gap between columns
 
 		//create labels for name of food and nutrients for user input
-		Label idLabel = new Label("ID: ");
-		idLabel.setFont(new Font("Arial",14));
+		Label idLabel = new Label(MakeLabel("ID"));
+		idLabel.setFont(new Font(Font,14));
 		
-		Label nameLabel = new Label("Name: "); 
-		nameLabel.setFont(new Font("Arial", 14));
+		Label nameLabel = new Label(MakeLabel("Name")); 
+		nameLabel.setFont(new Font(Font, 14));
 
-		Label caloriesLabel = new Label("Calories: "); 
-		caloriesLabel.setFont(new Font("Arial", 14));
+		Label caloriesLabel = new Label(MakeLabel(Calories)); 
+		caloriesLabel.setFont(new Font(Font, 14));
 
-		Label fatLabel = new Label("Fat: "); 
-		fatLabel.setFont(new Font("Arial", 14));
+		Label fatLabel = new Label(MakeLabel(Fat)); 
+		fatLabel.setFont(new Font(Font, 14));
 
-		Label carbLabel = new Label("Carbohydrate: "); 
-		carbLabel.setFont(new Font("Arial", 14));
+		Label carbLabel = new Label(MakeLabel(Carbohydrate)); 
+		carbLabel.setFont(new Font(Font, 14));
 
-		Label fiberLabel = new Label("Fiber: "); 
-		fiberLabel.setFont(new Font("Arial", 14));
+		Label fiberLabel = new Label(MakeLabel(Fiber)); 
+		fiberLabel.setFont(new Font(Font, 14));
 
-		Label proteinLabel = new Label("Protein: "); 
-		proteinLabel.setFont(new Font("Arial", 14));
+		Label proteinLabel = new Label(MakeLabel(Protein)); 
+		proteinLabel.setFont(new Font(Font, 14));
 
 		TextField idField = new TextField();
 		idField.setPrefWidth(100);
@@ -883,6 +883,15 @@ public class Main extends Application {
 		loadPopupWindow.showAndWait();
 
 	}//end of displayAddFood()
+	
+	/**
+	 * Generates a label from a nutrient name
+	 * @param nutrient nutrient name
+	 * @return nutrient name plus colon plus space
+	 */
+	private String MakeLabel(String nutrient) {
+		return String.format("%s: ", nutrient);
+	}
 	
 	/**
 	 * validates user entered data and adds foods to the food data.
