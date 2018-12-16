@@ -277,6 +277,7 @@ public class Main extends Application {
 			}
 			
 
+			
 			foodList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 			foodList.setPrefWidth(320);
 			foodList.setPrefHeight(320);
@@ -509,6 +510,10 @@ public class Main extends Application {
 					clearSearch);
 			primaryStage.show();
 
+			// add foodItems from the directory foodItems.csv file
+			File foodFile = new File("foodItems.csv");
+			loadFile(foodFile);
+			Collections.sort(foods, comparatorFoodItembyName);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -609,7 +614,14 @@ public class Main extends Application {
 		Button loadButton= new Button("Load");
 		loadButton.setPrefSize(80,40);
 		//loads file into data struce when load button is clicked
-		loadButton.setOnAction(e -> { loadFile(selectedFile); loadPopupWindow.close();});
+		loadButton.setOnAction(e -> { 
+			
+			// per the spec, loading a new food file should clear all food data.
+			foodData = new FoodData();
+			foods.clear();
+			loadFile(selectedFile); 
+			loadPopupWindow.close();
+		});
 
 
 		//Create text field that shows the path of the file selected
