@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * 
  * Credit Outside Help
  * 
- * Online Sources: https://youtu.be/GbzKr46VvD0
+ * Online Sources: https://youtu.be/GbzKr46VvD0, https://www.mkyong.com/java8/java-8-foreach-examples/
  * 
  * Notes: Minimal error handling occurs in the file processing, To be determined if this requires more work. -Colin Butkus
  * Known Bugs: 
@@ -147,7 +147,6 @@ public class Main extends Application {
 	private ListView<String> ruleList = new ListView<String>(rules);
 	private FoodData foodData = new FoodData();
 	private ObservableList<FoodItem> foods = FXCollections.observableArrayList();
-	private ObservableList<FoodItem> filteredFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> foodList = new ListView<FoodItem>(foods);
 	private ObservableList<FoodItem> menuFoods = FXCollections.observableArrayList();
 	private ListView<FoodItem> menuList = new ListView<FoodItem>(menuFoods);
@@ -217,7 +216,6 @@ public class Main extends Application {
 			AnchorPane ap = new AnchorPane();
 			ap.getChildren().addAll(banner, exitProgramButton);
 			AnchorPane.setLeftAnchor(banner, 0.0);
-			//AnchorPane.setRightAnchor(exitProgramButton, 48.0); // Sets position of exitProgramButton
 			AnchorPane.setRightAnchor(exitProgramButton, 0.0);
 			borderpane.setTop(ap);
 			ap.setMaxWidth(768);
@@ -239,7 +237,6 @@ public class Main extends Application {
 
 			// HBox for buttons in food list area
 			HBox foodListButtonsHBox = new HBox(); // Load, add, and save buttons in Food List area
-			//foodListButtonsHBox.setPadding(new Insets(15, 12, 15, 12));
 			foodListButtonsHBox.setSpacing(10);
 			
 			// button for adding foods from file
@@ -279,7 +276,7 @@ public class Main extends Application {
 			
 
 			foodList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-			foodList.setPrefWidth(320); // Formerly 323
+			foodList.setPrefWidth(320);
 			foodList.setPrefHeight(320);
 			foodList.setMinHeight(320);
 
@@ -303,7 +300,6 @@ public class Main extends Application {
 			removeFoodFromMenuButton.setTooltip(removeFoodTooltip);
 
 			VBox addAndRemoveButtonsVBox = new VBox();
-			//addAndRemoveButtonsVBox.setPadding(new Insets(15, 12, 15, 12));
 			addAndRemoveButtonsVBox.setSpacing(10);
 			addAndRemoveButtonsVBox.setAlignment(Pos.CENTER);
 			addAndRemoveButtonsVBox.getChildren().addAll(addFoodtoMenuButton, removeFoodFromMenuButton);
@@ -335,7 +331,7 @@ public class Main extends Application {
 			menuListLabel.setPadding(new Insets(10, 0, 10, 0));
 
 			// Menu food list
-			menuList.setPrefWidth(320); // Formerly 323
+			menuList.setPrefWidth(320);
 			menuList.setPrefHeight(320);
 
 			Button analyzeMenuButton = new Button(AnalyzeNutritionCaption);
@@ -418,7 +414,6 @@ public class Main extends Application {
 			// Remove an active rule
 
 			Button removeRuleButton = new Button(RemoveRuleCaption);
-			//removeRuleButton.setGraphic(new ImageView(imageExit));
 			Tooltip removeRuleTooltip = new Tooltip(RemoveRuleToolTip);
 			removeRuleButton.setTooltip(removeRuleTooltip);
 			removeRuleButton.setOnAction(e -> {
@@ -429,21 +424,20 @@ public class Main extends Application {
 			//Run query button
 			Button runSearch = new Button(RunSearchCaption);
 			runSearch.setMinSize(100, 50);
+<<<<<<< HEAD
 			runSearch.setOnAction(e -> {
 			    filteredFoods = runTheSearch(nameFilterField.getText(), rules, foodData, foods);
 			    foodList = new ListView<FoodItem>(filteredFoods);
 			    System.out.println(filteredFoods.toString()); // FIXME
 			});
+=======
+			runSearch.setOnAction(e -> runTheSearch(nameFilterField.getText(), rules, foodData, foods));
+>>>>>>> refs/remotes/origin/master
 
 			// Clear query button
 			Button clearSearch = new Button(ClearSearchCaption);
 			clearSearch.setMinSize(100, 50);
-			//clearSearch.setOnAction(e -> foodList = new ListView<FoodItem>(foods);); // FIXME
-
-			HBox searchHBox = new HBox();
-			searchHBox.setPadding(new Insets(0, 0, 0, 0));
-			searchHBox.setSpacing(50);
-			searchHBox.getChildren().addAll(filterFoodsLabel); // Formerly runSearch was included
+			clearSearch.setOnAction(e -> clearTheSearch(foodData, foods));
 
 
 			// --------- Adding objects to the pane ---------
@@ -474,7 +468,7 @@ public class Main extends Application {
 			GridPane.setConstraints(divider, 0, filterY - 1, 5, 1); // Formerly Col span: 6
 
 			// -- Filter Foods Area (Left Side): --
-			GridPane.setConstraints(searchHBox, foodListX, filterY, 4, 1); // Col span: 3
+			GridPane.setConstraints(filterFoodsLabel, foodListX, filterY, 4, 1); // Col span: 3
 			GridPane.setConstraints(createRuleLabel, foodListX, filterY + 1, 2, 1); // Col span: 2
 			GridPane.setConstraints(fillerText, foodListX, filterY + 2, 2, 1); // Col span: 2
 			GridPane.setHalignment(fillerText, HPos.CENTER);
@@ -511,7 +505,7 @@ public class Main extends Application {
 			// Adds all nodes to the Grid Pane
 			gridpane.getChildren().addAll(foodListLabel, foodListButtonsHBox, foodList, 
 					addAndRemoveButtonsVBox, menuListLabel, menuList, analyzeMenuButton, 
-					searchHBox, nutrientLabel, nutrientComboBox, operatorLabel, operatorComboBox, 
+					filterFoodsLabel, nutrientLabel, nutrientComboBox, operatorLabel, operatorComboBox, 
 					valueLabel, nutrientValueField, nameFilterLabel, nameFilterField, 
 					nutrientFilterLabel, ruleList, addRuleButtonVBox,activeFilterLabel,
 					createRuleLabel,divider, removeRuleButtonVBox, fillerText, runSearch, 
@@ -1007,21 +1001,24 @@ public class Main extends Application {
 		}//end of else statement
 	}//end of loadFile(File selectedFile)
 	
-	
 	/**
 	 * Method will be called when the runSearch button is clicked from main GUI
 	 * 
-	 * @param foodName
-	 * @param rules
-	 * @param foodData
-	 * @param foods
+	 * @param foodName name of the food to search for
+	 * @param rules the list of rules to search for
+	 * @param foodData FoodData object that enables searching
+	 * @param foods list of foods to run the search on
 	 */
+<<<<<<< HEAD
 	public ObservableList<FoodItem> runTheSearch(String foodName, ObservableList<String> 
+=======
+	public static void runTheSearch(String foodName, ObservableList<String> 
+>>>>>>> refs/remotes/origin/master
 	    rules, FoodData foodData, ObservableList<FoodItem> foods) {
 	  
 	  List<FoodItem> nameSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by name
 	  List<FoodItem> nutrientSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by nutrients
-	  List<FoodItem> result = new ArrayList<FoodItem>(); // 
+	  List<FoodItem> result = new ArrayList<FoodItem>(); // Stores the final intersected food list
 
 	  // If no foodName is entered, then the text field returns an empty String. Checks for empty String
 	  if (foodName.length() > 0) {
@@ -1061,8 +1058,28 @@ public class Main extends Application {
 	    result.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
 	  }
 	  
-	  return FXCollections.observableArrayList(result);
+	  // Clear foods
+	  foods.clear();
+	  
+	  // Rebuild foods
+	  result.forEach(foodItem -> foods.add(foodItem));
+	      
 	} // end of runTheSearch
+
+	/**
+	 * Method will be called when the clearSearch button is clicked from main GUI
+	 * 
+	 * @param foodData FoodData object used to rebuild food list
+	 * @param foods list of foods to display in the food list
+	 */
+	public static void clearTheSearch(FoodData foodData, ObservableList<FoodItem> foods) {
+	  
+	  // Clear foods
+	  foods.clear();
+	  
+	  // Rebuild foods
+	  foodData.getAllFoodItems().forEach(foodItem -> foods.add(foodItem));
+	} // end of clearTheSearch
 	
 
 }
