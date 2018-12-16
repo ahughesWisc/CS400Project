@@ -87,12 +87,10 @@ public class FoodItem {
     }
     
     /**
-     * Overridden to display the food's name in a friendlier format
+     * Overridden to display the food's name
      */
     public String toString() {
-    	String ret = this.getName();
-    	ret.replaceAll("_", " ");
-    	return ret;
+    	return this.getName();
     }
     
 }
