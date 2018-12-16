@@ -16,7 +16,8 @@ package application;
  * 
  * Credit Outside Help
  * 
- * Online Sources: https://youtu.be/GbzKr46VvD0, https://www.mkyong.com/java8/java-8-foreach-examples/
+ * Online Sources: https://youtu.be/GbzKr46VvD0, https://www.mkyong.com/java8/java-8-foreach-examples/,
+ * https://stackoverflow.com/questions/49821774/sorting-string-value-in-a-case-insensitive-manner-in-java-8/49821834
  * 
  * Notes: Minimal error handling occurs in the file processing, To be determined if this requires more work. foodItems.csv
  * has many blank lines at the end of file that creates an annoying popup saying  -Colin Butkus
