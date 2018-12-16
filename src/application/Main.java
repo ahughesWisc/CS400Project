@@ -96,7 +96,7 @@ public class Main extends Application {
 	//in the code. It also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
 	final static String Calories = "Calories";
 	final static String Fat = "Fat";
-	final static String Carbs = "Carbs";
+	final static String carbohydrate = "Carbohydrate";
 	final static String Protein = "Protein";
 	final static String Fiber = "Fiber";
 
@@ -154,7 +154,7 @@ public class Main extends Application {
 			FXCollections.observableArrayList(
 					Calories,
 					Fat,
-					Carbs,
+					carbohydrate,
 					Fiber,
 					Protein
 					);
@@ -657,7 +657,7 @@ public class Main extends Application {
 		// variables for storing combined information
 		double calories = 0;
 		double fat = 0;
-		double carbs = 0;
+		double carbohydrate = 0;
 		double protein = 0;
 		double fiber = 0;
 		String foods = "";
@@ -679,14 +679,14 @@ public class Main extends Application {
 			// add nutrient values
 			calories = calories + entry.getValue()*entry.getKey().getNutrientValue("calories");	
 			fat = fat + entry.getValue()*entry.getKey().getNutrientValue("fat");
-			carbs = carbs + entry.getValue()*entry.getKey().getNutrientValue("carbohydrate");
+			carbohydrate = carbohydrate + entry.getValue()*entry.getKey().getNutrientValue("carbohydrate");
 			protein = protein + entry.getValue()*entry.getKey().getNutrientValue("protein");
 			fiber = fiber + entry.getValue()*entry.getKey().getNutrientValue("fiber");
 		}
 
 		// create text for displaying nutrients
 		Text output = new Text("Foods in Meal:\t" + foods + "\n\n" + "Total calories:\t\t" + calories +
-				"\n" + "Total fat(g):\t\t" + fat +"\nTotal carbs(g):\t\t" + carbs + "\nTotal protein(g):\t" +
+				"\n" + "Total fat(g):\t\t" + fat +"\nTotal carbohydrates(g):\t\t" + carbohydrate + "\nTotal protein(g):\t" +
 				protein + "\nTotal fiber(g):\t\t" + fiber);
 		
 		// add all elements to the grid
@@ -724,7 +724,7 @@ public class Main extends Application {
 		Label fatLabel = new Label("Fat: "); 
 		fatLabel.setFont(new Font("Arial", 14));
 
-		Label carbLabel = new Label("Carbohydrates: "); 
+		Label carbLabel = new Label("carbohydrate: "); 
 		carbLabel.setFont(new Font("Arial", 14));
 
 		Label fiberLabel = new Label("Fiber: "); 
@@ -802,30 +802,30 @@ public class Main extends Application {
 	 * @param name
 	 * @param calories
 	 * @param fat
-	 * @param carbohydrates
+	 * @param carbohydrate
 	 * @param fiber
 	 * @param protein
 	 * @param stage
 	 * @return
 	 */
 	private boolean addFoodtoFoodData(Boolean triggerErrors,String id, String name,String calories,String 
-			fat,String carbohydrates,String fiber,String protein, Stage stage) {
+			fat,String carbohydrate,String fiber,String protein, Stage stage) {
 		if (foodData.isUniqueID(id)) {
-			if(id != null && name != null && calories != null && fat != null && carbohydrates != null &&
+			if(id != null && name != null && calories != null && fat != null && carbohydrate != null &&
 					fiber != null && protein != null){
 				//check all fields are not zero length
 				if(!id.isEmpty() && !name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && 
-						!carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
+						!carbohydrate.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
 					//check if the ID or name contain commas
 					if (!id.contains(",") && !name.contains(",")) {
 
 						//check if the nutrient values are positive doubles
-						if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && 
+						if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrate) && 
 								isPositiveDouble(fiber) && isPositiveDouble(protein)) {
 							FoodItem foodItem = new FoodItem(id,name);
 							foodItem.addNutrient("calories", Double.parseDouble(calories));
 							foodItem.addNutrient("fat", Double.parseDouble(fat));
-							foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrates));
+							foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrate));
 							foodItem.addNutrient("fiber", Double.parseDouble(fiber));
 							foodItem.addNutrient("protein", Double.parseDouble(protein));
 							foodData.addFoodItem(foodItem);
@@ -959,7 +959,7 @@ public class Main extends Application {
 			String name = new String();
 			String calories = new String();
 			String fat = new String();
-			String carbohydrates = new String();
+			String carbohydrate = new String();
 			String fiber = new String();
 			String protein = new String();
 			//go through each line in input file and decide if the format is valid to save to our foodData structure
@@ -974,11 +974,11 @@ public class Main extends Application {
 					name = listOfLines.get(i).get(1);
 					calories = listOfLines.get(i).get(3);
 					fat = listOfLines.get(i).get(5);
-					carbohydrates = listOfLines.get(i).get(7);
+					carbohydrate = listOfLines.get(i).get(7);
 					fiber = listOfLines.get(i).get(9);
 					protein = listOfLines.get(i).get(11);
 					
-					if (addFoodtoFoodData(false,id,name,calories,fat,carbohydrates,fiber,protein,null) == false) {
+					if (addFoodtoFoodData(false,id,name,calories,fat,carbohydrate,fiber,protein,null) == false) {
 						failedLines++;
 					}
 
