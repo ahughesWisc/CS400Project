@@ -987,7 +987,7 @@ public class Main extends Application {
 		Stage loadPopupWindow =new Stage();
 
 		loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
-		loadPopupWindow.setTitle(ErrorPoputTitle);
+		loadPopupWindow.setTitle(ErrorPopupTitle);
 
 		ScrollPane scrollPane = new ScrollPane();
 		GridPane gridPane = new GridPane();
