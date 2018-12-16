@@ -61,6 +61,8 @@ import javafx.scene.text.Text;
 import java.util.*; 
 import javafx.stage.Modality;
 import javafx.stage.FileChooser;
+
+
 import java.io.File;
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -68,6 +70,7 @@ import java.util.stream.Stream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import javafx.scene.text.TextAlignment;
 
 /**
  * Class used for creating and displaying the GUI and 
@@ -626,7 +629,22 @@ public class Main extends Application {
 		Label fileLabel = new Label("File Selected"); 
 		fileLabel.setFont(new Font(Font, 14));
 
-
+		//create label to describe the file format
+		Label fileFormatTitle = new Label("File Format Strictly Enforced - Each Input Line Must Follow:");
+		
+		
+		Label fileFormat = new Label("<id>,<food_name>,<calories>,<calorie_count>,<fat>,<fat_grams>,<carbohydrate>,<carbohydrate_grams>,<fiber>,<fiber_grams>,<protein>,<protein_grams>"); 
+		fileFormat.setWrapText(true);
+		fileFormat.setFont(new Font(Font, 10));
+		
+		Label fileExampleFormatTitle = new Label("Example Format of Line of input:"); 
+		
+		Label fileExampleFormat = new Label("556540ff5d613c9d5f5935a9,Stewarts_PremiumDarkChocolatewithMintCookieCrunch,calories,280,fat,18,carbohydrate,34,fiber,3,protein,3"); 
+		fileExampleFormat.setFont(new Font(Font, 10));
+		Label fileFailFormat = new Label("Failure to adhere will result in line input being ignored or nutrition data stored in wrong data field"); 
+		
+		
+		//fileFormat.setTextAlignment(TextAlignment.JUSTIFY);
 		//create a cancel button to close out of load popup screen     
 		Button cancelButton= new Button("Cancel");
 		cancelButton.setPrefSize(80,40);     
@@ -635,7 +653,7 @@ public class Main extends Application {
 		//create a load button that takes the selected file and parses it and saves it into our FoodData structure
 		Button loadButton= new Button("Load");
 		loadButton.setPrefSize(80,40);
-		//loads file into data struce when load button is clicked
+		//loads file into data structure when load button is clicked
 		loadButton.setOnAction(e -> { 
 			
 			// per the spec, loading a new food file should clear all food data.
@@ -644,7 +662,10 @@ public class Main extends Application {
 			loadFile(selectedFile); 
 			loadPopupWindow.close();
 		});
-
+		
+		HBox buttonBox = new HBox();
+		buttonBox.setSpacing(520);
+		buttonBox.getChildren().addAll(cancelButton, loadButton);
 
 		//Create text field that shows the path of the file selected
 		TextField nameFilterField = new TextField("No File Selected");
@@ -654,12 +675,15 @@ public class Main extends Application {
 
 		//add buttons,label and textbox to grid
 		gridPane.add(nameFilterField, 0, 1, 3, 1); 
-		gridPane.add(fileLabel, 1, 0, 1, 1);
-		gridPane.add(cancelButton, 0, 2, 1, 1);
-		gridPane.add(loadButton, 2, 2, 1, 1);
-
+		gridPane.add(fileLabel, 0, 0, 1, 1);
+		gridPane.add(buttonBox, 0, 2, 3, 1);
+		gridPane.add(fileFormatTitle, 0, 4, 1, 1);
+		gridPane.add(fileFormat, 0, 5, 3, 1);
+		gridPane.add(fileExampleFormatTitle,0,6,1,1);
+		gridPane.add(fileExampleFormat,0,7,3,1);
+		gridPane.add(fileFailFormat,0,8,3,1);
 		//add gridPane to the scene      
-		Scene scene1= new Scene(gridPane, 300, 150);
+		Scene scene1= new Scene(gridPane, 800, 300);
 
 		//set the scene to the popup window
 		loadPopupWindow.setScene(scene1);
