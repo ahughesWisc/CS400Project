@@ -8,6 +8,7 @@ import java.util.List;
  * This class represents a food item with all its properties.
  * 
  * @author Aaron Whitaker (awhitaker3@wisc.edu);
+ * @author Adam Hughes (adam.hughes@wisc.edu);
  */
 public class FoodItem {
     // The name of the food item.
@@ -85,8 +86,13 @@ public class FoodItem {
         return 0;
     }
     
+    /**
+     * Overridden to display the food's name in a friendlier format
+     */
     public String toString() {
-    	return getName();
+    	String ret = this.getName();
+    	ret.replaceAll("_", " ");
+    	return ret;
     }
     
 }
