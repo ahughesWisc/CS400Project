@@ -1,7 +1,5 @@
 package application;
 
-import java.util.function.Function;
-import java.util.regex.Pattern;
 
 /**
  * Purpose: General purpose GUI program for reading a .csv with food data and allowing users to interact
@@ -24,6 +22,8 @@ import java.util.regex.Pattern;
  * Known Bugs: 
  */
 
+import java.util.function.Function;
+import java.util.regex.Pattern;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -91,7 +91,7 @@ public class Main extends Application {
 	final static int foodListY = 1;
 	final static int foodListX = 0;
 	final static int menuListX = 3;
-	final static int filterY = 6;
+	final static int filterY = 7;
 
 	//Similar to a .NET Resources.resx file, these sections are used so we can easily change string values in the UI without poking around everywhere
 	//in the code. It also means that we can avoid spelling mistakes if we reuse the strings because we only have to spell them once explicitly.
@@ -231,7 +231,7 @@ public class Main extends Application {
 			};
 			
 			// -- Food List Area: --
-
+			Label foodCount = new Label(foods.size() + " in the availible food list");
 			Label foodListLabel = new Label(FoodListLabel); // Food List title
 			foodListLabel.setFont(new Font(Font, 28));
 			foodListLabel.setPadding(new Insets(10, 10, 10, 0));
@@ -246,6 +246,7 @@ public class Main extends Application {
 			loadFoodsButton.setOnAction(e -> {
 				displayLoadFile();
 				Collections.sort(foods,comparatorFoodItembyName);
+				foodCount.setText(foods.size() + " in the availible food list");
 			});//call displayLoadFile when Load Food Button clicked, opens popup window
 			
 			// button for adding foods from form
@@ -253,7 +254,8 @@ public class Main extends Application {
 			addFoodButton.setPrefSize(100, 20); // Sets width and height of button
 			addFoodButton.setOnAction(e -> {
 				displayAddFood();
-				Collections.sort(foods, comparatorFoodItembyName);	
+				Collections.sort(foods, comparatorFoodItembyName);
+				foodCount.setText(foods.size() + " in the availible food list");
 			});//call displayAddFood when Add Food Button clicked, opens popup window
 			
 			Button saveFoodsButton = new Button(SaveFoodsCaption);
@@ -283,7 +285,7 @@ public class Main extends Application {
 			foodList.setPrefHeight(320);
 			foodList.setMinHeight(320);
 
-			Label foodCount = new Label(foods.size() + " in the availible food list");
+			
 			//foodCount.textProperty().bind(foodList.itemsProperty().);
 
 			// -- Buttons between Food List and Menu List: --
@@ -445,7 +447,7 @@ public class Main extends Application {
 			GridPane.setConstraints(foodListLabel, foodListX, foodListY, 2, 1); // Col span: 2
 			GridPane.setConstraints(foodListButtonsHBox, foodListX, foodListY + 1, 2, 1); // Col span: 2
 			GridPane.setConstraints(foodList, foodListX, foodListY + 2, 2, 2); // Col span: 2, Row span: 2
-			GridPane.setConstraints(foodCount, foodListX, foodListY+3, 1, 1);
+			GridPane.setConstraints(foodCount, foodListX, foodListY+4, 1, 1);
 
 			// -- Buttons between Food List and Menu List: --
 			GridPane.setConstraints(addAndRemoveButtonsVBox, foodListX + 2, foodListY + 2, 1, 2);
@@ -507,7 +509,7 @@ public class Main extends Application {
 					valueLabel, nutrientValueField, nameFilterLabel, nameFilterField, 
 					nutrientFilterLabel, ruleList, addRuleButtonVBox,activeFilterLabel,
 					createRuleLabel,divider, removeRuleButtonVBox, fillerText, runSearch, 
-					clearSearch);
+					clearSearch,foodCount);
 			primaryStage.show();
 
 			// add foodItems from the directory foodItems.csv file
@@ -515,6 +517,7 @@ public class Main extends Application {
 				File foodFile = new File("foodItems.csv");
 				loadFile(foodFile);
 				Collections.sort(foods, comparatorFoodItembyName);
+				foodCount.setText(foods.size() + " in the availible food list");
 			} catch(Exception e) {
 				displayError("There was an error loading foods from foodItems.csv. Use the Load Food and Add Food "
 						+ "buttons to add foods to the program.");
