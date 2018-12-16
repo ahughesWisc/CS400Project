@@ -20,13 +20,7 @@ import java.util.regex.Pattern;
  * 
  * Online Sources: https://youtu.be/GbzKr46VvD0
  * 
- * Notes: Currently version is using a List<String> data structure when loading a file and adding a food item,
- *        once FoodData.java is ready we will need to use this data structure. The loading and parsing of the file
- *         occurs within the main program along with saving it to a data structure. This will need to be moved to 
- *         FoodData.loadFoodItems(String filePath). The ability to add a single food item needs to eventually be moved
- *         to FoodData.addFoodItem(FoodItem foodItem) as this also lives in the main class.  When adding a food data item, 
- *         method addFoodItem in the main class sets the same id string each time, need to update. Minimal error handling
- *         occurs in the file processing, To be determined if this requires more work. -Colin Butkus
+ * Notes: Minimal error handling occurs in the file processing, To be determined if this requires more work. -Colin Butkus
  * Known Bugs: 
  */
 
@@ -215,6 +209,7 @@ public class Main extends Application {
 			exitProgramButton.setGraphic(new ImageView(imageExit));
 			Tooltip exitProgramTooltip = new Tooltip(ExitToolTip);
 			exitProgramButton.setTooltip(exitProgramTooltip);
+			exitProgramButton.setOnMouseClicked(actionEvent -> primaryStage.close());
 		
 
 			AnchorPane ap = new AnchorPane();
@@ -384,7 +379,8 @@ public class Main extends Application {
 				SingleSelectionModel<String> operator = operatorComboBox.getSelectionModel();
 				String value = nutrientValueField.getText();
 				//ensure we have valid input and don't already have this rule
-				if (isValidDoubleValue(value) && hasSelection(nutrient) && hasSelection(operator) && !rules.contains(makeRule(nutrient, operator, value))) {
+				if (isValidDoubleValue(value) && hasSelection(nutrient) && hasSelection(operator) && 
+						!rules.contains(makeRule(nutrient, operator, value))) {
 					rules.add(makeRule(nutrient, operator, value));
 				}
 			});
@@ -564,7 +560,8 @@ public class Main extends Application {
 	 * @param value string representing a double
 	 * @return rule concatenating string form of nutrient, operator, and value
 	 */
-	private String makeRule(SingleSelectionModel<String> nutrient, SingleSelectionModel<String> operator, String value) {
+	private String makeRule(SingleSelectionModel<String> nutrient, SingleSelectionModel<String> operator,
+			String value) {
 		String nut = nutrient.getSelectedItem();
 		String op = operator.getSelectedItem();
 		return String.format("%s %s %s", 
@@ -809,43 +806,55 @@ public class Main extends Application {
 	 * @param stage
 	 * @return
 	 */
-	private boolean addFoodtoFoodData(Boolean triggerErrors,String id, String name,String calories,String fat,String carbohydrates,String fiber,String protein, Stage stage) {
+	private boolean addFoodtoFoodData(Boolean triggerErrors,String id, String name,String calories,String 
+			fat,String carbohydrates,String fiber,String protein, Stage stage) {
 		if (foodData.isUniqueID(id)) {
-			if(id != null && name != null && calories != null && fat != null && carbohydrates != null && fiber != null && protein != null){
+			if(id != null && name != null && calories != null && fat != null && carbohydrates != null &&
+					fiber != null && protein != null){
 				//check all fields are not zero length
-				if(!id.isEmpty() && !name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && !carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
-					//check if the nutrient values are positive doubles
-					if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && isPositiveDouble(fiber) && isPositiveDouble(protein)) {
-						FoodItem foodItem = new FoodItem(id,name);
-						foodItem.addNutrient("calories", Double.parseDouble(calories));
-						foodItem.addNutrient("fat", Double.parseDouble(fat));
-						foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrates));
-						foodItem.addNutrient("fiber", Double.parseDouble(fiber));
-						foodItem.addNutrient("protein", Double.parseDouble(protein));
-						foodData.addFoodItem(foodItem);
-						foods.add(foodItem);
-						if (stage != null) {
-							stage.close();
+				if(!id.isEmpty() && !name.isEmpty() && !calories.isEmpty() && !fat.isEmpty() && 
+						!carbohydrates.isEmpty() && !fiber.isEmpty() && !protein.isEmpty()) {
+					//check if the ID or name contain commas
+					if (!id.contains(",") && !name.contains(",")) {
+
+						//check if the nutrient values are positive doubles
+						if(isPositiveDouble(calories) && isPositiveDouble(fat) && isPositiveDouble(carbohydrates) && 
+								isPositiveDouble(fiber) && isPositiveDouble(protein)) {
+							FoodItem foodItem = new FoodItem(id,name);
+							foodItem.addNutrient("calories", Double.parseDouble(calories));
+							foodItem.addNutrient("fat", Double.parseDouble(fat));
+							foodItem.addNutrient("carbohydrate", Double.parseDouble(carbohydrates));
+							foodItem.addNutrient("fiber", Double.parseDouble(fiber));
+							foodItem.addNutrient("protein", Double.parseDouble(protein));
+							foodData.addFoodItem(foodItem);
+							foods.add(foodItem);
+							if (stage != null) {
+								stage.close();
+							}
+							return true;
+						} else {
+							if (triggerErrors) {
+								displayError("Nutrient values must be numeric and non-negative");
+							}
 						}
-						return true;
 					} else {
 						if (triggerErrors) {
-								displayError("Nutrient values must be numeric and non-negative");
+							displayError("The ID and name must not contain commas");
 						}
 					}
 				} else {
 					if (triggerErrors) {
-					displayError("All fields in the form must be filled out");
+						displayError("All fields in the form must be filled out");
 					}
 				}
 			} else {
 				if (triggerErrors) {
-				displayError("All fields in the form must be filled out");
+					displayError("All fields in the form must be filled out");
 				}
 			}
 		} else {
 			if (triggerErrors) {
-			displayError("The selected ID is already in use, select a unique ID");
+				displayError("The selected ID is already in use, select a unique ID");
 			}
 		}
 		return false;
@@ -883,10 +892,15 @@ public class Main extends Application {
 	private static boolean isValidDataField(List<String> lineInput) {
 		//first check if there are 12 seperate data fields that were parsed, split by commas in input file
 		if(lineInput.size() == 12) {
-			//now check if column 3,5,7,9,11 have the correct name of the nutrient: calories, fat, carbohydrate, fiber and protein
-			if(lineInput.get(2).equals("calories") && lineInput.get(4).equals("fat") && lineInput.get(6).equals("carbohydrate") && lineInput.get(8).equals("fiber") && lineInput.get(10).equals("protein")) { 
+			//now check if column 3,5,7,9,11 have the correct name of the nutrient: calories,
+			//fat, carbohydrate, fiber and protein
+			if(lineInput.get(2).equals("calories") && lineInput.get(4).equals("fat") && 
+					lineInput.get(6).equals("carbohydrate") && lineInput.get(8).equals("fiber") && 
+					lineInput.get(10).equals("protein")) { 
 				//check if the column to the right of the nutrient contains a number that be of type double
-				if(isPositiveDouble(lineInput.get(3)) && isPositiveDouble(lineInput.get(5)) && isPositiveDouble(lineInput.get(7)) && isPositiveDouble(lineInput.get(9)) && isPositiveDouble(lineInput.get(11))) {
+				if(isPositiveDouble(lineInput.get(3)) && isPositiveDouble(lineInput.get(5)) &&
+						isPositiveDouble(lineInput.get(7)) && isPositiveDouble(lineInput.get(9)) && 
+						isPositiveDouble(lineInput.get(11))) {
 					return true;
 				}
 				else {
@@ -915,9 +929,8 @@ public class Main extends Application {
 
 	private void loadFile(File selectedFile) {
 
-		//process each item in list and save into 3 separate data structures: list of ids, list of names and list ofHashMap nutrient
-		//ToDo
-		//once the FoodData class is created will store this a FoodData data structure
+		//process each item in list and save into 3 separate data structures: list of ids, list of 
+		// names and list ofHashMap nutrient
 
 		//check if file selected was not null
 		if( selectedFile == null ) {
