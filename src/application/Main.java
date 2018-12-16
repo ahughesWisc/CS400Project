@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * 
  * Credit Outside Help
  * 
- * Online Sources: https://youtu.be/GbzKr46VvD0
+ * Online Sources: https://youtu.be/GbzKr46VvD0, https://www.mkyong.com/java8/java-8-foreach-examples/
  * 
  * Notes: Minimal error handling occurs in the file processing, To be determined if this requires more work. -Colin Butkus
  * Known Bugs: 
@@ -1006,10 +1006,10 @@ public class Main extends Application {
 	/**
 	 * Method will be called when the runSearch button is clicked from main GUI
 	 * 
-	 * @param foodName
-	 * @param rules
-	 * @param foodData
-	 * @param foods
+	 * @param foodName name of the food to search for
+	 * @param rules the list of rules to search for
+	 * @param foodData FoodData object that enables searching
+	 * @param foods list of foods to run the search on
 	 */
 	public static void runTheSearch(String foodName, ObservableList<String> 
 	    rules, FoodData foodData, ObservableList<FoodItem> foods) {
@@ -1067,12 +1067,15 @@ public class Main extends Application {
 	/**
 	 * Method will be called when the clearSearch button is clicked from main GUI
 	 * 
-	 * @param foodData
-	 * @param foods
+	 * @param foodData FoodData object used to rebuild food list
+	 * @param foods list of foods to display in the food list
 	 */
 	public static void clearTheSearch(FoodData foodData, ObservableList<FoodItem> foods) {
+	  
+	  // Clear foods
 	  foods.clear();
 	  
+	  // Rebuild foods
 	  foodData.getAllFoodItems().forEach(foodItem -> foods.add(foodItem));
 	} // end of clearTheSearch
 	
