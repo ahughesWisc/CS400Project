@@ -1028,12 +1028,12 @@ public class Main extends Application {
 
 			} catch (IOException e) {
 				e.printStackTrace();
-				displayError("There was an error loading foods from foodItems.csv. Adjust the file "
+				displayError("There was an error loading foods from" + selectedFile +". Adjust the file "
 						+ "input, and use the Load Food and Add Food buttons to add foods to the program.");
 			}
 			catch (Exception e) {
 				e.printStackTrace();
-				displayError("There was an error loading foods from foodItems.csv. Adjust the file "
+				displayError("There was an error loading foods from" + selectedFile +". Adjust the file "
 						+ "input, and use the Load Food and Add Food buttons to add foods to the program.");
 			}
 			
