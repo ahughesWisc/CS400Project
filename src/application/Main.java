@@ -716,32 +716,10 @@ public class Main extends Application {
 		//save empty file first
 		String content = "";
 		String filePath = saveFile.getAbsolutePath();
-		System.out.println(saveFile.getName());
-		System.out.println(saveFile.getName().contains("."));
 		if(!saveFile.getName().contains(".")) {
 			filePath = filePath + ".csv";
 		}
-
-		try {
-			Files.write(Paths.get(filePath), content.getBytes());
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		//add to lines to file
-		
-		Iterator<FoodItem> itr = foodData.getAllFoodItems().iterator();
-		while(itr.hasNext()) {
-			FoodItem foodItemTemp = (FoodItem) itr.next();
-			String appendLineToFile = lineAppend(foodItemTemp);
-			try {
-				Files.write(Paths.get(filePath), appendLineToFile.getBytes(),StandardOpenOption.APPEND);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+		foodData.saveFoodItems(filePath);
 	
 	}//end of save to file
 	

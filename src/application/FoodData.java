@@ -1,5 +1,9 @@
 package application;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -186,8 +190,44 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public void saveFoodItems(String filename) {
-    	// TODO : Complete
+    	String content = "";
+    	try {
+		Files.write(Paths.get(filename), content.getBytes());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		//add to lines to file
+		
+		Iterator<FoodItem> itr = foodItemList.iterator();
+		while(itr.hasNext()) {
+			FoodItem foodItemTemp = (FoodItem) itr.next();
+			String appendLineToFile = lineAppend(foodItemTemp);
+			try {
+				Files.write(Paths.get(filename), appendLineToFile.getBytes(),StandardOpenOption.APPEND);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
     }
+    
+	/**
+	 * Produces the formatted string to append to a file when saving.
+	 * @param foodItemTemp a food item to be written to a line in the file
+	 * @return string in the expected format
+	 */
+	private String lineAppend(FoodItem foodItemTemp) {
+		return String.format("%s,%s,calories,%f,fat,%f,carbohydrate,%f,fiber,%f,protein,%f\n",
+				foodItemTemp.getID(),
+				foodItemTemp.getName(),
+				foodItemTemp.getNutrientValue("calories"),
+				foodItemTemp.getNutrientValue("fat"),
+				foodItemTemp.getNutrientValue("carbohydrate"),
+				foodItemTemp.getNutrientValue("fiber"),
+				foodItemTemp.getNutrientValue("protein"));
+	}
     
     /**
      * check to make sure an ID can be used. IDs
