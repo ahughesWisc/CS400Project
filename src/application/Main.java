@@ -146,7 +146,7 @@ public class Main extends Application {
 	final static String HorizontalDividerImage = "horizontalLine.png";
 
 	//Testing
-	final static boolean DEBUG = false;
+	final static boolean DEBUG = true;
 
 	//Class Attributes
 	private ObservableList<String> rules = FXCollections.observableArrayList();
@@ -498,6 +498,7 @@ public class Main extends Application {
 			GridPane.setValignment(nutrientFilterLabel, VPos.CENTER);
 			GridPane.setConstraints(ruleList, menuListX, filterY + 4, 2, 2); // Col span: 2, row span: 2
 			GridPane.setConstraints(runSearch, menuListX, filterY);
+			GridPane.setConstraints(clearSearch, menuListX + 1, filterY);
 
 			VBox removeRuleButtonVBox = new VBox();
 			removeRuleButtonVBox.getChildren().addAll(removeRuleButton);
@@ -510,7 +511,8 @@ public class Main extends Application {
 					searchHBox, nutrientLabel, nutrientComboBox, operatorLabel, operatorComboBox, 
 					valueLabel, nutrientValueField, nameFilterLabel, nameFilterField, 
 					nutrientFilterLabel, ruleList, addRuleButtonVBox,activeFilterLabel,
-					createRuleLabel,divider, removeRuleButtonVBox, fillerText, runSearch);
+					createRuleLabel,divider, removeRuleButtonVBox, fillerText, runSearch, 
+					clearSearch);
 			primaryStage.show();
 
 		} catch(Exception e) {
