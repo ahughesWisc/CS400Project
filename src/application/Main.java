@@ -123,6 +123,7 @@ public class Main extends Application {
 	final static String ValueLabel = "Value";
 	final static String RemoveRuleCaption = "Remove Selected Rule";
 	final static String AcceptButtonCaption = "OK";
+	final static String AnalysisPopupTitle = "Nutritional Analysis";
 
 	//Prompts
 	final static String NutrientPromptText = "enter positive numeric value (e.g. 1.4)";
@@ -736,7 +737,7 @@ public class Main extends Application {
 		Stage loadPopupWindow =new Stage();
 
 		loadPopupWindow.initModality(Modality.APPLICATION_MODAL);
-		loadPopupWindow.setTitle("Nutritional Analysis");
+		loadPopupWindow.setTitle(AnalysisPopupTitle);
 
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setPadding(new Insets(20, 12, 20, 12));
@@ -885,12 +886,12 @@ public class Main extends Application {
 	}//end of displayAddFood()
 	
 	/**
-	 * Generates a label from a nutrient name
-	 * @param nutrient nutrient name
-	 * @return nutrient name plus colon plus space
+	 * Generates a label from a string
+	 * @param str string to be the label
+	 * @return str plus colon plus space
 	 */
-	private String MakeLabel(String nutrient) {
-		return String.format("%s: ", nutrient);
+	private String MakeLabel(String str) {
+		return String.format("%s: ", str);
 	}
 	
 	/**
