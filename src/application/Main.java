@@ -596,7 +596,10 @@ public class Main extends Application {
 				value);
 	}
 
-	//method will be called when the LoadFood button is clicked from main GUI
+	/**
+	 * Loads food from selected file and displays it.
+	 * Method is called when the LoadFood button is clicked in the main GUI.
+	 */
 	public void displayLoadFile()
 	{
 		Stage loadPopupWindow =new Stage();
@@ -674,7 +677,9 @@ public class Main extends Application {
 		loadPopupWindow.showAndWait();
 	}//end of displayLoadFile()
 	
-	//method to save foodData to a file, if no file extension string contained automatically appends ".csv"
+	/**
+	 * Saves food data to a file. If the file provided by the user has no extension, it is assumed to be a .csv file
+	 */
 	public void displaySaveFile()
 	{
 		Stage loadPopupWindow =new Stage();
@@ -731,7 +736,7 @@ public class Main extends Application {
 
 	/**
 	 * Displays a nutritional analysis of the foods in the menu
-	 * @param menuFoods
+	 * @param menuFoods list of food items in the meal to be analyzed
 	 */
 	public static void displayNutrients(ObservableList<FoodItem> menuFoods) {
 		// set up the stage and the gridpane
@@ -796,7 +801,10 @@ public class Main extends Application {
 		loadPopupWindow.showAndWait();
 	}
 
-	//method will be called when the addFood button is clicked from main GUI
+	/**
+	 * Displays added food.
+	 * Method is called when the addFood button is clicked from main GUI
+	 */
 	public void displayAddFood()
 	{
 		Stage loadPopupWindow =new Stage();
@@ -903,8 +911,8 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * validates user entered data and adds foods to the food data.
-	 * May optionally display error messages
+	 * Validates user entered data and adds foods to the food data.
+	 * May optionally display error messages based on first parameter
 	 * @param triggerErrors
 	 * @param id
 	 * @param name
@@ -914,7 +922,7 @@ public class Main extends Application {
 	 * @param fiber
 	 * @param protein
 	 * @param stage
-	 * @return
+	 * @return true if successful
 	 */
 	private boolean addFoodtoFoodData(Boolean triggerErrors,String id, String name,String calories,String 
 			fat,String carbohydrate,String fiber,String protein, Stage stage) {
@@ -1018,7 +1026,11 @@ public class Main extends Application {
 		loadPopupWindow.showAndWait();	
 	}
 
-	//method that loadFile method uses to check if the line read in is of valid data format
+	/**
+	 * Used by loadFile to check if a given line is in the expected format
+	 * @param lineInput an array of lines of data
+	 * @return true if valid, false otherwise
+	 */
 	private static boolean isValidDataField(List<String> lineInput) {
 		//first check if there are 12 seperate data fields that were parsed, split by commas in input file
 		if(lineInput.size() == 12) {
@@ -1045,7 +1057,11 @@ public class Main extends Application {
 		}
 	}//end of isValidDataField()
 
-	//method to check if a string can be converted into a non-negative double
+	/**
+	 * method to check if a string can be converted into a non-negative double
+	 * @param str string to check
+	 * @return true if string represents a positive double, false otherwise
+	 */
 	private static boolean isPositiveDouble(String str) {
 		try {
 			if(Double.parseDouble(str) >=0.0) {
@@ -1056,11 +1072,13 @@ public class Main extends Application {
 			return false;
 		}
 	}//end of isPositiveDouble
-
+	
+	/**
+	 * Loads the selected file into a list and saves it into the ID list, name list,
+	 * and hashmap list of nutrients
+	 * @param selectedFile name of the file
+	 */
 	private void loadFile(File selectedFile) {
-
-		//process each item in list and save into 3 separate data structures: list of ids, list of 
-		// names and list ofHashMap nutrient
 
 		//check if file selected was not null
 		if( selectedFile == null ) {
@@ -1126,7 +1144,8 @@ public class Main extends Application {
 	}//end of loadFile(File selectedFile)
 	
 	/**
-	 * Method will be called when the runSearch button is clicked from main GUI
+	 * Performs the requested search.
+	 * Method is called when the runSearch button is clicked from main GUI
 	 * 
 	 * @param foodName name of the food to search for
 	 * @param rules the list of rules to search for
@@ -1187,7 +1206,8 @@ public class Main extends Application {
 	} // end of runTheSearch
 
 	/**
-	 * Method will be called when the clearSearch button is clicked from main GUI
+	 * Clears search parameters.
+	 * Method is called when the clearSearch button is clicked from main GUI
 	 * 
 	 * @param foodData FoodData object used to rebuild food list
 	 * @param foods list of foods to display in the food list
