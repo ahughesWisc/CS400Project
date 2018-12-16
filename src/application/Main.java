@@ -18,7 +18,8 @@ package application;
  * 
  * Online Sources: https://youtu.be/GbzKr46VvD0, https://www.mkyong.com/java8/java-8-foreach-examples/
  * 
- * Notes: Minimal error handling occurs in the file processing, To be determined if this requires more work. -Colin Butkus
+ * Notes: Minimal error handling occurs in the file processing, To be determined if this requires more work. foodItems.csv
+ * has many blank lines at the end of file that creates an annoying popup saying  -Colin Butkus
  * Known Bugs: 
  */
 
@@ -679,6 +680,8 @@ public class Main extends Application {
 		//save empty file first
 		String content = "";
 		String filePath = saveFile.getAbsolutePath();
+		System.out.println(saveFile.getName());
+		System.out.println(saveFile.getName().contains("."));
 		if(!saveFile.getName().contains(".")) {
 			filePath = filePath + ".csv";
 		}
@@ -699,13 +702,13 @@ public class Main extends Application {
 					foodItemTemp.getNutrientValue("fat")+ ",carbohydrate," + foodItemTemp.getNutrientValue("carbohydrate") +  ",fiber," +
 					foodItemTemp.getNutrientValue("fiber") + ",protein," + foodItemTemp.getNutrientValue("protein") +"\n";
 			try {
-				Files.write(Paths.get(saveFile.getAbsolutePath()  + ".csv"), appendLineToFile.getBytes(),StandardOpenOption.APPEND);
+				Files.write(Paths.get(filePath), appendLineToFile.getBytes(),StandardOpenOption.APPEND);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
-		
+	
 	}//end of save to file
 
 	/**
