@@ -47,7 +47,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
         this.indexes = new HashMap<String, BPTree<Double, FoodItem>>();
         indexes.put("calories", new BPTree<Double,FoodItem>(64));
         indexes.put("fat", new BPTree<Double,FoodItem>(64));
-        indexes.put("carbohydrates", new BPTree<Double,FoodItem>(64));
+        indexes.put("carbohydrate", new BPTree<Double,FoodItem>(64));
         indexes.put("protein", new BPTree<Double,FoodItem>(64));
         indexes.put("fiber", new BPTree<Double,FoodItem>(64));
         this.usedIDs = new ArrayList<String>();
@@ -161,9 +161,9 @@ public class FoodData implements FoodDataADT<FoodItem> {
     	fatTree.insert(foodItem.getNutrientValue("fat"), foodItem);
     	indexes.put("fat", fatTree);
     	
-    	BPTree<Double,FoodItem> carbohydratesTree = indexes.get("carbohydrates");
-    	carbohydratesTree.insert(foodItem.getNutrientValue("carbohydrates"), foodItem);
-    	indexes.put("carbohydrates", carbohydratesTree);
+    	BPTree<Double,FoodItem> carbohydrateTree = indexes.get("carbohydrate");
+    	carbohydrateTree.insert(foodItem.getNutrientValue("carbohydrate"), foodItem);
+    	indexes.put("carbohydrate", carbohydrateTree);
     	
     	BPTree<Double,FoodItem> proteinTree = indexes.get("protein");
     	proteinTree.insert(foodItem.getNutrientValue("protein"), foodItem);
