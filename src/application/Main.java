@@ -1055,6 +1055,11 @@ public class Main extends Application {
 	public static void runTheSearch(String foodName, ObservableList<String> 
 	    rules, FoodData foodData, ObservableList<FoodItem> foods) {
 	  
+	  // If there are no rules and no name to search for, then method returns
+	  if (foodName.length() == 0 && rules.size() == 0) {
+	    return;
+	  }
+	  
 	  List<FoodItem> nameSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by name
 	  List<FoodItem> nutrientSearchResults = new ArrayList<FoodItem>(); // Stores the results of filtering by nutrients
 	  List<FoodItem> result = new ArrayList<FoodItem>(); // Stores the final intersected food list
@@ -1070,42 +1075,30 @@ public class Main extends Application {
 	  }
 	  
 	  // Intersects lists, if needed
-	  if (nameSearchResults != null && nutrientSearchResults != null) {
-	    
-	    if (nameSearchResults.size() > 0 && nutrientSearchResults.size() > 0) {
+	  if (nameSearchResults.size() > 0 && nutrientSearchResults.size() > 0) {
 
 	      result = nameSearchResults.stream()
 	          .filter(nutrientSearchResults::contains)
 	          .collect(Collectors.toList());
 
-	    } else if (nameSearchResults.size() > 0) {
+	  } else if (nameSearchResults.size() > 0) {
 	      result = nameSearchResults;
 
-	    } else if (nutrientSearchResults.size() > 0) {
+	  } else if (nutrientSearchResults.size() > 0) {
 	      result = nutrientSearchResults;
-	    }
-
-	  } else if (nameSearchResults != null) {
-	    result = nameSearchResults;
-
-	  } else if (nutrientSearchResults != null) {
-	    result = nutrientSearchResults;
 	  }
 	  
 	  // If results isn't empty, then it is sorted alphabetically, case insensitive
       if (!result.isEmpty()) {
         result.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
-        
-          // Clear foods
-          foods.clear();
-          
-          // Rebuild foods
-          result.forEach(foodItem -> foods.add(foodItem));
-          
-      } else {
-        // Nothing to search for
-        return;
-      }    
+      }
+      
+      // Clear foods
+      foods.clear();
+      
+      // Rebuild foods
+      result.forEach(foodItem -> foods.add(foodItem));
+      
 	} // end of runTheSearch
 
 	/**
