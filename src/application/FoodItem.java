@@ -1,14 +1,13 @@
 package application;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * This class represents a food item with all its properties.
  * 
  * @author Aaron Whitaker (awhitaker3@wisc.edu);
  * @author Adam Hughes (adam.hughes@wisc.edu);
+ * @author Sarah Bonebright (sbonebright@wisc.edu);
  */
 public class FoodItem {
     // The name of the food item.

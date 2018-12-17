@@ -65,13 +65,7 @@ import javafx.stage.FileChooser;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import javafx.scene.text.TextAlignment;
 
 /**
  * Class used for creating and displaying the GUI and 
@@ -714,7 +708,6 @@ public class Main extends Application {
 
 		File saveFile = fileChooser.showSaveDialog(loadPopupWindow);
 		//save empty file first
-		String content = "";
 		String filePath = saveFile.getAbsolutePath();
 		if(!saveFile.getName().contains(".")) {
 			filePath = filePath + ".csv";
@@ -723,22 +716,6 @@ public class Main extends Application {
 	
 	}//end of save to file
 	
-	/**
-	 * Produces the formatted string to append to a file when saving.
-	 * @param foodItemTemp a food item to be written to a line in the file
-	 * @return string in the expected format
-	 */
-	private String lineAppend(FoodItem foodItemTemp) {
-		return String.format("%s,%s,calories,%f,fat,%f,carbohydrate,%f,fiber,%f,protein,%f\n",
-				foodItemTemp.getID(),
-				foodItemTemp.getName(),
-				foodItemTemp.getNutrientValue("calories"),
-				foodItemTemp.getNutrientValue("fat"),
-				foodItemTemp.getNutrientValue("carbohydrate"),
-				foodItemTemp.getNutrientValue("fiber"),
-				foodItemTemp.getNutrientValue("protein"));
-	}
-
 	/**
 	 * Displays a nutritional analysis of the foods in the menu
 	 * @param menuFoods list of food items in the meal to be analyzed
@@ -1030,37 +1007,6 @@ public class Main extends Application {
 		loadPopupWindow.setScene(scene1);
 		loadPopupWindow.showAndWait();	
 	}
-
-	/**
-	 * Used by loadFile to check if a given line is in the expected format
-	 * @param lineInput an array of lines of data
-	 * @return true if valid, false otherwise
-	 */
-	private static boolean isValidDataField(List<String> lineInput) {
-		//first check if there are 12 seperate data fields that were parsed, split by commas in input file
-		if(lineInput.size() == 12) {
-			//now check if column 3,5,7,9,11 have the correct name of the nutrient: calories,
-			//fat, carbohydrate, fiber and protein
-			if(lineInput.get(2).equals("calories") && lineInput.get(4).equals("fat") && 
-					lineInput.get(6).equals("carbohydrate") && lineInput.get(8).equals("fiber") && 
-					lineInput.get(10).equals("protein")) { 
-				//check if the column to the right of the nutrient contains a number that be of type double
-				if(isPositiveDouble(lineInput.get(3)) && isPositiveDouble(lineInput.get(5)) &&
-						isPositiveDouble(lineInput.get(7)) && isPositiveDouble(lineInput.get(9)) && 
-						isPositiveDouble(lineInput.get(11))) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-			else {
-				return false;
-			}
-		}else {
-			return false;
-		}
-	}//end of isValidDataField()
 
 	/**
 	 * method to check if a string can be converted into a non-negative double
