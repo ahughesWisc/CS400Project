@@ -516,7 +516,7 @@ public class Main extends Application {
 					foods.add(foodItemTemp);
 				}
 				Collections.sort(foods, comparatorFoodItembyName);
-				foodCount.setText(foods.size() + " in the availible food list");
+				foodCount.setText(foods.size() + " in the available food list");
 			} catch(Exception e) {
 				displayError("There was an error loading foods from foodItems.csv. Use the Load Food and Add Food "
 						+ "buttons to add foods to the program.");
