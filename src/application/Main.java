@@ -135,7 +135,6 @@ public class Main extends Application {
 	final static String FoodPromptText = "enter food name";
 
 	//ToolTips
-	final static String ExitToolTip = "Exit Program";
 	final static String AddActionToolTip = "Add the selected foods to the menu";
 	final static String RemoveFoodToolTip = "Remove the selected foods from the menu";
 	final static String AddRuleToolTip = "Add the rule to the search";
@@ -214,22 +213,10 @@ public class Main extends Application {
 			bannerTitle.setPadding(new Insets(8, 10, 8, 10));
 			banner.getChildren().add(bannerTitle);
 
-			// Exit button for the program
-			Image imageExit = new Image(getClass().getResourceAsStream(XButtonImage));
-			Button exitProgramButton = new Button();
-			exitProgramButton.setGraphic(new ImageView(imageExit));
-			Tooltip exitProgramTooltip = new Tooltip(ExitToolTip);
-			exitProgramButton.setTooltip(exitProgramTooltip);
-			exitProgramButton.setOnMouseClicked(actionEvent -> primaryStage.close());
-		
-
 			AnchorPane ap = new AnchorPane();
-			ap.getChildren().addAll(banner, exitProgramButton);
+			ap.getChildren().addAll(banner);
 			AnchorPane.setLeftAnchor(banner, 0.0);
-			AnchorPane.setRightAnchor(exitProgramButton, 0.0);
 			borderpane.setTop(ap);
-			ap.setMaxWidth(768);
-			ap.setMinWidth(768);
 
 			// comparator for sorting food lists by name
 			Comparator<? super FoodItem> comparatorFoodItembyName = new Comparator<FoodItem>() {
@@ -1160,16 +1147,19 @@ public class Main extends Application {
 	  }
 	  
 	  // If results isn't empty, then it is sorted alphabetically, case insensitive
-	  if (!result.isEmpty()) {
-	    result.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
-	  }
-	  
-	  // Clear foods
-	  foods.clear();
-	  
-	  // Rebuild foods
-	  result.forEach(foodItem -> foods.add(foodItem));
-	      
+      if (!result.isEmpty()) {
+        result.sort(Comparator.comparing(FoodItem::getName, String.CASE_INSENSITIVE_ORDER));
+        
+          // Clear foods
+          foods.clear();
+          
+          // Rebuild foods
+          result.forEach(foodItem -> foods.add(foodItem));
+          
+      } else {
+        // Nothing to search for
+        return;
+      }    
 	} // end of runTheSearch
 
 	/**
