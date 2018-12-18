@@ -1067,12 +1067,9 @@ public class Main extends Application {
 	  // If no foodName is entered, then the text field returns an empty String. Checks for empty String
 	  if (foodName.length() > 0) {
 	    nameSearchResults = foodData.filterByName(foodName);
-	  }
+	  } 
 
-	  // Checks there are foods to search
-	  if (foods.size() > 0) {
-	    nutrientSearchResults = foodData.filterByNutrients(rules);
-	  }
+	  nutrientSearchResults = foodData.filterByNutrients(rules);
 	  
 	  // Intersects lists, if needed
 	  if (nameSearchResults.size() > 0 && nutrientSearchResults.size() > 0) {
